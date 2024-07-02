@@ -1,0 +1,7 @@
+﻿[*.cs]
+
+# CA1416: 플랫폼 호환성 유효성 검사
+dotnet_diagnostic.CA1416.severity = silent
+
+# IDE0019: 패턴 일치 사용
+dotnet_diagnostic.IDE0019.severity = silent
