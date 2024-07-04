@@ -1,8 +1,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "DustCharacter.h"
+#include "Camera/CameraComponent.h"
 #include "GameFramework/Character.h"
-#include "Component/MoveComponent.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "CPlayerCharacter.generated.h"
 
 UCLASS()
@@ -20,8 +22,25 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TWeakObjectPtr<UMoveComponent> MoveComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+		class USpringArmComponent* SpringArmComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+		class UCameraComponent* FollowCamera;
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	 UInputMappingContext* DefaultMappingContext;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	 UInputAction* MoveAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	 UInputAction* LookAction;
+
+public:
+	UPROPERTY(EditAnywhere)
+		class UMoveComponent* MoveComponent;
 };

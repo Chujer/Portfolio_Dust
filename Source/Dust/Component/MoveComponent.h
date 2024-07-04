@@ -6,6 +6,7 @@
 #include "MoveComponent.generated.h"
 
 
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class DUST_API UMoveComponent : public UActorComponent
 {
@@ -21,13 +22,16 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 public:
+	/** Called for movement input */
 	UFUNCTION()
-		void Move(const FInputActionValue& Value);
+	void Move(const FInputActionValue& Value);
 
+	/** Called for looking input */
+	UFUNCTION()
+	void Look(const FInputActionValue& Value);
+
+		
 private:
-	TWeakObjectPtr<ACharacter> PlayerCharacter;
+	TWeakObjectPtr<class ACharacter> PlayerCharacter;
 
-public:
-	UPROPERTY(EditAnywhere)
-	int test = 0;
 };
