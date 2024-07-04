@@ -22,7 +22,18 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	
+
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+	virtual void NotifyActorEndOverlap(AActor* OtherActor) override;
+
+	//TODO - 임시 실행 함수 /////////////////////////////////////////
+public:
+	void PlayInteract();
+
+	UPROPERTY(EditAnywhere)
+		class UTextRenderComponent* InteractText;
+	///////////////////// /////////////////////////////////////////
+
 
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -40,7 +51,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	 UInputAction* LookAction;
 
+	 UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	 UInputAction* InteractionAction;
 public:
 	UPROPERTY(EditAnywhere)
-		class UMoveComponent* MoveComponent;
+		TObjectPtr<class UMoveComponent> MoveComponent;
+		
+		class IInteractionInterface* InteractionObject = nullptr;
+	UPROPERTY()
+		float InteractionDistance = 0.0f;
 };

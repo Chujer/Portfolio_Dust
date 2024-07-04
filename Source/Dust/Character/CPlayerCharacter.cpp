@@ -3,7 +3,10 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Component/MoveComponent.h"
+#include "Components/TextRenderComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Interface/InteractionInterface.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Utility/CHelpers.h"
 
 
@@ -34,11 +37,20 @@ ACPlayerCharacter::ACPlayerCharacter()
 	FollowCamera->bUsePawnControlRotation = false; 
 
 	MoveComponent = CreateDefaultSubobject<UMoveComponent>("MoveComponent");
+
+	///////////////////////////////////////////////////
+	InteractText = CreateDefaultSubobject<UTextRenderComponent>("InteractText");
+	InteractText->SetupAttachment(RootComponent);
+	InteractText->SetRelativeLocation(FVector(0, 0, 120.0f));
+	InteractText->SetRelativeRotation(FRotator(0, 180.0f, 0));
+	InteractText->SetText(FText::FromString("G"));
+	//////////////////////////////////////////////////
 }
 
 void ACPlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	InteractText->SetVisibility(false);
 
 	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
 	{
@@ -60,9 +72,56 @@ void ACPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	if(UEnhancedInputComponent* Input = Cast< UEnhancedInputComponent>(PlayerInputComponent))
 	{
-		Input->BindAction(MoveAction, ETriggerEvent::Triggered,MoveComponent, &UMoveComponent::Move);
-		Input->BindAction(LookAction, ETriggerEvent::Triggered, MoveComponent, &UMoveComponent::Look);
-		Input->BindAction(LookAction, ETriggerEvent::Triggered, MoveComponent, &UMoveComponent::Look);
+		Input->BindAction(MoveAction, ETriggerEvent::Triggered,MoveComponent.Get(), &UMoveComponent::Move);
+		Input->BindAction(LookAction, ETriggerEvent::Triggered, MoveComponent.Get(), &UMoveComponent::Look);
+		Input->BindAction(LookAction, ETriggerEvent::Triggered, MoveComponent.Get(), &UMoveComponent::Look);
+		Input->BindAction(InteractionAction, ETriggerEvent::Triggered, this, &ACPlayerCharacter::PlayInteract);
+	}
+}
+
+void ACPlayerCharacter::NotifyActorBeginOverlap(AActor* OtherActor)
+{
+	Super::NotifyActorBeginOverlap(OtherActor);
+
+	IInteractionInterface* other = Cast<IInteractionInterface>(OtherActor);
+	if(!!other)
+	{
+		//거리에 비례해서 현재 활성화할 상호작용 객체 설정   -- TODO : 2024.07.04 -  임시 제작 차후 다른 곳으로 옮기거나 제거할 수 있음 
+		FVector2D playerLocation = FVector2D(GetActorLocation().X, GetActorLocation().Y);
+		FVector2D otherLocation = FVector2D(OtherActor->GetActorLocation().X, OtherActor->GetActorLocation().Y);
+		float otherDistance = UKismetMathLibrary::Distance2D(playerLocation, otherLocation);
+		if (!!InteractionObject)
+		{
+			InteractionObject = other;
+			InteractionDistance = otherDistance;
+		}
+		else
+		{
+			if (InteractionDistance > otherDistance)
+			{
+				//InteractionObject = other;
+				InteractionDistance = otherDistance;
+			}
+		}
+		InteractText->SetVisibility(true);
 
 	}
+}
+
+void ACPlayerCharacter::NotifyActorEndOverlap(AActor* OtherActor)
+{
+	Super::NotifyActorEndOverlap(OtherActor);
+
+	IInteractionInterface* other = Cast<IInteractionInterface>(OtherActor);
+	if (!!other && InteractionObject == other)
+	{
+		InteractionObject = nullptr;
+		InteractionDistance = 0;
+		InteractText->SetVisibility(false);
+	}
+}
+
+void ACPlayerCharacter::PlayInteract()
+{
+	InteractionObject->Interact(this);
 }
