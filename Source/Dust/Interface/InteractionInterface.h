@@ -17,5 +17,5 @@ class DUST_API IInteractionInterface
 	GENERATED_BODY()
 	
 public:
-	virtual void Interact(ACharacter* player) = 0;
+	virtual void Interact(ACharacter* Player) = 0;
 };

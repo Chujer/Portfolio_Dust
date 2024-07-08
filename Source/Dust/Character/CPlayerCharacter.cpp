@@ -51,6 +51,7 @@ void ACPlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	InteractText->SetVisibility(false);
+	InteractionObject = nullptr;
 
 	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
 	{
@@ -90,7 +91,8 @@ void ACPlayerCharacter::NotifyActorBeginOverlap(AActor* OtherActor)
 		FVector2D playerLocation = FVector2D(GetActorLocation().X, GetActorLocation().Y);
 		FVector2D otherLocation = FVector2D(OtherActor->GetActorLocation().X, OtherActor->GetActorLocation().Y);
 		float otherDistance = UKismetMathLibrary::Distance2D(playerLocation, otherLocation);
-		if (!!InteractionObject)
+		//InteractionObject = other;
+		if (!InteractionObject) //상호작용 객체가 없다면
 		{
 			InteractionObject = other;
 			InteractionDistance = otherDistance;
@@ -99,7 +101,7 @@ void ACPlayerCharacter::NotifyActorBeginOverlap(AActor* OtherActor)
 		{
 			if (InteractionDistance > otherDistance)
 			{
-				//InteractionObject = other;
+				InteractionObject = other;
 				InteractionDistance = otherDistance;
 			}
 		}

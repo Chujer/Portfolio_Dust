@@ -33,7 +33,7 @@ public:
 	UPROPERTY(EditAnywhere)
 		class UTextRenderComponent* InteractText;
 	///////////////////// /////////////////////////////////////////
-
+		
 
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -57,7 +57,7 @@ public:
 	UPROPERTY(EditAnywhere)
 		TObjectPtr<class UMoveComponent> MoveComponent;
 		
-		class IInteractionInterface* InteractionObject = nullptr;
+		TObjectPtr<class IInteractionInterface> InteractionObject;
 	UPROPERTY()
-		float InteractionDistance = 0.0f;
+		float InteractionDistance = 10000.0f;
 };

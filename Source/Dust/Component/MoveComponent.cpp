@@ -52,8 +52,9 @@ void UMoveComponent::Look(const FInputActionValue& Value)
 {
 	// input is a Vector2D
 	FVector2D LookAxisVector = Value.Get<FVector2D>();
+	APlayerController* playerController = Cast<APlayerController>(PlayerCharacter->GetController());
 
-	if (PlayerCharacter->GetController() != nullptr)
+	if (!!playerController && playerController->bShowMouseCursor == false)
 	{
 		// add yaw and pitch input to controller
 		PlayerCharacter->AddControllerYawInput(LookAxisVector.X);
