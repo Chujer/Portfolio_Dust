@@ -32,7 +32,13 @@ public:
 
 	UPROPERTY(EditAnywhere)
 		class UTextRenderComponent* InteractText;
-	///////////////////// /////////////////////////////////////////
+
+		void LoadPlayerData();
+
+		UFUNCTION(BlueprintCallable, NetMulticast, Reliable)
+		void LoadPlayerData_NMC();
+
+	//TODO/////////////////// /////////////////////////////////////////
 		
 
 public:
@@ -56,7 +62,9 @@ public:
 public:
 	UPROPERTY(EditAnywhere)
 		TObjectPtr<class UMoveComponent> MoveComponent;
-		
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+		TObjectPtr<class UPlayerSaveComponent> SaveComponent;	
+
 		TObjectPtr<class IInteractionInterface> InteractionObject;
 	UPROPERTY()
 		float InteractionDistance = 10000.0f;

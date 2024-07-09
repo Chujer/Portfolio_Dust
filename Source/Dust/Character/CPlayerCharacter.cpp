@@ -3,6 +3,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Component/MoveComponent.h"
+#include "Component/PlayerSaveComponent.h"
 #include "Components/TextRenderComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Interface/InteractionInterface.h"
@@ -37,6 +38,7 @@ ACPlayerCharacter::ACPlayerCharacter()
 	FollowCamera->bUsePawnControlRotation = false; 
 
 	MoveComponent = CreateDefaultSubobject<UMoveComponent>("MoveComponent");
+	SaveComponent = CreateDefaultSubobject<UPlayerSaveComponent>("SaveComponent");
 
 	///////////////////////////////////////////////////
 	InteractText = CreateDefaultSubobject<UTextRenderComponent>("InteractText");
@@ -126,4 +128,13 @@ void ACPlayerCharacter::NotifyActorEndOverlap(AActor* OtherActor)
 void ACPlayerCharacter::PlayInteract()
 {
 	InteractionObject->Interact(this);
+}
+
+void ACPlayerCharacter::LoadPlayerData()
+{
+}
+
+void ACPlayerCharacter::LoadPlayerData_NMC_Implementation()
+{
+	SaveComponent->LoadData();
 }
