@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BlueprintDataDefinitions.h"
 #include "GameFramework/PlayerController.h"
 #include "Misc/Structures.h"
 #include "CLobbyController.generated.h"
@@ -16,10 +17,13 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 public:
-	UFUNCTION(Client, Unreliable)
+	UFUNCTION(Client, Reliable)
 	void CreateLobbyWidget_Client();
-	UFUNCTION(Reliable, Server)
-	void UpdatePlayerList_Server(const TArray<FPlayerInfo>& PlayerInfos);
+	UFUNCTION(BlueprintCallable)
+	void UpdatePlayerList(const TArray<FPlayerInfo>& PlayerInfos);
+
+	void SetPlayerInfo();
+
 
 private:
 	//Widget
@@ -29,9 +33,12 @@ private:
 	TObjectPtr<class UCLobbyWidget> LobbyWidget;
 
 public:
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite, Replicated)
 	FPlayerInfo PlayerInfo;
 
-	UPROPERTY(Replicated)
+	UPROPERTY(BlueprintReadWrite, Replicated)
 	TArray<FPlayerInfo> ConnectedPlayerInfo;
+
+
+	FBPUniqueNetId UNetID;
 };

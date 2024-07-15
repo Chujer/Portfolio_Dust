@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "Misc/Structures.h"
 #include "CLobbyGameMode.generated.h"
 
 UCLASS()
@@ -13,5 +14,6 @@ public:
 	virtual void OnPostLogin(AController* NewPlayer) override;
 
 public:
-
+	TArray<class ACLobbyController*> ConnectedPlayers;
+	TArray<FPlayerInfo> ConnectedPlayerInfos;
 };

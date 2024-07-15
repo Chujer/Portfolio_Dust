@@ -127,7 +127,8 @@ void ACPlayerCharacter::NotifyActorEndOverlap(AActor* OtherActor)
 
 void ACPlayerCharacter::PlayInteract()
 {
-	InteractionObject->Interact(this);
+	if(!!InteractionObject)
+		InteractionObject->Interact(this);
 }
 
 void ACPlayerCharacter::LoadPlayerData()

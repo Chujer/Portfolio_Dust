@@ -9,10 +9,10 @@ struct FPlayerInfo
 	GENERATED_BODY()
 public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	FText PlayerName;
+	FText PlayerName = FText::FromString("PlayerName");
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	bool IsReady;
+	bool IsReady = false;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	ACharacter* Character;
+	TWeakObjectPtr<ACharacter> Character;
 
 };
