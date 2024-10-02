@@ -40,7 +40,6 @@ public:
 
 	//TODO/////////////////// /////////////////////////////////////////
 		
-
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class USpringArmComponent* SpringArmComponent;
@@ -60,7 +59,7 @@ public:
 	 UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	 UInputAction* InteractionAction;
 public:
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, meta = (AllowPrivateAccess = true))
 		TObjectPtr<class UMoveComponent> MoveComponent;
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 		TObjectPtr<class UPlayerSaveComponent> SaveComponent;	

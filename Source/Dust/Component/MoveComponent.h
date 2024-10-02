@@ -22,16 +22,19 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 public:
-	/** Called for movement input */
 	UFUNCTION()
 	void Move(const FInputActionValue& Value);
-
-	/** Called for looking input */
+	
 	UFUNCTION()
 	void Look(const FInputActionValue& Value);
 
-		
+	UFUNCTION(BlueprintCallable)
+	FVector2D GetMovementVector() { return MovementVector; }
+
 private:
 	TWeakObjectPtr<class ACharacter> PlayerCharacter;
 
+	//키입력값이 저장될 변수
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	FVector2D MovementVector;
 };
