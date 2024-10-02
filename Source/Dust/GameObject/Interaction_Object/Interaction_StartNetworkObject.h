@@ -21,8 +21,9 @@ public:
 
 	virtual void Interact(ACharacter* Player) override;
 
+	//Main Menu UI생성
+	//블루프린트에서 설정하기 위해서 nativeEvent사용
 	UFUNCTION(BlueprintNativeEvent)
-		void OpenNetworkUI(ACharacter* player);
-
-		void OpenNetworkUI_Implementation(ACharacter* Player);
+	void OpenNetworkUI(ACharacter* player);
+	void OpenNetworkUI_Implementation(ACharacter* Player);
 };

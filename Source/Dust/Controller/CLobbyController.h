@@ -38,7 +38,6 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, Replicated)
 	TArray<FPlayerInfo> ConnectedPlayerInfo;
-
-
+	
 	FBPUniqueNetId UNetID;
 };
