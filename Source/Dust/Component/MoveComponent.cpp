@@ -14,7 +14,7 @@ void UMoveComponent::BeginPlay()
 	Super::BeginPlay();
 
 
-	PlayerCharacter = Cast<ACharacter>(GetOwner());
+	OwnerCharacter = Cast<ACharacter>(GetOwner());
 }
 
 
@@ -30,10 +30,10 @@ void UMoveComponent::Move(const FInputActionValue& Value)
 	// input is a Vector2D
 	MovementVector = Value.Get<FVector2D>();
 
-	if (PlayerCharacter->GetController() != nullptr)
+	if (OwnerCharacter->GetController() != nullptr)
 	{
 		// find out which way is forward
-		const FRotator Rotation = PlayerCharacter->GetController()->GetControlRotation();
+		const FRotator Rotation = OwnerCharacter->GetController()->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
 
 		// get forward vector
@@ -43,8 +43,8 @@ void UMoveComponent::Move(const FInputActionValue& Value)
 		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
 		// add movement 
-		PlayerCharacter->AddMovementInput(ForwardDirection, MovementVector.Y);
-		PlayerCharacter->AddMovementInput(RightDirection, MovementVector.X);
+		OwnerCharacter->AddMovementInput(ForwardDirection, MovementVector.Y);
+		OwnerCharacter->AddMovementInput(RightDirection, MovementVector.X);
 	}
 }
 
@@ -52,12 +52,12 @@ void UMoveComponent::Look(const FInputActionValue& Value)
 {
 	// input is a Vector2D
 	FVector2D LookAxisVector = Value.Get<FVector2D>();
-	APlayerController* playerController = Cast<APlayerController>(PlayerCharacter->GetController());
+	APlayerController* playerController = Cast<APlayerController>(OwnerCharacter->GetController());
 
 	if (!!playerController && playerController->bShowMouseCursor == false)
 	{
 		// add yaw and pitch input to controller
-		PlayerCharacter->AddControllerYawInput(LookAxisVector.X);
-		PlayerCharacter->AddControllerPitchInput(LookAxisVector.Y);
+		OwnerCharacter->AddControllerYawInput(LookAxisVector.X);
+		OwnerCharacter->AddControllerPitchInput(LookAxisVector.Y);
 	}
 }

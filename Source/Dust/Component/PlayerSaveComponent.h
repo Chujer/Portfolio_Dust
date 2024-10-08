@@ -30,7 +30,7 @@ public:
 	TObjectPtr<class UCPlayerSaveGame> SaveGame;
 
 private:
-	TWeakObjectPtr<class ACharacter> PlayerCharacter;
+	TWeakObjectPtr<class ACharacter> OwnerCharacter;
 	FString FilePath;
 };
 

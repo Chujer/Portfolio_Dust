@@ -32,7 +32,7 @@ public:
 	FVector2D GetMovementVector() { return MovementVector; }
 
 private:
-	TWeakObjectPtr<class ACharacter> PlayerCharacter;
+	TWeakObjectPtr<class ACharacter> OwnerCharacter;
 
 	//키입력값이 저장될 변수
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = true))

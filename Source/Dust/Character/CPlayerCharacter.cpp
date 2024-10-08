@@ -4,6 +4,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "Component/MoveComponent.h"
 #include "Component/PlayerSaveComponent.h"
+#include "Component/WeaponComponent.h"
 #include "Components/TextRenderComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Interface/InteractionInterface.h"
@@ -39,6 +40,7 @@ ACPlayerCharacter::ACPlayerCharacter()
 
 	MoveComponent = CreateDefaultSubobject<UMoveComponent>("MoveComponent");
 	SaveComponent = CreateDefaultSubobject<UPlayerSaveComponent>("SaveComponent");
+	WeaponComponent = CreateDefaultSubobject<UWeaponComponent>("WeaponComponent");
 
 	///////////////////////////////////////////////////
 	InteractText = CreateDefaultSubobject<UTextRenderComponent>("InteractText");

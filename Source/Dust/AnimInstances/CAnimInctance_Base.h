@@ -16,6 +16,7 @@ class DUST_API UCAnimInctance_Base : public UAnimInstance
 
 public:
 	virtual void NativeBeginPlay() override;
+	
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
 protected:

@@ -14,13 +14,13 @@ UPlayerSaveComponent::UPlayerSaveComponent()
 void UPlayerSaveComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	PlayerCharacter = Cast<ACharacter>(GetOwner());
+	OwnerCharacter = Cast<ACharacter>(GetOwner());
 
-	ACLobbyController* temp = Cast<ACLobbyController>(PlayerCharacter->GetController());
+	ACLobbyController* temp = Cast<ACLobbyController>(OwnerCharacter->GetController());
 
 	if (temp == nullptr)
 		return;
-	FilePath += Cast<ACLobbyController>(PlayerCharacter->GetController())->PlayerInfo.PlayerName.ToString();
+	FilePath += Cast<ACLobbyController>(OwnerCharacter->GetController())->PlayerInfo.PlayerName.ToString();
 
 	if (UGameplayStatics::DoesSaveGameExist(FilePath, 0) == true)		//해당경로에 데이터가 있다면
 	{
@@ -36,15 +36,15 @@ void UPlayerSaveComponent::BeginPlay()
 
 void UPlayerSaveComponent::LoadData()
 {
-	if (PlayerCharacter.IsValid() || SaveGame == nullptr)
+	if (OwnerCharacter.IsValid() || SaveGame == nullptr)
 		return;
 
-	PlayerCharacter->SetActorTransform(SaveGame->PlayerPos);
+	OwnerCharacter->SetActorTransform(SaveGame->PlayerPos);
 }
 
 void UPlayerSaveComponent::SaveData(FTransform data)
 {
-	if (PlayerCharacter.IsValid() && SaveGame != nullptr)
+	if (OwnerCharacter.IsValid() && SaveGame != nullptr)
 		return;
 
 	UGameplayStatics::SaveGameToSlot(SaveGame, FilePath, 0);
