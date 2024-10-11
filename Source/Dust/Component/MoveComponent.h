@@ -22,6 +22,9 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 public:
+	FORCEINLINE void SetStop(bool inStop) { IsStop = inStop; }
+
+public:
 	UFUNCTION()
 	void Move(const FInputActionValue& Value);
 	
@@ -37,4 +40,5 @@ private:
 	//키입력값이 저장될 변수
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	FVector2D MovementVector;
+	bool IsStop = false;
 };

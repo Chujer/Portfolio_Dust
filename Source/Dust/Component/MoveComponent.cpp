@@ -27,6 +27,9 @@ void UMoveComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 
 void UMoveComponent::Move(const FInputActionValue& Value)
 {
+	if (IsStop == true)
+		return;
+
 	// input is a Vector2D
 	MovementVector = Value.Get<FVector2D>();
 

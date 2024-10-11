@@ -16,3 +16,33 @@ public:
 	TWeakObjectPtr<ACharacter> Character;
 
 };
+
+USTRUCT()
+struct FDoActionData
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere)
+		UAnimMontage* Montage;
+	UPROPERTY(EditAnywhere)
+		float PlayRate = 1.0f;
+	UPROPERTY(EditAnywhere)
+		bool bCanMove = true;
+
+public:
+	UPROPERTY(EditAnywhere)
+		float Power;
+	UPROPERTY(EditAnywhere)
+		FVector Launch = FVector(100.0f, 0, 0);
+	UPROPERTY(EditAnywhere)
+		float StopTime;
+	UPROPERTY(EditAnywhere)
+		USoundWave* HittingSound;
+	UPROPERTY(EditAnywhere)
+		bool bWithLaunch = false;
+
+public:
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<UCameraShakeBase> CameraShakeClass;
+};

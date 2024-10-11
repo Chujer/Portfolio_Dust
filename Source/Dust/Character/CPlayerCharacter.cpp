@@ -4,6 +4,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "Component/MoveComponent.h"
 #include "Component/PlayerSaveComponent.h"
+#include "Component/StateComponent.h"
 #include "Component/WeaponComponent.h"
 #include "Components/TextRenderComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -41,6 +42,7 @@ ACPlayerCharacter::ACPlayerCharacter()
 	MoveComponent = CreateDefaultSubobject<UMoveComponent>("MoveComponent");
 	SaveComponent = CreateDefaultSubobject<UPlayerSaveComponent>("SaveComponent");
 	WeaponComponent = CreateDefaultSubobject<UWeaponComponent>("WeaponComponent");
+	StateComponent = CreateDefaultSubobject<UStateComponent>("StateComponent");
 
 	///////////////////////////////////////////////////
 	InteractText = CreateDefaultSubobject<UTextRenderComponent>("InteractText");
@@ -81,6 +83,7 @@ void ACPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 		Input->BindAction(LookAction, ETriggerEvent::Triggered, MoveComponent.Get(), &UMoveComponent::Look);
 		Input->BindAction(LookAction, ETriggerEvent::Triggered, MoveComponent.Get(), &UMoveComponent::Look);
 		Input->BindAction(InteractionAction, ETriggerEvent::Triggered, this, &ACPlayerCharacter::PlayInteract);
+		Input->BindAction(ActionAction, ETriggerEvent::Triggered, WeaponComponent.Get(), &UWeaponComponent::DoAction);
 	}
 }
 

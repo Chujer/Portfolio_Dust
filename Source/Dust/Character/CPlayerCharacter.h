@@ -59,6 +59,11 @@ public:
 	 UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	 UInputAction* InteractionAction;
 
+	 UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	 UInputAction* ActionAction;
+
+
+	 /////////////////////ÄÄÆ÷³ÍÆ®
 public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, meta = (AllowPrivateAccess = true))
 		TObjectPtr<class UMoveComponent> MoveComponent;
@@ -66,7 +71,10 @@ public:
 		TObjectPtr<class UPlayerSaveComponent> SaveComponent;
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 		TObjectPtr<class UWeaponComponent> WeaponComponent;
-
+		UPROPERTY(BlueprintReadOnly, EditAnywhere)
+		TObjectPtr<class UStateComponent> StateComponent;
+public:
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 		TObjectPtr<class IInteractionInterface> InteractionObject;
 	UPROPERTY()
 		float InteractionDistance = 10000.0f;

@@ -22,10 +22,21 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 public:
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(Reliable, Server)
+		void DoAction();
+
+public:
+	//무기 설정
+	UFUNCTION(BlueprintCallable, Reliable, Server)
 	void SetWeaponData(class UWeaponDataAsset* weaponData);
+
+	UFUNCTION(NetMulticast, Reliable)
+	void SetWeaponAnimInstance(UWeaponDataAsset* weaponData);
 
 private:
 	TWeakObjectPtr<ACharacter> OwnerCharacter;
 	TWeakObjectPtr<class AAttachment> CurAttachment;
+	TWeakObjectPtr<class UCDoAction> CurDoAction;
+	UWeaponDataAsset* CurWeaponData;
+
 };
