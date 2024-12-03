@@ -13,19 +13,18 @@ class DUST_API UCDoAction : public UObject
 public:
 	UCDoAction();
 
+
 public:
 	virtual void BeginPlay(class ACharacter* InOwner);
 
 public:
-	UFUNCTION(Reliable, Server)
 	virtual void DoAction();
 	virtual void NextDoAction();
 	virtual void EndDoAtion();
 
 public:
 	//TODO : 2024.10.11 : DoAction애니메이션이 서버클라이언트에서만 보이는 문제 발생 해결 요망
-	UFUNCTION(NetMulticast, Reliable)
-	void PlayMontage(FDoActionData DoActionData);
+	void PlayMontage();
 	void LaunchCharacter(FDoActionData DoActionData, class ACharacter* LaunchCharacter);
 
 private:

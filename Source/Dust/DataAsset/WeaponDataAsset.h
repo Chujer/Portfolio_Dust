@@ -18,11 +18,9 @@ class DUST_API UWeaponDataAsset : public UDataAsset
 	GENERATED_BODY()
 public:
 	UPROPERTY(EditAnywhere, Category = "Attachment")
-		TSubclassOf<AAttachment> Attachment;
+		TSubclassOf<AAttachment> Attachment; 
 
 	UPROPERTY(EditAnywhere, Category = "Animation")
 		TSubclassOf<UAnimInstance> AnimInstance;
-
-	UPROPERTY(EditAnywhere, Category = "DoActionData")
-		TSubclassOf<UCDoAction> DoAction;
+		
 };

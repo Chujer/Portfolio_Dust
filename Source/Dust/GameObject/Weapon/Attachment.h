@@ -11,7 +11,15 @@ class DUST_API AAttachment : public AActor
 	
 public:	
 	AAttachment();
+	
 
+public:
+	UFUNCTION(Server,Reliable)
+	void DoAction_Server();
+
+	UFUNCTION(NetMulticast,Reliable)
+	void DoAction_NMC();
+	
 protected:
 	virtual void BeginPlay() override;
 
@@ -22,4 +30,8 @@ public:
 
 	UPROPERTY(EditAnywhere)
 		UStaticMeshComponent* WeaponMesh1;
+	UPROPERTY(EditAnywhere)
+		TWeakObjectPtr<class UCDoAction> DoAction;
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<class UCDoAction> DoActionClass;
 };

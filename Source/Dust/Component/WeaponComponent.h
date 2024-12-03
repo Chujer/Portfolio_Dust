@@ -18,13 +18,16 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+public:
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	virtual bool IsSupportedForNetworking() const override { return true; }
+
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 public:
 	UFUNCTION(Reliable, Server)
 		void DoAction();
-
 public:
 	//무기 설정
 	UFUNCTION(BlueprintCallable, Reliable, Server)
@@ -35,8 +38,7 @@ public:
 
 private:
 	TWeakObjectPtr<ACharacter> OwnerCharacter;
+	UPROPERTY(EditAnywhere, Replicated)
 	TWeakObjectPtr<class AAttachment> CurAttachment;
-	TWeakObjectPtr<class UCDoAction> CurDoAction;
 	UWeaponDataAsset* CurWeaponData;
-
 };

@@ -7,11 +7,10 @@
 #include "Component/MoveComponent.h"
 #include "Component/StateComponent.h"
 #include "GameFramework/Character.h"
-
+#include "Net/UnrealNetwork.h"
 UCDoAction::UCDoAction()
 {
 }
-
 void UCDoAction::BeginPlay(ACharacter* InOwner)
 {
 	OwnerCharacter = InOwner;
@@ -23,16 +22,16 @@ void UCDoAction::BeginPlay(ACharacter* InOwner)
 	MaxIndex = DoActionDatas.Num();
 }
 
-void UCDoAction::DoAction_Implementation()
+void UCDoAction::DoAction()
 {
 	StateComponent->SetActionMode();
-	PlayMontage(DoActionDatas[Index]);
 }
 
 
 void UCDoAction::NextDoAction()
 {
-	PlayMontage(DoActionDatas[++Index]);
+	PlayMontage();
+	Index++;
 	if (Index >= MaxIndex)
 		Index = 0;
 }
@@ -44,19 +43,22 @@ void UCDoAction::EndDoAtion()
 	Index = 0;
 }
 
-void UCDoAction::PlayMontage_Implementation(FDoActionData DoActionData)
+void UCDoAction::PlayMontage()
 {
+	if (OwnerCharacter.IsValid())
+		CLog::Print(GetName());
+
 	if (MoveComponent.IsValid())
 	{
 		//몽타주 재생중 캐릭터 이동불가 설정
-		MoveComponent->SetStop(!DoActionData.bCanMove);
+		MoveComponent->SetStop(!DoActionDatas[Index].bCanMove);
 	}
-	if (OwnerCharacter.IsValid() && !!DoActionData.Montage)
+	if (OwnerCharacter.IsValid() && !!DoActionDatas[Index].Montage)
 	{
-		CLog::Print(DoActionData.Montage);
-		OwnerCharacter->PlayAnimMontage(DoActionData.Montage, DoActionData.PlayRate);
+		OwnerCharacter->PlayAnimMontage(DoActionDatas[Index].Montage, DoActionDatas[Index].PlayRate);
 	}
 }
+
 
 void UCDoAction::LaunchCharacter(FDoActionData DoActionData, ACharacter* LaunchCharacter)
 {
