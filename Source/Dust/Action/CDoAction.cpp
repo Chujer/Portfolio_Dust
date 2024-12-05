@@ -19,7 +19,6 @@ void UCDoAction::BeginPlay(ACharacter* InOwner)
 		StateComponent = OwnerCharacter->GetComponentByClass<UStateComponent>();
 		MoveComponent = OwnerCharacter->GetComponentByClass<UMoveComponent>();
 	}
-	MaxIndex = DoActionDatas.Num();
 }
 
 void UCDoAction::DoAction()
@@ -27,35 +26,22 @@ void UCDoAction::DoAction()
 	StateComponent->SetActionMode();
 }
 
-
-void UCDoAction::NextDoAction()
-{
-	PlayMontage();
-	Index++;
-	if (Index >= MaxIndex)
-		Index = 0;
-}
-
 void UCDoAction::EndDoAtion()
 {
 	StateComponent->SetIdleMode();
 	MoveComponent->SetStop(false);
-	Index = 0;
 }
 
-void UCDoAction::PlayMontage()
+void UCDoAction::PlayMontage(FDoActionData DoActionData)
 {
-	if (OwnerCharacter.IsValid())
-		CLog::Print(GetName());
-
 	if (MoveComponent.IsValid())
 	{
 		//몽타주 재생중 캐릭터 이동불가 설정
-		MoveComponent->SetStop(!DoActionDatas[Index].bCanMove);
+		MoveComponent->SetStop(!DoActionData.bCanMove);
 	}
-	if (OwnerCharacter.IsValid() && !!DoActionDatas[Index].Montage)
+	if (OwnerCharacter.IsValid() && !!DoActionData.Montage)
 	{
-		OwnerCharacter->PlayAnimMontage(DoActionDatas[Index].Montage, DoActionDatas[Index].PlayRate);
+		OwnerCharacter->PlayAnimMontage(DoActionData.Montage, DoActionData.PlayRate);
 	}
 }
 

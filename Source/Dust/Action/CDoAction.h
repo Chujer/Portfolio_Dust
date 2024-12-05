@@ -13,18 +13,17 @@ class DUST_API UCDoAction : public UObject
 public:
 	UCDoAction();
 
+public:
 
 public:
 	virtual void BeginPlay(class ACharacter* InOwner);
 
 public:
 	virtual void DoAction();
-	virtual void NextDoAction();
 	virtual void EndDoAtion();
 
 public:
-	//TODO : 2024.10.11 : DoAction애니메이션이 서버클라이언트에서만 보이는 문제 발생 해결 요망
-	void PlayMontage();
+	void PlayMontage(FDoActionData DoActionData);
 	void LaunchCharacter(FDoActionData DoActionData, class ACharacter* LaunchCharacter);
 
 private:
@@ -33,11 +32,5 @@ private:
 
 private:
 	TWeakObjectPtr<ACharacter> OwnerCharacter;
-	UPROPERTY(EditAnywhere)
-	TArray<FDoActionData> DoActionDatas;
-
-private:
-	unsigned int Index = 0;
-	unsigned int MaxIndex = 0;
 
 };

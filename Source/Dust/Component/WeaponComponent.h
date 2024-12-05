@@ -15,19 +15,31 @@ class DUST_API UWeaponComponent : public UActorComponent
 public:	
 	UWeaponComponent();
 
+public:
+	
+
 protected:
 	virtual void BeginPlay() override;
+	TWeakObjectPtr<class AAttachment> GetAttachment() { return CurAttachment; }
 
 public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-	virtual bool IsSupportedForNetworking() const override { return true; }
 
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 public:
 	UFUNCTION(Reliable, Server)
-		void DoAction();
+	void DoAction();
+
+	UFUNCTION(Reliable, Server)
+	void EndDoAction();
+
+	UFUNCTION(Reliable, Server)
+	void DoAction_Combo();
+
+
+
 public:
 	//무기 설정
 	UFUNCTION(BlueprintCallable, Reliable, Server)
@@ -35,6 +47,9 @@ public:
 
 	UFUNCTION(NetMulticast, Reliable)
 	void SetWeaponAnimInstance(UWeaponDataAsset* weaponData);
+
+private:
+	TWeakObjectPtr<class UStateComponent> StateComponent;
 
 private:
 	TWeakObjectPtr<ACharacter> OwnerCharacter;

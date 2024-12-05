@@ -42,7 +42,9 @@ ACPlayerCharacter::ACPlayerCharacter()
 	MoveComponent = CreateDefaultSubobject<UMoveComponent>("MoveComponent");
 	SaveComponent = CreateDefaultSubobject<UPlayerSaveComponent>("SaveComponent");
 	WeaponComponent = CreateDefaultSubobject<UWeaponComponent>("WeaponComponent");
+	WeaponComponent->SetIsReplicated(true);
 	StateComponent = CreateDefaultSubobject<UStateComponent>("StateComponent");
+	StateComponent->SetIsReplicated(true);
 
 	///////////////////////////////////////////////////
 	InteractText = CreateDefaultSubobject<UTextRenderComponent>("InteractText");

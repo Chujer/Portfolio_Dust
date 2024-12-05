@@ -13,7 +13,6 @@ void UMoveComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-
 	OwnerCharacter = Cast<ACharacter>(GetOwner());
 }
 

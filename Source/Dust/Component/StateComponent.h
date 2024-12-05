@@ -22,13 +22,19 @@ class DUST_API UStateComponent : public UActorComponent
 public:	
 	UStateComponent();
 
+public:
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+
 protected:
 	virtual void BeginPlay() override;
 
 public:
+	UFUNCTION(Server, Reliable)
 	void ChangeType(EStateType InType);
 
 public:
+	UFUNCTION(BlueprintCallable)
 	FORCEINLINE EStateType GetStateType() { return Type; }
 	FORCEINLINE bool IsIdleMode() { return Type == EStateType::Idle; }
 	FORCEINLINE bool isDeadMode() { return Type == EStateType::Dead; }
@@ -50,5 +56,6 @@ private:
 	FStateTypeChanged OnStateTypeChanged;
 
 private:
+	UPROPERTY(EditAnywhere, Replicated)
 	EStateType Type = EStateType::Idle;
 };

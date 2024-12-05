@@ -3,21 +3,27 @@
 
 #include "Component/StateComponent.h"
 
+#include "Net/UnrealNetwork.h"
+
 UStateComponent::UStateComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
+}
 
+void UStateComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(UStateComponent, Type);
 }
 
 
 void UStateComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
 	
 }
 
-void UStateComponent::ChangeType(EStateType InType)
+void UStateComponent::ChangeType_Implementation(EStateType InType)
 {
 	EStateType prevType = Type;
 	Type = InType;

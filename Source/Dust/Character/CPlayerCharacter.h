@@ -70,9 +70,10 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 		TObjectPtr<class UPlayerSaveComponent> SaveComponent;
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-		TObjectPtr<class UWeaponComponent> WeaponComponent;
-		UPROPERTY(BlueprintReadOnly, EditAnywhere)
-		TObjectPtr<class UStateComponent> StateComponent;
+	TObjectPtr<class UWeaponComponent> WeaponComponent;
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	TObjectPtr<class UStateComponent> StateComponent;
+
 public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 		TObjectPtr<class IInteractionInterface> InteractionObject;

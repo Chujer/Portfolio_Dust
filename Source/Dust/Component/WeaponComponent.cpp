@@ -1,6 +1,7 @@
 #include "Component/WeaponComponent.h"
 
 #include "CLog.h"
+#include "StateComponent.h"
 #include "DataAsset/WeaponDataAsset.h"
 #include "GameFramework/Character.h"
 #include "Net/UnrealNetwork.h"
@@ -16,6 +17,10 @@ void UWeaponComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	OwnerCharacter = Cast<ACharacter>(GetOwner());
+	if (!OwnerCharacter.IsValid())
+		return;
+
+	StateComponent = OwnerCharacter->GetComponentByClass<UStateComponent>();
 	
 }
 
@@ -32,10 +37,31 @@ void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
+void UWeaponComponent::EndDoAction_Implementation()
+{
+	GetAttachment()->EndDoAction_Server();
+}
+
+void UWeaponComponent::DoAction_Combo_Implementation()
+{
+	if (!CurAttachment.IsValid())
+		return;
+
+	CurAttachment->DoActionCombo_Server();
+}
+
 void UWeaponComponent::DoAction_Implementation()
 {
-	if (CurAttachment.IsValid())
-		CurAttachment->DoAction_Server();
+	if (!CurAttachment.IsValid())
+		return;
+
+	if (CurAttachment->IsComboReady()) //콤보공격 가능 기간중 클릭시 콤보공격 대기설정
+		CurAttachment->SetIsNext(true);
+
+	if (StateComponent->GetStateType() != EStateType::Idle)
+		return;
+	
+	CurAttachment->StartAction_Server();
 }
 
 void UWeaponComponent::SetWeaponAnimInstance_Implementation(UWeaponDataAsset* weaponData)
@@ -47,10 +73,6 @@ void UWeaponComponent::SetWeaponAnimInstance_Implementation(UWeaponDataAsset* we
 	OwnerCharacter->GetMesh()->SetAnimClass(weaponData->AnimInstance);
 	OwnerCharacter->GetMesh()->GetAnimInstance()->NativeBeginPlay();
 	
-	if (OwnerCharacter->IsLocallyControlled() && CurAttachment.IsValid())
-	{
-		CLog::Print(CurAttachment->GetName());
-	}
 }
 
 void UWeaponComponent::SetWeaponData_Implementation(UWeaponDataAsset* weaponData)

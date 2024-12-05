@@ -28,7 +28,7 @@ public:
 	UPROPERTY(EditAnywhere)
 		float PlayRate = 1.0f;
 	UPROPERTY(EditAnywhere)
-		bool bCanMove = true;
+		bool bCanMove = false;
 
 public:
 	UPROPERTY(EditAnywhere)
