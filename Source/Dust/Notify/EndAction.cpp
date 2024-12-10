@@ -7,12 +7,14 @@
 #include "Component/StateComponent.h"
 #include "Component/WeaponComponent.h"
 
-void UEndAction::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
+
+void UEndAction::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
+	const FAnimNotifyEventReference& EventReference)
 {
-	Super::Notify(MeshComp, Animation);
+	Super::Notify(MeshComp, Animation, EventReference);
 
 	if (UWeaponComponent* weaponComponent = MeshComp->GetOwner()->GetComponentByClass<UWeaponComponent>())
 	{
-		weaponComponent->EndDoAction();
+		weaponComponent->EndDoAction_Server();
 	}
 }

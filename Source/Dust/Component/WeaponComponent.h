@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "DataAsset/WeaponData.h"
+#include "DataAsset/WeaponDataAsset.h"
 #include "WeaponComponent.generated.h"
 
 
@@ -20,8 +22,12 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-	TWeakObjectPtr<class AAttachment> GetAttachment() { return CurAttachment; }
 
+public:
+	TWeakObjectPtr<class AAttachment> GetAttachment() const; ;
+
+	TWeakObjectPtr<class UCDoAction> GetDoAction() const; ;
+	
 public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
@@ -30,30 +36,37 @@ public:
 
 public:
 	UFUNCTION(Reliable, Server)
-	void DoAction();
+	void DoAction_Server();
+
+	UFUNCTION(Reliable, NetMulticast)
+	void DoAction_NMC();
 
 	UFUNCTION(Reliable, Server)
-	void EndDoAction();
-
-	UFUNCTION(Reliable, Server)
-	void DoAction_Combo();
+	void EndDoAction_Server();
 
 
 
 public:
-	//무기 설정
 	UFUNCTION(BlueprintCallable, Reliable, Server)
-	void SetWeaponData(class UWeaponDataAsset* weaponData);
+	void SetWeaponData_Server(class UWeaponDataAsset* weaponDataAsset);
 
-	UFUNCTION(NetMulticast, Reliable)
-	void SetWeaponAnimInstance(UWeaponDataAsset* weaponData);
+	//Attachment의 경우 리플리케이션한 엑터이므로 밖(Server)에서 생성후 매개변수로 가져옴
+	UFUNCTION(BlueprintCallable, Reliable, NetMulticast)
+	void SetWeaponData_NMC(class UWeaponDataAsset* weaponDataAsset, AAttachment* Attachment);
 
+	UFUNCTION()
+	void SetWeaponAnimInstance_NMC();
+	
 private:
 	TWeakObjectPtr<class UStateComponent> StateComponent;
 
 private:
 	TWeakObjectPtr<ACharacter> OwnerCharacter;
-	UPROPERTY(EditAnywhere, Replicated)
-	TWeakObjectPtr<class AAttachment> CurAttachment;
-	UWeaponDataAsset* CurWeaponData;
+
+	UPROPERTY(EditAnywhere)
+	UWeaponDataAsset* WeaponDataAsset;
+	
+	UPROPERTY(EditAnywhere)
+	class UWeaponData* WeaponData;
+	
 };

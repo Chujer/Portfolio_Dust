@@ -31,13 +31,16 @@ public:
 	void PlayInteract();
 
 	UPROPERTY(EditAnywhere)
-		class UTextRenderComponent* InteractText;
+	class UTextRenderComponent* InteractText;
 
-		void LoadPlayerData();
+	void LoadPlayerData();
 
-		UFUNCTION(BlueprintCallable, NetMulticast, Reliable)
-		void LoadPlayerData_NMC();
+	UFUNCTION(BlueprintCallable, NetMulticast, Reliable)
+	void LoadPlayerData_NMC();
 
+
+	UFUNCTION(BlueprintCallable)
+	FString GetClientName() { return GetWorld()->GetFirstPlayerController()->GetName(); }
 	//TODO/////////////////// /////////////////////////////////////////
 		
 public:

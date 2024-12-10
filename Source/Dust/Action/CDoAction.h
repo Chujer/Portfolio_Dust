@@ -19,11 +19,11 @@ public:
 	virtual void BeginPlay(class ACharacter* InOwner);
 
 public:
-	virtual void DoAction();
-	virtual void EndDoAtion();
+	virtual void DoAction_Server();
+	virtual void EndDoAtion_Server();
+	void DoAction_NMC();
 
 public:
-	void PlayMontage(FDoActionData DoActionData);
 	void LaunchCharacter(FDoActionData DoActionData, class ACharacter* LaunchCharacter);
 
 private:
@@ -33,4 +33,9 @@ private:
 private:
 	TWeakObjectPtr<ACharacter> OwnerCharacter;
 
+	UPROPERTY(EditAnywhere)
+	TArray<struct FDoActionData> DoActionDatas;
+private:
+	unsigned int ActionIndex = 0;
+	unsigned int MaxActionIndex = 0;
 };

@@ -1,5 +1,6 @@
 #include "Component/PlayerSaveComponent.h"
 
+#include "WeaponComponent.h"
 #include "Controller/CLobbyController.h"
 #include "Save/CPlayerSaveGame.h"
 #include "GameFramework/Character.h"
@@ -39,10 +40,10 @@ void UPlayerSaveComponent::LoadData()
 	if (OwnerCharacter.IsValid() || SaveGame == nullptr)
 		return;
 
-	OwnerCharacter->SetActorTransform(SaveGame->PlayerPos);
+	OwnerCharacter->GetComponentByClass<UWeaponComponent>()->SetWeaponData_Server(SaveGame->WeaponDataAsset);
 }
 
-void UPlayerSaveComponent::SaveData(FTransform data)
+void UPlayerSaveComponent::SaveData(UWeaponDataAsset* data)
 {
 	if (OwnerCharacter.IsValid() && SaveGame != nullptr)
 		return;

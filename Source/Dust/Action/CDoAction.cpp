@@ -21,30 +21,29 @@ void UCDoAction::BeginPlay(ACharacter* InOwner)
 	}
 }
 
-void UCDoAction::DoAction()
+void UCDoAction::DoAction_Server()
 {
 	StateComponent->SetActionMode();
 }
 
-void UCDoAction::EndDoAtion()
-{
-	StateComponent->SetIdleMode();
-	MoveComponent->SetStop(false);
-}
-
-void UCDoAction::PlayMontage(FDoActionData DoActionData)
+void UCDoAction::DoAction_NMC()
 {
 	if (MoveComponent.IsValid())
 	{
 		//몽타주 재생중 캐릭터 이동불가 설정
-		MoveComponent->SetStop(!DoActionData.bCanMove);
+		MoveComponent->SetStop(!DoActionDatas[ActionIndex].bCanMove);
 	}
-	if (OwnerCharacter.IsValid() && !!DoActionData.Montage)
+	if (OwnerCharacter.IsValid() && !!DoActionDatas[ActionIndex].Montage)
 	{
-		OwnerCharacter->PlayAnimMontage(DoActionData.Montage, DoActionData.PlayRate);
+		OwnerCharacter->PlayAnimMontage(DoActionDatas[ActionIndex].Montage, DoActionDatas[ActionIndex].PlayRate);
 	}
 }
 
+void UCDoAction::EndDoAtion_Server()
+{
+	StateComponent->SetIdleMode();
+	MoveComponent->SetStop(false);
+}
 
 void UCDoAction::LaunchCharacter(FDoActionData DoActionData, ACharacter* LaunchCharacter)
 {

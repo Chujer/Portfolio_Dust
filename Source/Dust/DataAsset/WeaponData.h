@@ -3,28 +3,27 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Action/CDoAction.h"
-#include "Engine/DataAsset.h"
-#include "GameObject/Weapon/Attachment.h"
-#include "WeaponDataAsset.generated.h"
+#include "WeaponDataAsset.h"
+#include "UObject/NoExportTypes.h"
+#include "WeaponData.generated.h"
 
 /**
  * 
  */
-UCLASS(BlueprintType)
-class DUST_API UWeaponDataAsset : public UDataAsset
+UCLASS()
+class DUST_API UWeaponData : public UObject
 {
 	GENERATED_BODY()
-
-	virtual void BeginDestroy() override;
+	
 public:
 	UPROPERTY(EditAnywhere, Category = "Animation")
 	TSubclassOf<UAnimInstance> AnimInstance;
-
+public:
 	UPROPERTY(EditAnywhere, Category = "Attachment")
-	TSubclassOf<AAttachment> AttachmentClass; 
+	TWeakObjectPtr<class AAttachment> Attachment;
 
 	UPROPERTY(EditAnywhere, Category = "DoAction")
-	TSubclassOf<UCDoAction> DoActionClass;
+	TWeakObjectPtr<class UCDoAction> DoAction;
 	
+
 };

@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "DataAsset/WeaponDataAsset.h"
 #include "PlayerSaveComponent.generated.h"
 
 
@@ -21,7 +22,7 @@ public:
 	void LoadData();
 
 	UFUNCTION(BlueprintCallable)
-	void SaveData(FTransform data);
+	void SaveData(UWeaponDataAsset* data);
 
 public:
 	UPROPERTY(EditAnywhere)

@@ -11,5 +11,5 @@ class DUST_API UCPlayerSaveGame : public USaveGame
 	
 
 public:
-	FTransform PlayerPos;
+	class UWeaponDataAsset* WeaponDataAsset;
 };
