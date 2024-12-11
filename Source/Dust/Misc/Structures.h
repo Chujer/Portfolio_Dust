@@ -24,7 +24,7 @@ struct FDoActionData
 
 public:
 	UPROPERTY(EditAnywhere)
-		UAnimMontage* Montage;
+		UAnimMontage* Montage = nullptr;
 	UPROPERTY(EditAnywhere)
 		float PlayRate = 1.0f;
 	UPROPERTY(EditAnywhere)
@@ -32,13 +32,13 @@ public:
 
 public:
 	UPROPERTY(EditAnywhere)
-		float Power;
+		float Power = 1.0f;
 	UPROPERTY(EditAnywhere)
 		FVector Launch = FVector(100.0f, 0, 0);
 	UPROPERTY(EditAnywhere)
-		float StopTime;
+		float StopTime = 0.0f;
 	UPROPERTY(EditAnywhere)
-		USoundWave* HittingSound;
+		USoundWave* HittingSound = nullptr;
 	UPROPERTY(EditAnywhere)
 		bool bWithLaunch = false;
 

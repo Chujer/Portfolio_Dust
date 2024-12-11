@@ -25,8 +25,8 @@ protected:
 
 public:
 	TWeakObjectPtr<class AAttachment> GetAttachment() const; ;
-
 	TWeakObjectPtr<class UCDoAction> GetDoAction() const; ;
+	class UWeaponDataAsset* GetWeaponDataAsset() { return WeaponDataAsset; }
 	
 public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;

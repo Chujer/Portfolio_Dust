@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "DataAsset/WeaponDataAsset.h"
 #include "GameFramework/SaveGame.h"
 #include "CPlayerSaveGame.generated.h"
 
@@ -11,5 +12,8 @@ class DUST_API UCPlayerSaveGame : public USaveGame
 	
 
 public:
-	class UWeaponDataAsset* WeaponDataAsset;
+	UPROPERTY(SaveGame)
+	UWeaponDataAsset* WeaponDataAsset;
+	/*UPROPERTY()
+	FTransform PlayerPos;*/
 };

@@ -21,17 +21,23 @@ void UPlayerSaveComponent::BeginPlay()
 
 	if (temp == nullptr)
 		return;
-	FilePath += Cast<ACLobbyController>(OwnerCharacter->GetController())->PlayerInfo.PlayerName.ToString();
-
-	if (UGameplayStatics::DoesSaveGameExist(FilePath, 0) == true)		//해당경로에 데이터가 있다면
+	
+	//FilePath += Cast<ACLobbyController>(OwnerCharacter->GetController())->PlayerInfo.PlayerName.ToString();
+	FilePath += OwnerCharacter->GetName();
+	
+	SaveGame = Cast<UCPlayerSaveGame>(UGameplayStatics::CreateSaveGameObject(SaveGameClass));
+	
+	if (UGameplayStatics::DoesSaveGameExist(FilePath, 0) == true)	//해당경로에 데이터가 있다면
 	{
 		SaveGame = Cast<UCPlayerSaveGame>(UGameplayStatics::LoadGameFromSlot(FilePath, 0));
+		return;
 	}
-	else
-	{
-		//세이브 게임 제작
-		SaveGame = Cast<UCPlayerSaveGame>(UGameplayStatics::CreateSaveGameObject(SaveGameClass));
-	}
+	//else
+	//{
+	//	SaveGame = Cast<UCPlayerSaveGame>(UGameplayStatics::CreateSaveGameObject(SaveGameClass));
+	//	//세이브 게임 제작
+	//	//SaveGame = Cast<UCPlayerSaveGame>(UGameplayStatics::CreateSaveGameObject(SaveGameClass));
+	//}
 	
 }
 
@@ -45,19 +51,21 @@ void UPlayerSaveComponent::LoadData()
 
 void UPlayerSaveComponent::SaveData(UWeaponDataAsset* data)
 {
-	if (OwnerCharacter.IsValid() && SaveGame != nullptr)
+	int a = 0;
+
+	if (OwnerCharacter.IsValid() && SaveGame == nullptr)
 		return;
 
 	UGameplayStatics::SaveGameToSlot(SaveGame, FilePath, 0);
 
-	//if (UGameplayStatics::DoesSaveGameExist(FilePath, 0) == true)		//해당경로에 데이터가 있다면
-	//{
-	//	SaveGame->PlayerPos = PlayerCharacter->GetTransform();
-	//	UGameplayStatics::SaveGameToSlot(SaveGame, FilePath, 0);
-	//}
-	//else
-	//{
-	//	SaveGame = Cast<UCPlayerSaveGame>(UGameplayStatics::CreateSaveGameObject(SaveGameClass));
-	//	SaveData(data);
-	//}
+	if (UGameplayStatics::DoesSaveGameExist(FilePath, 0) == true)		//해당경로에 데이터가 있다면
+	{
+		SaveGame->WeaponDataAsset = OwnerCharacter->GetComponentByClass<UWeaponComponent>()->GetWeaponDataAsset();
+		UGameplayStatics::SaveGameToSlot(SaveGame, FilePath, 0);
+	}
+	else
+	{
+		SaveGame = Cast<UCPlayerSaveGame>(UGameplayStatics::CreateSaveGameObject(SaveGameClass));
+		SaveData(data);
+	}
 }

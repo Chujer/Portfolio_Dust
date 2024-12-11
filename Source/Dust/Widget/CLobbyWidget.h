@@ -16,3 +16,4 @@ public:
 
 	void UpdatePlayerList_Implementation(const TArray<FPlayerInfo>& PlayerInfos);
 };
+

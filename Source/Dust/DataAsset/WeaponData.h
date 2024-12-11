@@ -24,6 +24,4 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "DoAction")
 	TWeakObjectPtr<class UCDoAction> DoAction;
-	
-
 };

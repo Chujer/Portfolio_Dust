@@ -28,7 +28,8 @@ public:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class UCPlayerSaveGame> SaveGameClass;
 
-	TObjectPtr<class UCPlayerSaveGame> SaveGame;
+	UPROPERTY()
+	class UCPlayerSaveGame* SaveGame;
 
 private:
 	TWeakObjectPtr<class ACharacter> OwnerCharacter;
