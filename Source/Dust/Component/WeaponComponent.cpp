@@ -1,11 +1,14 @@
 #include "Component/WeaponComponent.h"
 
 #include "CLog.h"
+#include "PlayerSaveComponent.h"
 #include "StateComponent.h"
 #include "DataAsset/WeaponData.h"
 #include "DataAsset/WeaponDataAsset.h"
 #include "GameFramework/Character.h"
 #include "Net/UnrealNetwork.h"
+#include "DataAsset/WeaponData.h"
+#include "DataAsset/WeaponDataAsset.h"
 
 
 UWeaponComponent::UWeaponComponent()
@@ -45,7 +48,8 @@ TWeakObjectPtr<UCDoAction> UWeaponComponent::GetDoAction() const
 void UWeaponComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-	
+
+	DOREPLIFETIME(UWeaponComponent, curWeaponIndex);
 }
 
 
@@ -100,6 +104,7 @@ void UWeaponComponent::SetWeaponData_NMC_Implementation(class UWeaponDataAsset* 
 		WeaponData->DoAction->BeginPlay(OwnerCharacter.Get());
 	}
 
+
 	if (!OwnerCharacter.IsValid())
 		return;
 	SetWeaponAnimInstance_NMC();
@@ -117,37 +122,20 @@ void UWeaponComponent::SetWeaponAnimInstance_NMC()
 	
 }
 
-void UWeaponComponent::SetWeaponData_Server_Implementation(UWeaponDataAsset* weaponDataAsset)
+void UWeaponComponent::SetWeaponData_Server_Implementation(int WeaponIndex)
 {
-	if (weaponDataAsset == nullptr)
+	if (DataTable == nullptr || WeaponIndex > DataTable->GetRowNames().Num() || WeaponIndex == 0)
 	{
-		CLog::Print("weaponDataAsset없음");
+		CLog::Print("WeaponIndex > DataTableSize");
 		return;
 	}
+	curWeaponIndex = WeaponIndex;
+	FString temp = FString::FromInt(WeaponIndex);
+
+	FWeaponDataStruct* weaponDataRow = DataTable->FindRow<FWeaponDataStruct>(FName(*temp), FString(""));
 
 	FActorSpawnParameters param;
 	param.Owner = Cast<AActor>(OwnerCharacter);
 	//Attachment의 경우 리플리케이션한 엑터이므로 밖(Server)에서 생성후 매개변수로 전달
-	SetWeaponData_NMC(weaponDataAsset, GetWorld()->SpawnActor<AAttachment>(weaponDataAsset->AttachmentClass, param));
+	SetWeaponData_NMC(weaponDataRow->WeaponDataAsset, GetWorld()->SpawnActor<AAttachment>(weaponDataRow->WeaponDataAsset->AttachmentClass, param));
 }
-
-//void UWeaponComponent::SetWeaponData(UWeaponDataAsset* weaponData)
-//{
-//	if (!weaponData)
-//	{
-//		CLog::Print("weaponData없음");
-//		return;
-//	}
-//	if (CurAttachment != nullptr)
-//		CurAttachment->Destroy();
-//
-//	FActorSpawnParameters param;
-//	param.Owner = Cast<AActor>(OwnerCharacter);
-//	
-//	CurAttachment = GetWorld()->SpawnActor<AAttachment>(weaponData->Attachment, param);
-//
-//	//플레이어 애님 인스턴스를 무기에 맞춰 변경
-//	OwnerCharacter->GetMesh()->SetAnimClass(weaponData->AnimInstance);
-//	OwnerCharacter->GetMesh()->GetAnimInstance()->NativeBeginPlay();
-//}
-

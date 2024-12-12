@@ -46,3 +46,18 @@ public:
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<UCameraShakeBase> CameraShakeClass;
 };
+
+USTRUCT(BlueprintType)
+
+struct FWeaponDataStruct : public FTableRowBase
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString WeaponName = "";
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UWeaponDataAsset* WeaponDataAsset = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UTexture2D* ICon = nullptr;
+};

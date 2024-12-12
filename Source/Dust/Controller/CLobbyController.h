@@ -17,7 +17,7 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 public:
-	UFUNCTION(Client, Reliable)
+	UFUNCTION(BlueprintCallable, Client, Reliable)
 	void CreateLobbyWidget_Client();
 	UFUNCTION(BlueprintCallable)
 	void UpdatePlayerList(const TArray<FPlayerInfo>& PlayerInfos);

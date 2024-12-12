@@ -25,34 +25,30 @@ void UPlayerSaveComponent::BeginPlay()
 	//FilePath += Cast<ACLobbyController>(OwnerCharacter->GetController())->PlayerInfo.PlayerName.ToString();
 	FilePath += OwnerCharacter->GetName();
 	
-	SaveGame = Cast<UCPlayerSaveGame>(UGameplayStatics::CreateSaveGameObject(SaveGameClass));
-	
+
 	if (UGameplayStatics::DoesSaveGameExist(FilePath, 0) == true)	//해당경로에 데이터가 있다면
 	{
 		SaveGame = Cast<UCPlayerSaveGame>(UGameplayStatics::LoadGameFromSlot(FilePath, 0));
+		LoadData();
 		return;
 	}
-	//else
-	//{
-	//	SaveGame = Cast<UCPlayerSaveGame>(UGameplayStatics::CreateSaveGameObject(SaveGameClass));
-	//	//세이브 게임 제작
-	//	//SaveGame = Cast<UCPlayerSaveGame>(UGameplayStatics::CreateSaveGameObject(SaveGameClass));
-	//}
+	else
+	{
+		SaveGame = Cast<UCPlayerSaveGame>(UGameplayStatics::CreateSaveGameObject(SaveGameClass));
+	}
 	
 }
 
 void UPlayerSaveComponent::LoadData()
 {
-	if (OwnerCharacter.IsValid() || SaveGame == nullptr)
+	if (!OwnerCharacter.IsValid()|| SaveGame == nullptr)
 		return;
 
-	OwnerCharacter->GetComponentByClass<UWeaponComponent>()->SetWeaponData_Server(SaveGame->WeaponDataAsset);
+	OwnerCharacter->GetComponentByClass<UWeaponComponent>()->SetWeaponData_Server(SaveGame->WeaponIndex);
 }
 
-void UPlayerSaveComponent::SaveData(UWeaponDataAsset* data)
+void UPlayerSaveComponent::SaveData()
 {
-	int a = 0;
-
 	if (OwnerCharacter.IsValid() && SaveGame == nullptr)
 		return;
 
@@ -60,12 +56,12 @@ void UPlayerSaveComponent::SaveData(UWeaponDataAsset* data)
 
 	if (UGameplayStatics::DoesSaveGameExist(FilePath, 0) == true)		//해당경로에 데이터가 있다면
 	{
-		SaveGame->WeaponDataAsset = OwnerCharacter->GetComponentByClass<UWeaponComponent>()->GetWeaponDataAsset();
+		SaveGame->WeaponIndex = OwnerCharacter->GetComponentByClass<UWeaponComponent>()->curWeaponIndex;
 		UGameplayStatics::SaveGameToSlot(SaveGame, FilePath, 0);
 	}
 	else
-	{
+	{ 
 		SaveGame = Cast<UCPlayerSaveGame>(UGameplayStatics::CreateSaveGameObject(SaveGameClass));
-		SaveData(data);
+		SaveData();
 	}
 }

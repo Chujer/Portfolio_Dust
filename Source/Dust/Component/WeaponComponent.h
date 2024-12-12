@@ -4,8 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "DataAsset/WeaponData.h"
-#include "DataAsset/WeaponDataAsset.h"
 #include "WeaponComponent.generated.h"
 
 
@@ -48,7 +46,7 @@ public:
 
 public:
 	UFUNCTION(BlueprintCallable, Reliable, Server)
-	void SetWeaponData_Server(class UWeaponDataAsset* weaponDataAsset);
+	void SetWeaponData_Server(int WeaponIndex);
 
 	//Attachment의 경우 리플리케이션한 엑터이므로 밖(Server)에서 생성후 매개변수로 가져옴
 	UFUNCTION(BlueprintCallable, Reliable, NetMulticast)
@@ -62,11 +60,13 @@ private:
 
 private:
 	TWeakObjectPtr<ACharacter> OwnerCharacter;
-
-	UPROPERTY(EditAnywhere)
-	UWeaponDataAsset* WeaponDataAsset;
 	
-	UPROPERTY(EditAnywhere)
+	class UWeaponDataAsset* WeaponDataAsset;
 	class UWeaponData* WeaponData;
-	
+
+public:
+	UPROPERTY(Replicated, BlueprintReadOnly)
+	int curWeaponIndex = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UDataTable* DataTable;
 };

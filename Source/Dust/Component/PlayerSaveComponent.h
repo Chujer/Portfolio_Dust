@@ -22,7 +22,7 @@ public:
 	void LoadData();
 
 	UFUNCTION(BlueprintCallable)
-	void SaveData(UWeaponDataAsset* data);
+	void SaveData();
 
 public:
 	UPROPERTY(EditAnywhere)

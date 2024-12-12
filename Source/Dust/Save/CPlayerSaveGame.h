@@ -13,7 +13,7 @@ class DUST_API UCPlayerSaveGame : public USaveGame
 
 public:
 	UPROPERTY(SaveGame)
-	UWeaponDataAsset* WeaponDataAsset;
+	int WeaponIndex = 0;
 	/*UPROPERTY()
 	FTransform PlayerPos;*/
 };

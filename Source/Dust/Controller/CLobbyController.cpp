@@ -20,7 +20,6 @@ void ACLobbyController::CreateLobbyWidget_Client_Implementation()
 void ACLobbyController::BeginPlay()
 {
 	Super::BeginPlay();
-	CreateLobbyWidget_Client();
 }
 
 void ACLobbyController::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
