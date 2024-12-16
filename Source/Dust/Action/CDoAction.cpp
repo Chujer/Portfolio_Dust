@@ -23,6 +23,9 @@ void UCDoAction::BeginPlay(ACharacter* InOwner)
 
 void UCDoAction::DoAction_Server()
 {
+	if (!StateComponent.IsValid())
+		return;
+
 	StateComponent->SetActionMode();
 }
 

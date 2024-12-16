@@ -40,9 +40,12 @@ ACPlayerCharacter::ACPlayerCharacter()
 	FollowCamera->bUsePawnControlRotation = false; 
 
 	MoveComponent = CreateDefaultSubobject<UMoveComponent>("MoveComponent");
+	MoveComponent->SetIsReplicated(true);
 	SaveComponent = CreateDefaultSubobject<UPlayerSaveComponent>("SaveComponent");
+	SaveComponent->OnPostComponentBeginPlay.AddDynamic(this, &ACPlayerCharacter::OnEndComponentBeginPlay);
 	WeaponComponent = CreateDefaultSubobject<UWeaponComponent>("WeaponComponent");
 	WeaponComponent->SetIsReplicated(true);
+	WeaponComponent->OnPostComponentBeginPlay.AddDynamic(this, &ACPlayerCharacter::OnEndComponentBeginPlay);
 	StateComponent = CreateDefaultSubobject<UStateComponent>("StateComponent");
 	StateComponent->SetIsReplicated(true);
 
@@ -88,6 +91,7 @@ void ACPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 		Input->BindAction(ActionAction, ETriggerEvent::Triggered, WeaponComponent.Get(), &UWeaponComponent::DoAction_Server);
 	}
 }
+
 
 void ACPlayerCharacter::NotifyActorBeginOverlap(AActor* OtherActor)
 {
@@ -138,11 +142,15 @@ void ACPlayerCharacter::PlayInteract()
 		InteractionObject->Interact(this);
 }
 
-void ACPlayerCharacter::LoadPlayerData()
+void ACPlayerCharacter::OnEndComponentBeginPlay()
 {
+	if (IsLocallyControlled() == false)
+		return;
+	CompEndBeginCount++;
+	if (2 <= CompEndBeginCount)
+		PostComponentBeginPlay();
 }
 
-void ACPlayerCharacter::LoadPlayerData_NMC_Implementation()
+void ACPlayerCharacter::PostComponentBeginPlay_Implementation()
 {
-	SaveComponent->LoadData();
 }

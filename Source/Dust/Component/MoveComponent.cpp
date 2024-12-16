@@ -1,6 +1,7 @@
 #include "Component/MoveComponent.h"
 
 #include "GameFramework/Character.h"
+#include "Net/UnrealNetwork.h"
 
 UMoveComponent::UMoveComponent()
 {
@@ -12,7 +13,7 @@ UMoveComponent::UMoveComponent()
 void UMoveComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 	OwnerCharacter = Cast<ACharacter>(GetOwner());
 }
 
@@ -21,6 +22,12 @@ void UMoveComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+}
+
+void UMoveComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(UMoveComponent, IsStop);
 }
 
 

@@ -33,9 +33,10 @@ void ACLobbyController::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 void ACLobbyController::SetPlayerInfo()
 {
 	UAdvancedSessionsLibrary::GetUniqueNetID(this, UNetID);
+	if (!UNetID.IsValid())
+		return;
 	PlayerInfo.PlayerName = FText::FromString(UAdvancedSteamFriendsLibrary::GetSteamPersonaName(UNetID));
-	//PlayerInfo.Character = Cast<ACharacter>(GetPawn());
-	//PlayerInfo.PlayerName = FText::FromString(Player.GetName());
+	PlayerInfo.PController = this;
 }
 
 void ACLobbyController::UpdatePlayerList(const TArray<FPlayerInfo>& PlayerInfos)

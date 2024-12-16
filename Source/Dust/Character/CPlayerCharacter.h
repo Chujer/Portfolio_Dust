@@ -7,6 +7,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "CPlayerCharacter.generated.h"
 
+
+
 UCLASS()
 class DUST_API ACPlayerCharacter : public ACharacter
 {
@@ -22,7 +24,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
+	
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 	virtual void NotifyActorEndOverlap(AActor* OtherActor) override;
 
@@ -32,15 +34,15 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	class UTextRenderComponent* InteractText;
-
-	void LoadPlayerData();
-
-	UFUNCTION(BlueprintCallable, NetMulticast, Reliable)
-	void LoadPlayerData_NMC();
-
-
+	
 	UFUNCTION(BlueprintCallable)
 	FString GetClientName() { return GetWorld()->GetFirstPlayerController()->GetName(); }
+
+	UFUNCTION()
+	void OnEndComponentBeginPlay();
+
+	UFUNCTION(BlueprintNativeEvent)
+	void PostComponentBeginPlay();
 	//TODO/////////////////// /////////////////////////////////////////
 		
 public:
@@ -69,9 +71,9 @@ public:
 	 /////////////////////ÄÄÆ÷³ÍÆ®
 public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, meta = (AllowPrivateAccess = true))
-		TObjectPtr<class UMoveComponent> MoveComponent;
+	TObjectPtr<class UMoveComponent> MoveComponent;
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-		TObjectPtr<class UPlayerSaveComponent> SaveComponent;
+	TObjectPtr<class UPlayerSaveComponent> SaveComponent;
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	TObjectPtr<class UWeaponComponent> WeaponComponent;
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
@@ -82,4 +84,8 @@ public:
 		TObjectPtr<class IInteractionInterface> InteractionObject;
 	UPROPERTY()
 		float InteractionDistance = 10000.0f;
+
+private:
+	int CompCount = 0;
+	int CompEndBeginCount = 0;
 };

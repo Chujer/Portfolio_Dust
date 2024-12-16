@@ -20,14 +20,16 @@ protected:
 
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 
 public:
 	FORCEINLINE void SetStop(bool inStop) { IsStop = inStop; }
-
+	UFUNCTION(BlueprintCallable)
+	bool GetStop() { return IsStop; }
 public:
 	UFUNCTION()
 	void Move(const FInputActionValue& Value);
-	
 	UFUNCTION()
 	void Look(const FInputActionValue& Value);
 
@@ -40,5 +42,6 @@ private:
 	//키입력값이 저장될 변수
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	FVector2D MovementVector;
+	UPROPERTY(EditAnywhere, Replicated)
 	bool IsStop = false;
 };

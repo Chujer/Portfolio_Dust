@@ -7,6 +7,8 @@
 #include "WeaponComponent.generated.h"
 
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPostComponentBeginPlay);
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class DUST_API UWeaponComponent : public UActorComponent
 {
@@ -50,13 +52,18 @@ public:
 
 	//Attachment의 경우 리플리케이션한 엑터이므로 밖(Server)에서 생성후 매개변수로 가져옴
 	UFUNCTION(BlueprintCallable, Reliable, NetMulticast)
-	void SetWeaponData_NMC(class UWeaponDataAsset* weaponDataAsset, AAttachment* Attachment);
+	void SetWeaponData_NMC(int WeaponIndex, AAttachment* Attachment);
 
 	UFUNCTION()
 	void SetWeaponAnimInstance_NMC();
-	
+
+public:
+	////저장한 파일을 읽어 무기 설정
+	UFUNCTION(BlueprintCallable)
+	void LoadSetWeaponData();
 private:
 	TWeakObjectPtr<class UStateComponent> StateComponent;
+	TWeakObjectPtr<class UPlayerSaveComponent> SaveComponent;
 
 private:
 	TWeakObjectPtr<ACharacter> OwnerCharacter;
@@ -65,8 +72,12 @@ private:
 	class UWeaponData* WeaponData;
 
 public:
-	UPROPERTY(Replicated, BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly)
 	int curWeaponIndex = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UDataTable* DataTable;
+
+public:
+	// 설정한 컴포넌트의 BeginPlay가 완료된 순간
+	FOnPostComponentBeginPlay OnPostComponentBeginPlay;
 };

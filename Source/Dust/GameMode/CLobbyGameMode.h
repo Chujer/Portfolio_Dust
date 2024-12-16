@@ -16,4 +16,5 @@ public:
 public:
 	TArray<class ACLobbyController*> ConnectedPlayers;
 	TArray<FPlayerInfo> ConnectedPlayerInfos;
+	
 };

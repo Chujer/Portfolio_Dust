@@ -5,6 +5,7 @@
 #include "DataAsset/WeaponDataAsset.h"
 #include "PlayerSaveComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPostSaveCompBeginPlay);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class DUST_API UPlayerSaveComponent : public UActorComponent
@@ -21,6 +22,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void LoadData();
 
+	UFUNCTION()
+	void LoadSetWeaponData();
+
 	UFUNCTION(BlueprintCallable)
 	void SaveData();
 
@@ -30,6 +34,9 @@ public:
 
 	UPROPERTY()
 	class UCPlayerSaveGame* SaveGame;
+
+	// 설정한 컴포넌트의 BeginPlay가 완료된 순간
+	FOnPostSaveCompBeginPlay OnPostComponentBeginPlay;
 
 private:
 	TWeakObjectPtr<class ACharacter> OwnerCharacter;

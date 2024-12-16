@@ -13,7 +13,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	bool IsReady = false;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	TWeakObjectPtr<ACharacter> Character;
+	TWeakObjectPtr<class ACLobbyController> PController;
 
 };
 
@@ -60,4 +60,7 @@ public:
 	class UWeaponDataAsset* WeaponDataAsset = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UTexture2D* ICon = nullptr;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int WeaponNum = 0;
 };
