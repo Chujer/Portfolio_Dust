@@ -38,11 +38,13 @@ public:
 	UFUNCTION(BlueprintCallable)
 	FString GetClientName() { return GetWorld()->GetFirstPlayerController()->GetName(); }
 
-	UFUNCTION()
-	void OnEndComponentBeginPlay();
+	UFUNCTION(BlueprintCallable, Reliable, Server)
+	void LastPlayerInGame_Server();
+	UFUNCTION(Client, Reliable)
+	void LastPlayerInGame_Client();
 
-	UFUNCTION(BlueprintNativeEvent)
-	void PostComponentBeginPlay();
+
+	
 	//TODO/////////////////// /////////////////////////////////////////
 		
 public:
@@ -86,6 +88,6 @@ public:
 		float InteractionDistance = 10000.0f;
 
 private:
-	int CompCount = 0;
+	//BeginPlay가 끝난 Component의 갯수
 	int CompEndBeginCount = 0;
 };

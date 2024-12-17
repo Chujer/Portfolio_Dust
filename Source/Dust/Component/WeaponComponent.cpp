@@ -26,8 +26,6 @@ void UWeaponComponent::BeginPlay()
 
 	StateComponent = OwnerCharacter->GetComponentByClass<UStateComponent>();
 	SaveComponent  = OwnerCharacter->GetComponentByClass<UPlayerSaveComponent>();
-
-	OnPostComponentBeginPlay.Broadcast();
 }
 
 TWeakObjectPtr<AAttachment> UWeaponComponent::GetAttachment() const
@@ -97,7 +95,7 @@ void UWeaponComponent::SetWeaponData_NMC_Implementation(int WeaponIndex, AAttach
 	curWeaponIndex = WeaponIndex;
 	FString temp = FString::FromInt(WeaponIndex);
 	FWeaponDataStruct* weaponDataRow = DataTable->FindRow<FWeaponDataStruct>(FName(*temp), FString(""));
-
+	
 	WeaponDataAsset = weaponDataRow->WeaponDataAsset;
 
 	//변경된 WeaponIndex값을 Save

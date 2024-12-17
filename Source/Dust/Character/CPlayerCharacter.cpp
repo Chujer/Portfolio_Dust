@@ -1,5 +1,6 @@
 #include "Character/CPlayerCharacter.h"
 
+#include "CLog.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Component/MoveComponent.h"
@@ -7,7 +8,10 @@
 #include "Component/StateComponent.h"
 #include "Component/WeaponComponent.h"
 #include "Components/TextRenderComponent.h"
+#include "Controller/CLobbyController.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/GameModeBase.h"
+#include "GameInstance/CGameInstance.h"
 #include "Interface/InteractionInterface.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Utility/CHelpers.h"
@@ -42,10 +46,8 @@ ACPlayerCharacter::ACPlayerCharacter()
 	MoveComponent = CreateDefaultSubobject<UMoveComponent>("MoveComponent");
 	MoveComponent->SetIsReplicated(true);
 	SaveComponent = CreateDefaultSubobject<UPlayerSaveComponent>("SaveComponent");
-	SaveComponent->OnPostComponentBeginPlay.AddDynamic(this, &ACPlayerCharacter::OnEndComponentBeginPlay);
 	WeaponComponent = CreateDefaultSubobject<UWeaponComponent>("WeaponComponent");
 	WeaponComponent->SetIsReplicated(true);
-	WeaponComponent->OnPostComponentBeginPlay.AddDynamic(this, &ACPlayerCharacter::OnEndComponentBeginPlay);
 	StateComponent = CreateDefaultSubobject<UStateComponent>("StateComponent");
 	StateComponent->SetIsReplicated(true);
 
@@ -69,6 +71,20 @@ void ACPlayerCharacter::BeginPlay()
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
+		}
+	}
+
+	//마지막 클라이언트의 캐릭터가 생성된 경우 
+	if (Controller != nullptr && Controller->IsLocalController())
+	{
+		ACLobbyController* lobbyController = Cast<ACLobbyController>(Controller);
+		UCGameInstance* gameInstance = Cast<UCGameInstance>(GetGameInstance());
+		if (lobbyController == nullptr || gameInstance == nullptr)
+			return;
+
+		if (lobbyController->ConnectedPlayerInfo.Num() >= gameInstance->MissionPlayerCount)
+		{
+			LastPlayerInGame_Server();
 		}
 	}
 }
@@ -142,15 +158,28 @@ void ACPlayerCharacter::PlayInteract()
 		InteractionObject->Interact(this);
 }
 
-void ACPlayerCharacter::OnEndComponentBeginPlay()
+void ACPlayerCharacter::LastPlayerInGame_Server_Implementation()
 {
-	if (IsLocallyControlled() == false)
+	AGameModeBase* gameMode = UGameplayStatics::GetGameMode(this);
+	if (gameMode == nullptr)
 		return;
-	CompEndBeginCount++;
-	if (2 <= CompEndBeginCount)
-		PostComponentBeginPlay();
+
+	int playerCount = gameMode->GetNumPlayers();
+
+	//게임모드 안의 모든 컨트롤러들의 LoadSetWeaponData(무기불러오기)를 실행
+	for(int i = 0; i < playerCount; ++i)
+	{
+		ACPlayerCharacter* player = Cast<ACPlayerCharacter>(UGameplayStatics::GetPlayerController(GetWorld(), i)->GetPawn());
+		if(player == nullptr)
+			continue;
+		player->LastPlayerInGame_Client();
+	}
 }
 
-void ACPlayerCharacter::PostComponentBeginPlay_Implementation()
+void ACPlayerCharacter::LastPlayerInGame_Client_Implementation()
 {
+	if (WeaponComponent == nullptr)
+		return;
+	WeaponComponent->LoadSetWeaponData();
 }
+

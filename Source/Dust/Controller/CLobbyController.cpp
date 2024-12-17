@@ -2,20 +2,14 @@
 
 #include "AdvancedSteamFriendsLibrary.h"
 #include "AdvancedSessionsLibrary.h"
+#include "CLog.h"
 #include "Net/UnrealNetwork.h"
 #include "Blueprint/UserWidget.h"
 #include "GameFramework/Character.h"
+#include "GameInstance/CGameInstance.h"
+#include "GameMode/CLobbyGameMode.h"
 #include "Widget/CLobbyWidget.h"
 
-
-void ACLobbyController::CreateLobbyWidget_Client_Implementation()
-{
-	LobbyWidget = Cast<UCLobbyWidget>(CreateWidget(this, LobbyWidgetClass));
-	
-	LobbyWidget->AddToViewport();
-	if(!!LobbyWidget)
-		LobbyWidget->UpdatePlayerList(ConnectedPlayerInfo);
-}
 
 void ACLobbyController::BeginPlay()
 {
@@ -30,6 +24,18 @@ void ACLobbyController::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 	DOREPLIFETIME(ACLobbyController, PlayerInfo);
 }
 
+void ACLobbyController::CreateLobbyWidget_Client_Implementation()
+{
+	if (!IsLocalPlayerController())
+		return;
+	LobbyWidget = Cast<UCLobbyWidget>(CreateWidget(this, LobbyWidgetClass));
+
+
+	LobbyWidget->AddToViewport();
+	if (!!LobbyWidget)
+		LobbyWidget->UpdatePlayerList(ConnectedPlayerInfo);
+}
+
 void ACLobbyController::SetPlayerInfo()
 {
 	UAdvancedSessionsLibrary::GetUniqueNetID(this, UNetID);
@@ -37,6 +43,24 @@ void ACLobbyController::SetPlayerInfo()
 		return;
 	PlayerInfo.PlayerName = FText::FromString(UAdvancedSteamFriendsLibrary::GetSteamPersonaName(UNetID));
 	PlayerInfo.PController = this;
+}
+
+void ACLobbyController::SetGIPlayerCount(int count)
+{
+	if (HasAuthority())
+		CLog::Print("server : " + GetName());
+	else
+		CLog::Print("Client : " + GetName());
+
+	for (FPlayerInfo connectPlayerInfo : ConnectedPlayerInfo)
+	{
+		if (connectPlayerInfo.PController == nullptr)
+			continue;
+		if (UCGameInstance* instance = Cast<UCGameInstance>(connectPlayerInfo.PController->GetGameInstance()))
+		{
+			instance->MissionPlayerCount = count;
+		}
+	}
 }
 
 void ACLobbyController::UpdatePlayerList(const TArray<FPlayerInfo>& PlayerInfos)

@@ -7,7 +7,7 @@
 #include "WeaponComponent.generated.h"
 
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPostComponentBeginPlay);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEndBeginWeaponComp);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class DUST_API UWeaponComponent : public UActorComponent
@@ -76,8 +76,5 @@ public:
 	int curWeaponIndex = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UDataTable* DataTable;
-
-public:
-	// 설정한 컴포넌트의 BeginPlay가 완료된 순간
-	FOnPostComponentBeginPlay OnPostComponentBeginPlay;
+	
 };

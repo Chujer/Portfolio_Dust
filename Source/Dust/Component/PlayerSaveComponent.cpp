@@ -36,8 +36,7 @@ void UPlayerSaveComponent::BeginPlay()
 	{
 		SaveGame = Cast<UCPlayerSaveGame>(UGameplayStatics::CreateSaveGameObject(SaveGameClass));
 	}
-
-	OnPostComponentBeginPlay.Broadcast();
+	
 	
 }
 

@@ -15,7 +15,6 @@ public:
 	virtual void BeginPlay() override;
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-
 public:
 	UFUNCTION(BlueprintCallable, Client, Reliable)
 	void CreateLobbyWidget_Client();
@@ -24,7 +23,10 @@ public:
 
 	void SetPlayerInfo();
 
-
+	
+	
+	UFUNCTION(BlueprintCallable)
+	void SetGIPlayerCount(int count);
 private:
 	//Widget
 	UPROPERTY(EditAnywhere)

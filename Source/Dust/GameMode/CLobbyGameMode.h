@@ -13,6 +13,7 @@ class DUST_API ACLobbyGameMode : public AGameModeBase
 public:
 	virtual void OnPostLogin(AController* NewPlayer) override;
 
+
 public:
 	TArray<class ACLobbyController*> ConnectedPlayers;
 	TArray<FPlayerInfo> ConnectedPlayerInfos;
