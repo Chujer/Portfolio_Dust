@@ -43,6 +43,8 @@ public:
 
 	UFUNCTION(Reliable, Server)
 	void EndDoAction_Server();
+	UFUNCTION(Reliable, NetMulticast)
+	void EndDoAction_NMC();
 
 
 

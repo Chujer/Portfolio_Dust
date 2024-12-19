@@ -12,30 +12,32 @@ class DUST_API UCDoAction : public UObject
 
 public:
 	UCDoAction();
-
-public:
-
+	
 public:
 	virtual void BeginPlay(class ACharacter* InOwner);
 
 public:
+	virtual void DoActionTrigger();
 	virtual void DoAction_Server();
+	virtual void DoAction_NMC();
 	virtual void EndDoAtion_Server();
-	void DoAction_NMC();
+	virtual void EndDoAtion_NMC();
 
 public:
 	void LaunchCharacter(FDoActionData DoActionData, class ACharacter* LaunchCharacter);
 
-private:
+protected:
+	TWeakObjectPtr<ACharacter> OwnerCharacter;
+
+protected:
 	TWeakObjectPtr<class UStateComponent> StateComponent;
 	TWeakObjectPtr<class UMoveComponent> MoveComponent;
 
-private:
-	TWeakObjectPtr<ACharacter> OwnerCharacter;
-
-	UPROPERTY(EditAnywhere)
-	TArray<struct FDoActionData> DoActionDatas;
-private:
+protected:
 	unsigned int ActionIndex = 0;
 	unsigned int MaxActionIndex = 0;
+
+private:
+	UPROPERTY(EditAnywhere)
+	TArray<struct FDoActionData> DoActionDatas;
 };

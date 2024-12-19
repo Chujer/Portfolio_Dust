@@ -9,6 +9,7 @@
 #include "Net/UnrealNetwork.h"
 #include "DataAsset/WeaponData.h"
 #include "DataAsset/WeaponDataAsset.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 
 UWeaponComponent::UWeaponComponent()
@@ -64,6 +65,8 @@ void UWeaponComponent::DoAction_Server_Implementation()
 	if (curWeaponIndex == 0)
 		return;
 
+	GetDoAction()->DoActionTrigger();
+
 	if (StateComponent->GetStateType() != EStateType::Idle)
 		return;
 
@@ -84,12 +87,16 @@ void UWeaponComponent::EndDoAction_Server_Implementation()
 	if (GetDoAction() == nullptr)
 		return;
 
-	GetDoAction()->EndDoAtion_Server() ;
+	GetDoAction()->EndDoAtion_Server();
+	EndDoAction_NMC();
 }
 
 
 void UWeaponComponent::SetWeaponData_NMC_Implementation(int WeaponIndex, AAttachment* Attachment)
 {
+	OwnerCharacter->bUseControllerRotationYaw = true;
+	OwnerCharacter->GetCharacterMovement()->bOrientRotationToMovement = false;
+
 	//기존 curWeaponIndex를 Replication해 사용하려 했으나 
 	//값의 변경이 Server에서 이루어 지기전에 저장 함수가 실행되는 문제가 발생해 NMC로 값을 수동으로 변경
 	curWeaponIndex = WeaponIndex;
@@ -118,6 +125,11 @@ void UWeaponComponent::SetWeaponData_NMC_Implementation(int WeaponIndex, AAttach
 	SetWeaponAnimInstance_NMC();
 }
 
+void UWeaponComponent::EndDoAction_NMC_Implementation()
+{
+	GetDoAction()->EndDoAtion_NMC();
+}
+
 void UWeaponComponent::SetWeaponAnimInstance_NMC()
 {
 	if (!OwnerCharacter.IsValid())
@@ -143,6 +155,7 @@ void UWeaponComponent::SetWeaponData_Server_Implementation(int WeaponIndex)
 		CLog::Print("WeaponIndex > DataTableSize");
 		return;
 	}
+
 	curWeaponIndex = WeaponIndex;
 	FString temp = FString::FromInt(WeaponIndex);
 

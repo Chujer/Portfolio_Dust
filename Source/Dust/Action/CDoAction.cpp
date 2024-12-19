@@ -10,6 +10,7 @@
 #include "Net/UnrealNetwork.h"
 UCDoAction::UCDoAction()
 {
+	MaxActionIndex = DoActionDatas.Num();
 }
 void UCDoAction::BeginPlay(ACharacter* InOwner)
 {
@@ -19,6 +20,10 @@ void UCDoAction::BeginPlay(ACharacter* InOwner)
 		StateComponent = OwnerCharacter->GetComponentByClass<UStateComponent>();
 		MoveComponent = OwnerCharacter->GetComponentByClass<UMoveComponent>();
 	}
+}
+
+void UCDoAction::DoActionTrigger()
+{
 }
 
 void UCDoAction::DoAction_Server()
@@ -46,6 +51,11 @@ void UCDoAction::EndDoAtion_Server()
 {
 	StateComponent->SetIdleMode();
 	MoveComponent->SetStop(false);
+}
+
+void UCDoAction::EndDoAtion_NMC()
+{
+	ActionIndex = 0;
 }
 
 void UCDoAction::LaunchCharacter(FDoActionData DoActionData, ACharacter* LaunchCharacter)

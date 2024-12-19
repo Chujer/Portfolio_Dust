@@ -51,7 +51,7 @@ void UMoveComponent::Move(const FInputActionValue& Value)
 		// get right vector 
 		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
-		// add movement 
+		// add movement
 		OwnerCharacter->AddMovementInput(ForwardDirection, MovementVector.Y);
 		OwnerCharacter->AddMovementInput(RightDirection, MovementVector.X);
 	}

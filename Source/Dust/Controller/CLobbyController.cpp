@@ -47,11 +47,7 @@ void ACLobbyController::SetPlayerInfo()
 
 void ACLobbyController::SetGIPlayerCount(int count)
 {
-	if (HasAuthority())
-		CLog::Print("server : " + GetName());
-	else
-		CLog::Print("Client : " + GetName());
-
+	//미션에 참가한 총 플레이어 수
 	for (FPlayerInfo connectPlayerInfo : ConnectedPlayerInfo)
 	{
 		if (connectPlayerInfo.PController == nullptr)

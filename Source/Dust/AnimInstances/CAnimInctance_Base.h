@@ -21,11 +21,11 @@ public:
 
 protected:
 	//캐릭터 정보를 받는 변수
-	UPROPERTY(BlueprintReadOnly, Category = "Character_Info")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character_Info")
 		float Speed;
 	UPROPERTY(BlueprintReadOnly, Category = "Character_Info")
 		float Pitch;
-	UPROPERTY(BlueprintReadOnly, Category = "Character_Info")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character_Info")
 		float Direction;
 private:
 	TWeakObjectPtr<ACharacter> Character;
