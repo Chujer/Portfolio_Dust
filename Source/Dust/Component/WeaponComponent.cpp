@@ -3,6 +3,7 @@
 #include "CLog.h"
 #include "PlayerSaveComponent.h"
 #include "StateComponent.h"
+#include "Character/CPlayerCharacter.h"
 #include "DataAsset/WeaponData.h"
 #include "DataAsset/WeaponDataAsset.h"
 #include "GameFramework/Character.h"
@@ -65,6 +66,8 @@ void UWeaponComponent::DoAction_Server_Implementation()
 	if (curWeaponIndex == 0)
 		return;
 
+	if (!GetDoAction().IsValid())
+		return;
 	GetDoAction()->DoActionTrigger();
 
 	if (StateComponent->GetStateType() != EStateType::Idle)
@@ -94,7 +97,10 @@ void UWeaponComponent::EndDoAction_Server_Implementation()
 
 void UWeaponComponent::SetWeaponData_NMC_Implementation(int WeaponIndex, AAttachment* Attachment)
 {
-	OwnerCharacter->bUseControllerRotationYaw = true;
+	if (!OwnerCharacter.IsValid())
+		return;
+
+	Cast<ACPlayerCharacter>(OwnerCharacter)->IsUseControllerRotYaw = true;	
 	OwnerCharacter->GetCharacterMovement()->bOrientRotationToMovement = false;
 
 	//기존 curWeaponIndex를 Replication해 사용하려 했으나 
@@ -127,6 +133,8 @@ void UWeaponComponent::SetWeaponData_NMC_Implementation(int WeaponIndex, AAttach
 
 void UWeaponComponent::EndDoAction_NMC_Implementation()
 {
+	if (!GetDoAction().IsValid())
+		return;
 	GetDoAction()->EndDoAtion_NMC();
 }
 

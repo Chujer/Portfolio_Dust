@@ -47,6 +47,19 @@ public:
 		TSubclassOf<UCameraShakeBase> CameraShakeClass;
 };
 
+USTRUCT()
+struct FEvadeData
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere)
+	UAnimMontage* Montage = nullptr;
+	UPROPERTY(EditAnywhere)
+	float PlayRate = 1.0f;
+	
+};
+
 USTRUCT(BlueprintType)
 
 struct FWeaponDataStruct : public FTableRowBase

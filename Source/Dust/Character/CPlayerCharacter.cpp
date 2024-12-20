@@ -3,6 +3,7 @@
 #include "CLog.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Component/EvadeComponent.h"
 #include "Component/MoveComponent.h"
 #include "Component/PlayerSaveComponent.h"
 #include "Component/StateComponent.h"
@@ -50,6 +51,8 @@ ACPlayerCharacter::ACPlayerCharacter()
 	WeaponComponent->SetIsReplicated(true);
 	StateComponent = CreateDefaultSubobject<UStateComponent>("StateComponent");
 	StateComponent->SetIsReplicated(true);
+	EvadeComponent = CreateDefaultSubobject<UEvadeComponent>("EvadeComponent");
+	EvadeComponent->SetIsReplicated(true);
 
 	///////////////////////////////////////////////////
 	InteractText = CreateDefaultSubobject<UTextRenderComponent>("InteractText");
@@ -93,6 +96,27 @@ void ACPlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	//UseControllerRotationYaw의 활성화시 캐릭터의 회전이 뚝끊겨보이는 것을 보간해서 부드러운 회전으로 설정ㅠ
+	if(IsUseControllerRotYaw)
+	{
+		FRotator currentRotation = GetActorRotation();
+		FRotator targetRotation = GetActorRotation();
+		targetRotation.Yaw = GetControlRotation().Yaw;
+		FRotator newRotation = UKismetMathLibrary::RInterpTo(currentRotation, targetRotation, DeltaTime, 15.0f);
+		SetActorRotation(newRotation);
+
+		CLog::Print(UKismetMathLibrary::NormalizeAxis(currentRotation.Yaw) , 1, 10, FColor::Red);
+		CLog::Print(UKismetMathLibrary::NormalizeAxis(targetRotation.Yaw), 2, 10, FColor::Red);
+
+		
+
+		if (UKismetMathLibrary::NearlyEqual_FloatFloat(UKismetMathLibrary::NormalizeAxis(currentRotation.Yaw),
+			UKismetMathLibrary::NormalizeAxis(targetRotation.Yaw), NealyControllerGap))
+		{
+			bUseControllerRotationYaw = true;
+			IsUseControllerRotYaw = false;
+		}
+	}
 }
 
 void ACPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -101,10 +125,12 @@ void ACPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	if(UEnhancedInputComponent* Input = Cast< UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		Input->BindAction(MoveAction, ETriggerEvent::Triggered,MoveComponent.Get(), &UMoveComponent::Move);
+		Input->BindAction(MoveAction, ETriggerEvent::Triggered,EvadeComponent.Get(), &UEvadeComponent::UpdateMoveAxis);
 		Input->BindAction(LookAction, ETriggerEvent::Triggered, MoveComponent.Get(), &UMoveComponent::Look);
 		Input->BindAction(LookAction, ETriggerEvent::Triggered, MoveComponent.Get(), &UMoveComponent::Look);
 		Input->BindAction(InteractionAction, ETriggerEvent::Triggered, this, &ACPlayerCharacter::PlayInteract);
 		Input->BindAction(ActionAction, ETriggerEvent::Triggered, WeaponComponent.Get(), &UWeaponComponent::DoAction_Server);
+		Input->BindAction(EvadeAction, ETriggerEvent::Triggered, EvadeComponent.Get(), &UEvadeComponent::Evade_Server);
 	}
 }
 

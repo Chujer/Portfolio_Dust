@@ -19,6 +19,8 @@ public:
 	
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
+	FORCEINLINE float GetDirection() { return Direction; }
+
 protected:
 	//캐릭터 정보를 받는 변수
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character_Info")

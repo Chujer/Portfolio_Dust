@@ -20,8 +20,8 @@ public:
 	TSubclassOf<UAnimInstance> AnimInstance;
 public:
 	UPROPERTY(EditAnywhere, Category = "Attachment")
-	TWeakObjectPtr<class AAttachment> Attachment;
+	TObjectPtr<class AAttachment> Attachment;
 
 	UPROPERTY(EditAnywhere, Category = "DoAction")
-	TWeakObjectPtr<class UCDoAction> DoAction;
+	TObjectPtr<class UCDoAction> DoAction;
 };

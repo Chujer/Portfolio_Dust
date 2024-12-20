@@ -13,6 +13,9 @@ void UEndAction::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Ani
 {
 	Super::Notify(MeshComp, Animation, EventReference);
 
+	if(Cast<ACPlayerCharacter>(MeshComp->GetOwner()))
+		Cast<ACPlayerCharacter>(MeshComp->GetOwner())->IsUseControllerRotYaw = true;
+
 	if (UWeaponComponent* weaponComponent = MeshComp->GetOwner()->GetComponentByClass<UWeaponComponent>())
 	{
 		weaponComponent->EndDoAction_Server();

@@ -40,7 +40,7 @@ void UCAnimInctance_Base::NativeUpdateAnimation(float DeltaSeconds)
 	InterpRotation = UKismetMathLibrary::RInterpTo(InterpRotation, delta, DeltaSeconds, 25);
 
 	CLog::Print(FString("InterpRotation"), 5, 10, FColor::Green);
-	CLog::Print(InterpRotation, 6, 10, FColor::Green);
+	CLog::Print(InterpRotation, 8, 10, FColor::Green);
 	Direction = InterpRotation.Yaw;
 	CLog::Print(FString("Direction"), 6, 10, FColor::Cyan);
 	CLog::Print(Direction, 7, 10, FColor::Cyan);

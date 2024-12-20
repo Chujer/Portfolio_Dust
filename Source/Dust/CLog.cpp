@@ -34,6 +34,11 @@ void CLog::Print(int32 InValue, int32 InKey, float InDuration, FColor InColor)
 	GEngine->AddOnScreenDebugMessage(InKey, InDuration, InColor, FString::FromInt(InValue));
 }
 
+void CLog::Print(double InValue, int32 InKey, float InDuration, FColor InColor)
+{
+	GEngine->AddOnScreenDebugMessage(InKey, InDuration, InColor, FString::FromInt(InValue));
+}
+
 void CLog::Print(bool InValue, int32 InKey, float InDuration, FColor InColor)
 {
 	if (InValue)
@@ -57,10 +62,16 @@ void CLog::Print(const FVector& InValue, int32 InKey, float InDuration, FColor I
 	GEngine->AddOnScreenDebugMessage(InKey, InDuration, InColor, InValue.ToString());
 }
 
+void CLog::Print(const FVector2D& InValue, int32 InKey, float InDuration, FColor InColor)
+{
+	GEngine->AddOnScreenDebugMessage(InKey, InDuration, InColor, InValue.ToString());
+}
+
 void CLog::Print(const FRotator& InValue, int32 InKey, float InDuration, FColor InColor)
 {
 	GEngine->AddOnScreenDebugMessage(InKey, InDuration, InColor, InValue.ToString());
 }
+
 
 void CLog::Print(const UObject* InValue, int32 InKey, float InDuration, FColor InColor)
 {

@@ -69,9 +69,11 @@ public:
 	 UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	 UInputAction* ActionAction;
 
+	 UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	 UInputAction* EvadeAction;
 
-	 /////////////////////컴포넌트
 public:
+	/////////////////////컴포넌트
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, meta = (AllowPrivateAccess = true))
 	TObjectPtr<class UMoveComponent> MoveComponent;
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
@@ -80,6 +82,8 @@ public:
 	TObjectPtr<class UWeaponComponent> WeaponComponent;
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	TObjectPtr<class UStateComponent> StateComponent;
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	TObjectPtr<class UEvadeComponent> EvadeComponent;
 
 public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
@@ -90,4 +94,12 @@ public:
 private:
 	//BeginPlay가 끝난 Component의 갯수
 	int CompEndBeginCount = 0;
+
+public:
+	//UseControllerRotationYaw의 보간 설정
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "UseControllerRotSetting")
+	bool IsUseControllerRotYaw = false;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "UseControllerRotSetting")
+	float NealyControllerGap = 370.0f;
 };

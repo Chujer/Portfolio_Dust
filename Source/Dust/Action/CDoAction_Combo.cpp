@@ -39,5 +39,4 @@ void UCDoAction_Combo::NextDoAction()
 
 	if(WeaponComponent.IsValid())
 		WeaponComponent->DoAction_Server();
-
 }

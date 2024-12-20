@@ -25,9 +25,10 @@ public:
 	void NextDoAction();
 
 private:
-
 	TWeakObjectPtr<class UWeaponComponent> WeaponComponent;
+
 	//콤보입력이 가능한 시간(노티파이 스테이트)
 	bool AvailableTime = false;
+	//추가공격 트리거
 	bool ComboTrigger = false;
 };
