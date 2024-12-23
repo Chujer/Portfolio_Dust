@@ -21,6 +21,7 @@ public:
 	virtual void BeginPlay(ACharacter* InOwner) override;
 	virtual void DoActionTrigger() override;
 	virtual void DoAction_NMC() override;
+	virtual void EndDoAtion_NMC() override;
 
 	void NextDoAction();
 
