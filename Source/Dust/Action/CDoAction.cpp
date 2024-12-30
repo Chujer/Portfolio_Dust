@@ -49,6 +49,9 @@ void UCDoAction::DoAction_NMC()
 
 void UCDoAction::EndDoAtion_Server()
 {
+	if (StateComponent == nullptr || MoveComponent == nullptr)
+		return;
+
 	StateComponent->SetIdleMode();
 	MoveComponent->SetStop(false);
 }

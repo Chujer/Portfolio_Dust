@@ -2,7 +2,7 @@
 
 #include "CLog.h"
 #include "Action/CDoAction.h"
-#include "Component/StateComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/Character.h"
 #include "Net/UnrealNetwork.h"
 
@@ -13,6 +13,8 @@ AAttachment::AAttachment()
 ;
 	RootComponent = CreateDefaultSubobject<USceneComponent>("SceneComponent");
 	WeaponMesh1 = CreateDefaultSubobject<UStaticMeshComponent>("WeaponMesh1");
+	Collision = CreateDefaultSubobject<UCapsuleComponent>("Collision");
+	Collision->SetupAttachment(WeaponMesh1);
 }
 
 void AAttachment::BeginPlay()
@@ -24,5 +26,10 @@ void AAttachment::BeginPlay()
 		return;
 
 	WeaponMesh1->AttachToComponent(OwnerCharacter->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, AttachSocketName);
+	
 
+}
+
+void AAttachment::Temp()
+{
 }

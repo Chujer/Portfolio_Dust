@@ -96,7 +96,7 @@ void ACPlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	//UseControllerRotationYaw의 활성화시 캐릭터의 회전이 뚝끊겨보이는 것을 보간해서 부드러운 회전으로 설정ㅠ
+	//UseControllerRotationYaw의 활성화시 캐릭터의 회전이 뚝끊겨보이는 것을 보간해서 부드러운 회전으로 설정
 	if(IsUseControllerRotYaw)
 	{
 		FRotator currentRotation = GetActorRotation();
@@ -104,11 +104,6 @@ void ACPlayerCharacter::Tick(float DeltaTime)
 		targetRotation.Yaw = GetControlRotation().Yaw;
 		FRotator newRotation = UKismetMathLibrary::RInterpTo(currentRotation, targetRotation, DeltaTime, 15.0f);
 		SetActorRotation(newRotation);
-
-		CLog::Print(UKismetMathLibrary::NormalizeAxis(currentRotation.Yaw) , 1, 10, FColor::Red);
-		CLog::Print(UKismetMathLibrary::NormalizeAxis(targetRotation.Yaw), 2, 10, FColor::Red);
-
-		
 
 		if (UKismetMathLibrary::NearlyEqual_FloatFloat(UKismetMathLibrary::NormalizeAxis(currentRotation.Yaw),
 			UKismetMathLibrary::NormalizeAxis(targetRotation.Yaw), NealyControllerGap))

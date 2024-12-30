@@ -4,8 +4,6 @@
 #include "GameFramework/Actor.h"
 #include "Attachment.generated.h"
 
-//TODO 2024.12.05 : 구조적 문제가 매우 심함 전체적으로 뜯어 고칠 필요가 있어보임
-
 UCLASS()
 class DUST_API AAttachment : public AActor
 {
@@ -16,7 +14,9 @@ public:
 	
 protected:
 	virtual void BeginPlay() override;
-	
+
+	void Temp();
+
 private:
 	TWeakObjectPtr<ACharacter> OwnerCharacter;
 	UPROPERTY(EditAnywhere, Category = "Attachment")
@@ -24,7 +24,10 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* WeaponMesh1;
-	
+
+	UPROPERTY(EditAnywhere)
+	class UCapsuleComponent* Collision;
 
 private:
+
 };

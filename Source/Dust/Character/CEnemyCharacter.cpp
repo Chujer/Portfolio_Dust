@@ -7,6 +7,7 @@ ACEnemyCharacter::ACEnemyCharacter()
 {
  	PrimaryActorTick.bCanEverTick = true;
 
+	
 }
 
 void ACEnemyCharacter::BeginPlay()
