@@ -24,8 +24,8 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	TWeakObjectPtr<class AAttachment> GetAttachment() const; ;
-	TWeakObjectPtr<class UCDoAction> GetDoAction() const; ;
+	TWeakObjectPtr<class AAttachment> GetAttachment() const; 
+	TWeakObjectPtr<class UCDoAction> GetDoAction() const; 
 	class UWeaponDataAsset* GetWeaponDataAsset() { return WeaponDataAsset; }
 	
 public:
@@ -45,8 +45,6 @@ public:
 	void EndDoAction_Server();
 	UFUNCTION(Reliable, NetMulticast)
 	void EndDoAction_NMC();
-
-
 
 public:
 	UFUNCTION(BlueprintCallable, Reliable, Server)

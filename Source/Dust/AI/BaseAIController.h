@@ -16,4 +16,15 @@ class DUST_API ABaseAIController : public AAIController
 
 public:
 	ABaseAIController();
+
+public:
+	UFUNCTION()
+	void PerceptionUpdated(const TArray<AActor*>& UpdatedActors);
+
+public:
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UAIPerceptionComponent* AIPerception;
+private:
+	class UAISenseConfig_Sight* SightConfig;
+	class UAISenseConfig_Damage* DamageSenseConfig;
 };

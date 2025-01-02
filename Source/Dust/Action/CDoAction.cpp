@@ -4,9 +4,11 @@
 #include "Action/CDoAction.h"
 
 #include "CLog.h"
+#include "Character/CPlayerCharacter.h"
 #include "Component/MoveComponent.h"
 #include "Component/StateComponent.h"
 #include "GameFramework/Character.h"
+#include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
 UCDoAction::UCDoAction()
 {
@@ -74,4 +76,17 @@ void UCDoAction::LaunchCharacter(FDoActionData DoActionData, ACharacter* LaunchC
 	//공격자도 함께 런치
 	if (DoActionData.bWithLaunch)
 		OwnerCharacter->LaunchCharacter(launchVector, true, true);
+}
+
+void UCDoAction::ApplyDamage(AActor* OtherActor, class AAttachment* Attachment)
+{
+	if (OtherActor == OwnerCharacter || Cast<ACharacter>(OtherActor) == nullptr)
+		return;
+	if (IsA(OwnerCharacter->GetClass())==false)
+		return;
+
+	CLog::Print(OtherActor->GetName());
+
+	UGameplayStatics::ApplyDamage(OtherActor, DoActionDatas[ActionIndex].Power, OwnerCharacter->GetController(), 
+		Cast<AActor>(Attachment), UDamageType::StaticClass());
 }

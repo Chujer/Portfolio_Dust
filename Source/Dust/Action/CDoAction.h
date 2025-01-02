@@ -26,6 +26,9 @@ public:
 public:
 	void LaunchCharacter(FDoActionData DoActionData, class ACharacter* LaunchCharacter);
 
+	UFUNCTION()
+	void ApplyDamage(AActor* OtherActor, class AAttachment* Attachment);
+
 protected:
 	TWeakObjectPtr<ACharacter> OwnerCharacter;
 

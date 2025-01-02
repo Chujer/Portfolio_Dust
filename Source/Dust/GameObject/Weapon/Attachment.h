@@ -1,8 +1,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/Actor.h"
 #include "Attachment.generated.h"
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnBeginCollision, AActor*, OtherActor, class AAttachment*, Attachment);
 
 UCLASS()
 class DUST_API AAttachment : public AActor
@@ -11,11 +14,14 @@ class DUST_API AAttachment : public AActor
 	
 public:	
 	AAttachment();
-	
+
+public:
+	void SetCollision(ECollisionEnabled::Type value) { Collision->SetCollisionEnabled(value); }
+
 protected:
 	virtual void BeginPlay() override;
 
-	void Temp();
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 
 private:
 	TWeakObjectPtr<ACharacter> OwnerCharacter;
@@ -27,7 +33,8 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	class UCapsuleComponent* Collision;
+	
 
-private:
-
+public:
+	FOnBeginCollision OnBeginCollision;
 };

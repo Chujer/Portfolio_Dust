@@ -58,4 +58,7 @@ private:
 private:
 	UPROPERTY(EditAnywhere, Replicated)
 	EStateType Type = EStateType::Idle;
+
+	int MaxHP = 100;
+	int HP = 100;
 };

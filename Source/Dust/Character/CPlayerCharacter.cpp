@@ -202,5 +202,6 @@ void ACPlayerCharacter::LastPlayerInGame_Client_Implementation()
 	if (WeaponComponent == nullptr)
 		return;
 	WeaponComponent->LoadSetWeaponData();
+
 }
 

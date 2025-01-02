@@ -20,7 +20,8 @@ void UStateComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 void UStateComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	HP = MaxHP;
 }
 
 void UStateComponent::ChangeType_Implementation(EStateType InType)

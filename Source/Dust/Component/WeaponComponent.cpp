@@ -125,7 +125,6 @@ void UWeaponComponent::SetWeaponData_NMC_Implementation(int WeaponIndex, AAttach
 		WeaponData->DoAction = NewObject<UCDoAction>(this, WeaponDataAsset->DoActionClass);
 		WeaponData->DoAction->BeginPlay(OwnerCharacter.Get());
 	}
-
 	if (!OwnerCharacter.IsValid())
 		return;
 	SetWeaponAnimInstance_NMC();
@@ -172,5 +171,8 @@ void UWeaponComponent::SetWeaponData_Server_Implementation(int WeaponIndex)
 	FActorSpawnParameters param;
 	param.Owner = Cast<AActor>(OwnerCharacter);
 	//Attachment의 경우 리플리케이션한 엑터이므로 밖(Server)에서 생성후 매개변수로 전달
-	SetWeaponData_NMC(WeaponIndex, GetWorld()->SpawnActor<AAttachment>(weaponDataRow->WeaponDataAsset->AttachmentClass, param));
+	AAttachment* tempAttachment = GetWorld()->SpawnActor<AAttachment>(weaponDataRow->WeaponDataAsset->AttachmentClass, param);
+	
+	SetWeaponData_NMC(WeaponIndex, tempAttachment);
+	tempAttachment->OnBeginCollision.AddDynamic(WeaponData->DoAction, &UCDoAction::ApplyDamage);
 }
