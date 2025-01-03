@@ -35,9 +35,10 @@ ABaseAIController::ABaseAIController()
 
 void ABaseAIController::PerceptionUpdated(const TArray<AActor*>& UpdatedActors)
 {
-	CLog::Print("asda");
-	CLog::Print(UpdatedActors[0]->GetName());
-	
+
+	if (Blackboard == nullptr)
+		return;
+
 	if (Blackboard.Get()->GetValueAsObject("AttackTarget") == nullptr)
 		Blackboard->SetValueAsObject("AttackTarget", UpdatedActors[0]);
 }

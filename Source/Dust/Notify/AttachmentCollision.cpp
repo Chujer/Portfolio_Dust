@@ -14,7 +14,7 @@ void UAttachmentCollision::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSe
 
 	if (UWeaponComponent* weaponComponent = MeshComp->GetOwner()->GetComponentByClass<UWeaponComponent>())
 	{
-		if(weaponComponent->GetAttachment().IsValid())
+		if(weaponComponent->GetAttachment()!= nullptr)
 			weaponComponent->GetAttachment()->SetCollision(ECollisionEnabled::QueryOnly);
 	}
 }
@@ -25,7 +25,7 @@ void UAttachmentCollision::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequ
 
 	if (UWeaponComponent* weaponComponent = MeshComp->GetOwner()->GetComponentByClass<UWeaponComponent>())
 	{
-		if (weaponComponent->GetAttachment().IsValid())
+		if (weaponComponent->GetAttachment() != nullptr)
 			weaponComponent->GetAttachment()->SetCollision(ECollisionEnabled::NoCollision);
 	}
 }

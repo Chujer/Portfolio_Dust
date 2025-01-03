@@ -49,16 +49,22 @@ public:
 	void SetActionMode();
 	void SetRollMode();
 
+public:
+	void SubHP(float Damage);
+
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-private:
+public:
 	FStateTypeChanged OnStateTypeChanged;
 
 private:
 	UPROPERTY(EditAnywhere, Replicated)
 	EStateType Type = EStateType::Idle;
-
-	int MaxHP = 100;
-	int HP = 100;
+	
+public:
+	UPROPERTY(EditAnywhere, Replicated)
+	float MaxHP = 100;
+	UPROPERTY(EditAnywhere, Replicated)
+	float HP = 100;
 };

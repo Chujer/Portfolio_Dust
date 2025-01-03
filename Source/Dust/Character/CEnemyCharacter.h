@@ -22,4 +22,15 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	//UFUNCTION(NetMulticast, Reliable)
+	void MakeBossUI();
+
+public:
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	TObjectPtr<class UStateComponent> StateComponent;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UCBossHPWidget> HPWidgetClass;
+	class UCBossHPWidget* HPWidget;
 };
+

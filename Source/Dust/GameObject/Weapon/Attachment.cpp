@@ -29,16 +29,31 @@ void AAttachment::BeginPlay()
 	
 	Collision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	WeaponMesh1->AttachToComponent(OwnerCharacter->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, AttachSocketName);
+	
+	Collision->OnComponentBeginOverlap.AddDynamic(this, &AAttachment::BeginOverlap);
 }
 
-void AAttachment::NotifyActorBeginOverlap(AActor* OtherActor)
+void AAttachment::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	//公扁面倒 贸府
 	if (!HasAuthority())
+		return;
+
+	if (OtherActor == OwnerCharacter || Cast<ACharacter>(OtherActor) == nullptr)
+		return;
+	if (OwnerCharacter->GetClass() == OtherActor->GetClass())
 		return;
 
 	Super::NotifyActorBeginOverlap(OtherActor);
 
 	if (OnBeginCollision.IsBound())
-		OnBeginCollision.Broadcast(OtherActor, this);
+	{
+		TArray<AActor*> ignore;
+		FHitResult HitResult;
+		ignore.AddUnique(OwnerCharacter.Get());
+		UKismetSystemLibrary::LineTraceSingle(this, Collision->GetComponentLocation(), OtherActor->GetActorLocation(), ETraceTypeQuery::TraceTypeQuery3, false,
+			ignore, EDrawDebugTrace::Type::ForDuration, HitResult, true);
+		OnBeginCollision.Broadcast(OtherActor, this, HitResult);
+	}
 }
-

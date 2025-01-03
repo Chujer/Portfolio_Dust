@@ -24,8 +24,8 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	TWeakObjectPtr<class AAttachment> GetAttachment() const; 
-	TWeakObjectPtr<class UCDoAction> GetDoAction() const; 
+	class AAttachment* GetAttachment() const; 
+	class UCDoAction* GetDoAction() const; 
 	class UWeaponDataAsset* GetWeaponDataAsset() { return WeaponDataAsset; }
 	
 public:

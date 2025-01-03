@@ -1,5 +1,6 @@
 #include "GameMode/CLobbyGameMode.h"
 
+#include "CLog.h"
 #include "Controller/CLobbyController.h"
 #include "GameInstance/CGameInstance.h"
 
@@ -23,4 +24,6 @@ void ACLobbyGameMode::OnPostLogin(AController* NewPlayer)
 	{
 		connectedPlayer->UpdatePlayerList(ConnectedPlayerInfos);
 	}
+
+	
 }

@@ -14,6 +14,8 @@ void UStateComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(UStateComponent, Type);
+	DOREPLIFETIME(UStateComponent, HP);
+	DOREPLIFETIME(UStateComponent, MaxHP);
 }
 
 
@@ -56,6 +58,15 @@ void UStateComponent::SetActionMode()
 void UStateComponent::SetRollMode()
 {
 	ChangeType(EStateType::Roll);
+}
+
+void UStateComponent::SubHP(float Damage)
+{
+	HP -= Damage;
+	if (HP <= 0)
+	{
+		SetDeadMode();
+	}
 }
 
 

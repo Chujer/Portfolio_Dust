@@ -20,8 +20,8 @@ public:
 	TSubclassOf<UAnimInstance> AnimInstance;
 public:
 	UPROPERTY(EditAnywhere, Category = "Attachment")
-	TObjectPtr<class AAttachment> Attachment;
+	class AAttachment* Attachment;
 
 	UPROPERTY(EditAnywhere, Category = "DoAction")
-	TObjectPtr<class UCDoAction> DoAction;
+	class UCDoAction* DoAction;
 };

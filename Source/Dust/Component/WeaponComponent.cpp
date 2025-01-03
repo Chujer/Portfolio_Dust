@@ -30,7 +30,7 @@ void UWeaponComponent::BeginPlay()
 	SaveComponent  = OwnerCharacter->GetComponentByClass<UPlayerSaveComponent>();
 }
 
-TWeakObjectPtr<AAttachment> UWeaponComponent::GetAttachment() const
+class AAttachment* UWeaponComponent::GetAttachment() const
 {
 	if (WeaponData == nullptr)
 		return nullptr;
@@ -38,7 +38,7 @@ TWeakObjectPtr<AAttachment> UWeaponComponent::GetAttachment() const
 	return WeaponData->Attachment;
 }
 
-TWeakObjectPtr<UCDoAction> UWeaponComponent::GetDoAction() const
+class UCDoAction* UWeaponComponent::GetDoAction() const
 {
 	if (WeaponData == nullptr)
 		return nullptr;
@@ -61,13 +61,11 @@ void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 void UWeaponComponent::DoAction_Server_Implementation()
 {
-	if (!GetDoAction().IsValid())
+	if (GetDoAction() == nullptr)
 		return;
 	if (curWeaponIndex == 0)
 		return;
-
-	if (!GetDoAction().IsValid())
-		return;
+	
 	GetDoAction()->DoActionTrigger();
 
 	if (StateComponent->GetStateType() != EStateType::Idle)
@@ -132,7 +130,7 @@ void UWeaponComponent::SetWeaponData_NMC_Implementation(int WeaponIndex, AAttach
 
 void UWeaponComponent::EndDoAction_NMC_Implementation()
 {
-	if (!GetDoAction().IsValid())
+	if (GetDoAction() == nullptr)
 		return;
 	GetDoAction()->EndDoAtion_NMC();
 }

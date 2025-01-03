@@ -1,15 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Action/CDoAction.h"
-
+#include "CDoAction.h"
 #include "CLog.h"
-#include "Character/CPlayerCharacter.h"
 #include "Component/MoveComponent.h"
 #include "Component/StateComponent.h"
 #include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
-#include "Net/UnrealNetwork.h"
+#include "NiagaraFunctionLibrary.h"
+
 UCDoAction::UCDoAction()
 {
 	MaxActionIndex = DoActionDatas.Num();
@@ -22,6 +21,7 @@ void UCDoAction::BeginPlay(ACharacter* InOwner)
 		StateComponent = OwnerCharacter->GetComponentByClass<UStateComponent>();
 		MoveComponent = OwnerCharacter->GetComponentByClass<UMoveComponent>();
 	}
+
 }
 
 void UCDoAction::DoActionTrigger()
@@ -78,15 +78,21 @@ void UCDoAction::LaunchCharacter(FDoActionData DoActionData, ACharacter* LaunchC
 		OwnerCharacter->LaunchCharacter(launchVector, true, true);
 }
 
-void UCDoAction::ApplyDamage(AActor* OtherActor, class AAttachment* Attachment)
+void UCDoAction::ApplyDamage(AActor* OtherActor, class AAttachment* Attachment, const FHitResult& HitResult)
 {
-	if (OtherActor == OwnerCharacter || Cast<ACharacter>(OtherActor) == nullptr)
+	UKismetSystemLibrary::DrawDebugSphere(this, HitResult.Location, 10, 12, FLinearColor::White, 5);
+	SpawnHitEffect(HitResult.Location);
+	
+	UStateComponent* stateComponent = OtherActor->GetComponentByClass<UStateComponent>();
+	if (stateComponent == nullptr)
 		return;
-	if (IsA(OwnerCharacter->GetClass())==false)
+	stateComponent->SubHP(DoActionDatas[ActionIndex - 1].Power);
+}
+
+void UCDoAction::SpawnHitEffect(FVector Location)
+{
+	if (DoActionDatas[ActionIndex - 1].HittEffect == nullptr)
 		return;
-
-	CLog::Print(OtherActor->GetName());
-
-	UGameplayStatics::ApplyDamage(OtherActor, DoActionDatas[ActionIndex].Power, OwnerCharacter->GetController(), 
-		Cast<AActor>(Attachment), UDamageType::StaticClass());
+	//피격 이펙트 생성
+	UNiagaraFunctionLibrary::SpawnSystemAtLocation(OwnerCharacter->GetWorld(), DoActionDatas[ActionIndex - 1].HittEffect, Location);
 }

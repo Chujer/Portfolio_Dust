@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "NiagaraComponent.h"
 #include "Structures.generated.h"
 
 USTRUCT(BlueprintType)
@@ -36,7 +37,9 @@ public:
 	UPROPERTY(EditAnywhere)
 		FVector Launch = FVector(100.0f, 0, 0);
 	UPROPERTY(EditAnywhere)
-		float StopTime = 0.0f;
+	float StopTime = 0.0f;
+	UPROPERTY(EditAnywhere)
+	UNiagaraSystem* HittEffect = nullptr;
 	UPROPERTY(EditAnywhere)
 		USoundWave* HittingSound = nullptr;
 	UPROPERTY(EditAnywhere)

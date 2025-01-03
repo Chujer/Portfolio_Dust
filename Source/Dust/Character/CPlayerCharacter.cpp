@@ -13,6 +13,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/GameModeBase.h"
 #include "GameInstance/CGameInstance.h"
+#include "GameMode/CLobbyGameMode.h"
 #include "Interface/InteractionInterface.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Utility/CHelpers.h"
@@ -68,6 +69,7 @@ void ACPlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 	InteractText->SetVisibility(false);
 	InteractionObject = nullptr;
+	
 
 	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
 	{

@@ -5,7 +5,7 @@
 #include "GameFramework/Actor.h"
 #include "Attachment.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnBeginCollision, AActor*, OtherActor, class AAttachment*, Attachment);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnBeginCollision, AActor*, OtherActor, class AAttachment*, Attachment, const FHitResult&, HitResult);
 
 UCLASS()
 class DUST_API AAttachment : public AActor
@@ -20,8 +20,12 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	UFUNCTION()
+	void BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
-	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+public:
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	class UCapsuleComponent* Collision;
 
 private:
 	TWeakObjectPtr<ACharacter> OwnerCharacter;
@@ -31,8 +35,6 @@ private:
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* WeaponMesh1;
 
-	UPROPERTY(EditAnywhere)
-	class UCapsuleComponent* Collision;
 	
 
 public:

@@ -27,7 +27,9 @@ public:
 	void LaunchCharacter(FDoActionData DoActionData, class ACharacter* LaunchCharacter);
 
 	UFUNCTION()
-	void ApplyDamage(AActor* OtherActor, class AAttachment* Attachment);
+	void ApplyDamage(AActor* OtherActor, class AAttachment* Attachment, const FHitResult& HitResult);
+	
+	void SpawnHitEffect(FVector Location);
 
 protected:
 	TWeakObjectPtr<ACharacter> OwnerCharacter;
