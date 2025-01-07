@@ -80,13 +80,15 @@ void UCDoAction::LaunchCharacter(FDoActionData DoActionData, ACharacter* LaunchC
 
 void UCDoAction::ApplyDamage(AActor* OtherActor, class AAttachment* Attachment, const FHitResult& HitResult)
 {
-	UKismetSystemLibrary::DrawDebugSphere(this, HitResult.Location, 10, 12, FLinearColor::White, 5);
+	//UKismetSystemLibrary::DrawDebugSphere(this, HitResult.Location, 10, 12, FLinearColor::White, 5);
 	SpawnHitEffect(HitResult.Location);
 	
 	UStateComponent* stateComponent = OtherActor->GetComponentByClass<UStateComponent>();
 	if (stateComponent == nullptr)
 		return;
-	stateComponent->SubHP(DoActionDatas[ActionIndex - 1].Power);
+
+	if (OwnerCharacter->HasAuthority())
+		stateComponent->SubHP(DoActionDatas[ActionIndex - 1].Power);
 }
 
 void UCDoAction::SpawnHitEffect(FVector Location)

@@ -51,12 +51,17 @@ public:
 	void SetWeaponData_Server(int WeaponIndex);
 
 	//Attachment의 경우 리플리케이션한 엑터이므로 밖(Server)에서 생성후 매개변수로 가져옴
-	UFUNCTION(BlueprintCallable, Reliable, NetMulticast)
-	void SetWeaponData_NMC(int WeaponIndex, AAttachment* Attachment);
+	UFUNCTION(BlueprintCallable)
+	void SetWeaponData(int WeaponIndex, AAttachment* Attachment);
 
 	UFUNCTION()
 	void SetWeaponAnimInstance_NMC();
+	UFUNCTION()
+	void OnRepAttach();
 
+public:
+	UFUNCTION(Server, Reliable)
+	void SetWeaponData(class UWeaponData* WeaponData);
 public:
 	////저장한 파일을 읽어 무기 설정
 	UFUNCTION(BlueprintCallable)
@@ -69,12 +74,14 @@ private:
 	TWeakObjectPtr<ACharacter> OwnerCharacter;
 	
 	class UWeaponDataAsset* WeaponDataAsset;
+
 	class UWeaponData* WeaponData;
 
 public:
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, Replicated)
 	int curWeaponIndex = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UDataTable* DataTable;
-	
+	UPROPERTY(ReplicatedUsing = OnRepAttach)
+	AAttachment* tempAttachment;
 };

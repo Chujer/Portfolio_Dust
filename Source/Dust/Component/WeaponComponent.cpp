@@ -50,6 +50,8 @@ class UCDoAction* UWeaponComponent::GetDoAction() const
 void UWeaponComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(UWeaponComponent, curWeaponIndex);
+	DOREPLIFETIME(UWeaponComponent, tempAttachment);
 }
 
 
@@ -92,8 +94,29 @@ void UWeaponComponent::EndDoAction_Server_Implementation()
 	EndDoAction_NMC();
 }
 
+void UWeaponComponent::SetWeaponData_Server_Implementation(int WeaponIndex)
+{
+	if (DataTable == nullptr || WeaponIndex > DataTable->GetRowNames().Num() || WeaponIndex == 0)
+	{
+		CLog::Print("WeaponIndex > DataTableSize");
+		return;
+	}
 
-void UWeaponComponent::SetWeaponData_NMC_Implementation(int WeaponIndex, AAttachment* Attachment)
+	curWeaponIndex = WeaponIndex;
+	FString temp = FString::FromInt(WeaponIndex);
+
+	FWeaponDataStruct* weaponDataRow = DataTable->FindRow<FWeaponDataStruct>(FName(*temp), FString(""));
+
+	FActorSpawnParameters param;
+	param.Owner = Cast<AActor>(OwnerCharacter);
+	//Attachment의 경우 리플리케이션한 엑터이므로 밖(Server)에서 생성후 매개변수로 전달
+	tempAttachment = GetWorld()->SpawnActor<AAttachment>(weaponDataRow->WeaponDataAsset->AttachmentClass, param);
+
+	//OnRep함수는 클라이언트에서만 실행되기 때문에 서버에서도 실행
+	SetWeaponData(WeaponIndex, tempAttachment);
+}
+
+void UWeaponComponent::SetWeaponData(int WeaponIndex, AAttachment* Attachment)
 {
 	if (!OwnerCharacter.IsValid())
 		return;
@@ -116,12 +139,14 @@ void UWeaponComponent::SetWeaponData_NMC_Implementation(int WeaponIndex, AAttach
 	//동일한 웨폰데이터를 사용하지 않기위해 새로운 웨폰 데이터를 생성
 	//UObject(UWeaponData)의 경우 리플리케이션이 되지 않아 각 클라이언트들에 생성 및 값 할당
 	WeaponData = NewObject<UWeaponData>(this, UWeaponData::StaticClass());
-	WeaponData->Attachment = Attachment;
+	WeaponData->Attachment = tempAttachment;
 	WeaponData->AnimInstance = WeaponDataAsset->AnimInstance;
 	if (!!WeaponDataAsset->DoActionClass)
 	{
 		WeaponData->DoAction = NewObject<UCDoAction>(this, WeaponDataAsset->DoActionClass);
 		WeaponData->DoAction->BeginPlay(OwnerCharacter.Get());
+		//콜리전 충돌 델리게이트 설정
+		WeaponData->Attachment->OnBeginCollision.AddDynamic(WeaponData->DoAction, &UCDoAction::ApplyDamage);
 	}
 	if (!OwnerCharacter.IsValid())
 		return;
@@ -146,31 +171,19 @@ void UWeaponComponent::SetWeaponAnimInstance_NMC()
 	
 }
 
+void UWeaponComponent::OnRepAttach()
+{
+	SetWeaponData(curWeaponIndex, tempAttachment);
+}
+
+void UWeaponComponent::SetWeaponData_Implementation(class UWeaponData* WeaponData)
+{
+
+}
+
 void UWeaponComponent::LoadSetWeaponData()
 {
 	//SaveData에서 값을 받아와 무기 설정
 	if (SaveComponent.IsValid())
 		SaveComponent->LoadSetWeaponData();
-}
-
-void UWeaponComponent::SetWeaponData_Server_Implementation(int WeaponIndex)
-{
-	if (DataTable == nullptr || WeaponIndex > DataTable->GetRowNames().Num() || WeaponIndex == 0)
-	{
-		CLog::Print("WeaponIndex > DataTableSize");
-		return;
-	}
-
-	curWeaponIndex = WeaponIndex;
-	FString temp = FString::FromInt(WeaponIndex);
-
-	FWeaponDataStruct* weaponDataRow = DataTable->FindRow<FWeaponDataStruct>(FName(*temp), FString(""));
-
-	FActorSpawnParameters param;
-	param.Owner = Cast<AActor>(OwnerCharacter);
-	//Attachment의 경우 리플리케이션한 엑터이므로 밖(Server)에서 생성후 매개변수로 전달
-	AAttachment* tempAttachment = GetWorld()->SpawnActor<AAttachment>(weaponDataRow->WeaponDataAsset->AttachmentClass, param);
-	
-	SetWeaponData_NMC(WeaponIndex, tempAttachment);
-	tempAttachment->OnBeginCollision.AddDynamic(WeaponData->DoAction, &UCDoAction::ApplyDamage);
 }

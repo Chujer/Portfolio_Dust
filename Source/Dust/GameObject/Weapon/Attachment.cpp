@@ -37,9 +37,6 @@ void AAttachment::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	//公扁面倒 贸府
-	if (!HasAuthority())
-		return;
-
 	if (OtherActor == OwnerCharacter || Cast<ACharacter>(OtherActor) == nullptr)
 		return;
 	if (OwnerCharacter->GetClass() == OtherActor->GetClass())
