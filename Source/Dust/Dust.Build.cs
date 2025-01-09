@@ -11,7 +11,7 @@ public class Dust : ModuleRules
         PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 		PublicIncludePaths.Add(ModuleDirectory);
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", 
-            "EnhancedInput", "OnlineSubsystem", "OnlineSubsystemUtils", "UMG", "Niagara" });
+            "EnhancedInput", "OnlineSubsystem", "OnlineSubsystemUtils", "UMG", "Niagara", "GameplayTasks" });
 
 	}
 }

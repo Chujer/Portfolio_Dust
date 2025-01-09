@@ -60,6 +60,26 @@ void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
+void UWeaponComponent::DoIndexAction_Server_Implementation(int Index)
+{
+	if (GetDoAction() == nullptr)
+		return;
+
+	if (StateComponent->GetStateType() == EStateType::Action)
+		return;
+
+	GetDoAction()->DoAction_Server();
+	DoIndexAction_NMC(Index);
+}
+
+void UWeaponComponent::DoIndexAction_NMC_Implementation(int Index)
+{
+	if (GetDoAction() == nullptr)
+		return;
+
+	GetDoAction()->DoIndexAction_NMC(Index);
+}
+
 
 void UWeaponComponent::DoAction_Server_Implementation()
 {
@@ -92,6 +112,7 @@ void UWeaponComponent::EndDoAction_Server_Implementation()
 
 	GetDoAction()->EndDoAtion_Server();
 	EndDoAction_NMC();
+	GetAttachment()->ClearHittedCharacter();
 }
 
 void UWeaponComponent::SetWeaponData_Server_Implementation(int WeaponIndex)
@@ -121,26 +142,30 @@ void UWeaponComponent::SetWeaponData(int WeaponIndex, AAttachment* Attachment)
 	if (!OwnerCharacter.IsValid())
 		return;
 
-	Cast<ACPlayerCharacter>(OwnerCharacter)->IsUseControllerRotYaw = true;	
-	OwnerCharacter->GetCharacterMovement()->bOrientRotationToMovement = false;
-
 	//기존 curWeaponIndex를 Replication해 사용하려 했으나 
-	//값의 변경이 Server에서 이루어 지기전에 저장 함수가 실행되는 문제가 발생해 NMC로 값을 수동으로 변경
+	//값의 변경이 Server에서 이루어 지기전에 저장 함수가 실행되는 문제가 발생해 값을 수동으로 변경
 	curWeaponIndex = WeaponIndex;
+
+	if (Cast<ACPlayerCharacter>(OwnerCharacter))
+	{
+		Cast<ACPlayerCharacter>(OwnerCharacter)->IsUseControllerRotYaw = true;
+		OwnerCharacter->GetCharacterMovement()->bOrientRotationToMovement = false;
+
+		//변경된 WeaponIndex값을 Save
+		if (OwnerCharacter.IsValid() && OwnerCharacter->IsLocallyControlled())
+			OwnerCharacter->GetComponentByClass<UPlayerSaveComponent>()->SaveData();
+	}
 	FString temp = FString::FromInt(WeaponIndex);
 	FWeaponDataStruct* weaponDataRow = DataTable->FindRow<FWeaponDataStruct>(FName(*temp), FString(""));
-	
-	WeaponDataAsset = weaponDataRow->WeaponDataAsset;
 
-	//변경된 WeaponIndex값을 Save
-	if (OwnerCharacter.IsValid() && OwnerCharacter->IsLocallyControlled())
-		OwnerCharacter->GetComponentByClass<UPlayerSaveComponent>()->SaveData();
+	WeaponDataAsset = weaponDataRow->WeaponDataAsset;
 
 	//동일한 웨폰데이터를 사용하지 않기위해 새로운 웨폰 데이터를 생성
 	//UObject(UWeaponData)의 경우 리플리케이션이 되지 않아 각 클라이언트들에 생성 및 값 할당
 	WeaponData = NewObject<UWeaponData>(this, UWeaponData::StaticClass());
 	WeaponData->Attachment = tempAttachment;
 	WeaponData->AnimInstance = WeaponDataAsset->AnimInstance;
+
 	if (!!WeaponDataAsset->DoActionClass)
 	{
 		WeaponData->DoAction = NewObject<UCDoAction>(this, WeaponDataAsset->DoActionClass);
@@ -168,17 +193,11 @@ void UWeaponComponent::SetWeaponAnimInstance_NMC()
 	//플레이어 애님 인스턴스를 무기에 맞춰 변경
 	OwnerCharacter->GetMesh()->SetAnimClass(WeaponDataAsset->AnimInstance);
 	OwnerCharacter->GetMesh()->GetAnimInstance()->NativeBeginPlay();
-	
 }
 
 void UWeaponComponent::OnRepAttach()
 {
 	SetWeaponData(curWeaponIndex, tempAttachment);
-}
-
-void UWeaponComponent::SetWeaponData_Implementation(class UWeaponData* WeaponData)
-{
-
 }
 
 void UWeaponComponent::LoadSetWeaponData()

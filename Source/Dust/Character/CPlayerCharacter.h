@@ -40,8 +40,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Reliable, Server)
 	void LastPlayerInGame_Server();
-	UFUNCTION(Client, Reliable)
-	void LastPlayerInGame_Client();
+	UFUNCTION(NetMulticast, Reliable)
+	void LastPlayerInGame_NMC();
 
 
 	

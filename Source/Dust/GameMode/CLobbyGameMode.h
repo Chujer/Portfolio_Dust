@@ -5,6 +5,8 @@
 #include "Misc/Structures.h"
 #include "CLobbyGameMode.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FLastPlayerInGame);
+
 UCLASS()
 class DUST_API ACLobbyGameMode : public AGameModeBase
 {
@@ -18,5 +20,5 @@ public:
 	TArray<class ACLobbyController*> ConnectedPlayers;
 	TArray<FPlayerInfo> ConnectedPlayerInfos;
 	
-	
+	FLastPlayerInGame OnLastPlayerInGame;
 };

@@ -69,7 +69,6 @@ void ACPlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 	InteractText->SetVisibility(false);
 	InteractionObject = nullptr;
-	
 
 	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
 	{
@@ -183,11 +182,12 @@ void ACPlayerCharacter::PlayInteract()
 
 void ACPlayerCharacter::LastPlayerInGame_Server_Implementation()
 {
-	AGameModeBase* gameMode = UGameplayStatics::GetGameMode(this);
+	ACLobbyGameMode* gameMode = Cast<ACLobbyGameMode>(UGameplayStatics::GetGameMode(this));
 	if (gameMode == nullptr)
 		return;
 
 	int playerCount = gameMode->GetNumPlayers();
+
 
 	//게임모드 안의 모든 컨트롤러들의 LoadSetWeaponData(무기불러오기)를 실행
 	for(int i = 0; i < playerCount; ++i)
@@ -195,11 +195,12 @@ void ACPlayerCharacter::LastPlayerInGame_Server_Implementation()
 		ACPlayerCharacter* player = Cast<ACPlayerCharacter>(UGameplayStatics::GetPlayerController(GetWorld(), i)->GetPawn());
 		if(player == nullptr)
 			continue;
-		player->LastPlayerInGame_Client();
+		player->LastPlayerInGame_NMC();
 	}
+	gameMode->OnLastPlayerInGame.Broadcast();
 }
 
-void ACPlayerCharacter::LastPlayerInGame_Client_Implementation()
+void ACPlayerCharacter::LastPlayerInGame_NMC_Implementation()
 {
 	if (WeaponComponent == nullptr)
 		return;

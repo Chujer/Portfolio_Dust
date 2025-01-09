@@ -18,6 +18,8 @@ public:
 public:
 	void SetCollision(ECollisionEnabled::Type value) { Collision->SetCollisionEnabled(value); }
 
+	void ClearHittedCharacter() { HittedCharacter.Empty(); }
+
 protected:
 	virtual void BeginPlay() override;
 	UFUNCTION()
@@ -35,7 +37,7 @@ private:
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* WeaponMesh1;
 
-	
+	TArray<ACharacter*> HittedCharacter;
 
 public:
 	FOnBeginCollision OnBeginCollision;

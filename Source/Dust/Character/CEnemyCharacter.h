@@ -21,16 +21,25 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-	//UFUNCTION(NetMulticast, Reliable)
+	
 	void MakeBossUI();
 
+	UFUNCTION()
+	void SetEnemyWeaponSet();
+
 public:
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	TObjectPtr<class UWeaponComponent> WeaponComponent;
+
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	TObjectPtr<class UStateComponent> StateComponent;
 
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<UCBossHPWidget> HPWidgetClass;
+	TSubclassOf<class UCBossHPWidget> HPWidgetClass;
 	class UCBossHPWidget* HPWidget;
+
+public:
+	UPROPERTY(EditAnywhere)
+	int WeaponIndex = 0;
 };
 

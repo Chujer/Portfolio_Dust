@@ -46,16 +46,26 @@ void UCDoAction::DoAction_NMC()
 	if (OwnerCharacter.IsValid() && !!DoActionDatas[ActionIndex].Montage)
 	{
 		OwnerCharacter->PlayAnimMontage(DoActionDatas[ActionIndex].Montage, DoActionDatas[ActionIndex].PlayRate);
+		currentDoActionData = DoActionDatas[ActionIndex];
+	}
+}
+
+void UCDoAction::DoIndexAction_NMC(int Index)
+{
+	if (OwnerCharacter.IsValid() && !!DoActionDatas[Index].Montage)
+	{
+		OwnerCharacter->PlayAnimMontage(DoActionDatas[Index].Montage, DoActionDatas[Index].PlayRate);
+		currentDoActionData = DoActionDatas[Index];
 	}
 }
 
 void UCDoAction::EndDoAtion_Server()
 {
-	if (StateComponent == nullptr || MoveComponent == nullptr)
-		return;
+	if (StateComponent != nullptr )
+		StateComponent->SetIdleMode();
 
-	StateComponent->SetIdleMode();
-	MoveComponent->SetStop(false);
+	if (MoveComponent != nullptr)
+		MoveComponent->SetStop(false);
 }
 
 void UCDoAction::EndDoAtion_NMC()
@@ -88,13 +98,13 @@ void UCDoAction::ApplyDamage(AActor* OtherActor, class AAttachment* Attachment, 
 		return;
 
 	if (OwnerCharacter->HasAuthority())
-		stateComponent->SubHP(DoActionDatas[ActionIndex - 1].Power);
+		stateComponent->SubHP(currentDoActionData.Power);
 }
 
 void UCDoAction::SpawnHitEffect(FVector Location)
 {
-	if (DoActionDatas[ActionIndex - 1].HittEffect == nullptr)
+	if (currentDoActionData.HittEffect == nullptr)
 		return;
 	//피격 이펙트 생성
-	UNiagaraFunctionLibrary::SpawnSystemAtLocation(OwnerCharacter->GetWorld(), DoActionDatas[ActionIndex - 1].HittEffect, Location);
+	UNiagaraFunctionLibrary::SpawnSystemAtLocation(OwnerCharacter->GetWorld(), currentDoActionData.HittEffect, Location);
 }

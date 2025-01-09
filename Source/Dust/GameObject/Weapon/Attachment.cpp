@@ -36,14 +36,22 @@ void AAttachment::BeginPlay()
 void AAttachment::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	//公扁面倒 贸府
-	if (OtherActor == OwnerCharacter || Cast<ACharacter>(OtherActor) == nullptr)
-		return;
-	if (OwnerCharacter->GetClass() == OtherActor->GetClass())
-		return;
-
 	Super::NotifyActorBeginOverlap(OtherActor);
+	ACharacter* otherActor = Cast<ACharacter>(OtherActor);
 
+	//吝汗面倒 规瘤
+	if (OtherActor == OwnerCharacter || Cast<ACharacter>(otherActor) == nullptr)
+		return;
+	if (OwnerCharacter->GetClass() == otherActor->GetClass())
+		return;
+
+	if (HittedCharacter.Find(Cast<ACharacter>(otherActor)) != INDEX_NONE)
+		return;
+
+	HittedCharacter.AddUnique(Cast<ACharacter>(otherActor));
+
+
+	//公扁面倒 贸府
 	if (OnBeginCollision.IsBound())
 	{
 		TArray<AActor*> ignore;
@@ -51,6 +59,7 @@ void AAttachment::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 		ignore.AddUnique(OwnerCharacter.Get());
 		UKismetSystemLibrary::LineTraceSingle(this, Collision->GetComponentLocation(), OtherActor->GetActorLocation(), ETraceTypeQuery::TraceTypeQuery3, false,
 			ignore, EDrawDebugTrace::Type::ForDuration, HitResult, true);
+		UKismetSystemLibrary::DrawDebugSphere(GetWorld(), HitResult.Location, 10);
 		OnBeginCollision.Broadcast(OtherActor, this, HitResult);
 	}
 }

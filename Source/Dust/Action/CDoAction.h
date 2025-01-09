@@ -20,6 +20,7 @@ public:
 	virtual void DoActionTrigger();
 	virtual void DoAction_Server();
 	virtual void DoAction_NMC();
+	virtual void DoIndexAction_NMC(int Index);
 	virtual void EndDoAtion_Server();
 	virtual void EndDoAtion_NMC();
 
@@ -45,4 +46,6 @@ protected:
 private:
 	UPROPERTY(EditAnywhere)
 	TArray<struct FDoActionData> DoActionDatas;
+
+	FDoActionData currentDoActionData;
 };

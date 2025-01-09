@@ -19,7 +19,6 @@ public:
 
 public:
 	
-
 protected:
 	virtual void BeginPlay() override;
 
@@ -37,9 +36,15 @@ public:
 public:
 	UFUNCTION(Reliable, Server)
 	void DoAction_Server();
-
 	UFUNCTION(Reliable, NetMulticast)
 	void DoAction_NMC();
+
+	UFUNCTION(Reliable, Server)
+	void DoIndexAction_Server(int Index);
+	UFUNCTION(Reliable, NetMulticast)
+	void DoIndexAction_NMC(int Index);
+
+
 
 	UFUNCTION(Reliable, Server)
 	void EndDoAction_Server();
@@ -58,10 +63,7 @@ public:
 	void SetWeaponAnimInstance_NMC();
 	UFUNCTION()
 	void OnRepAttach();
-
-public:
-	UFUNCTION(Server, Reliable)
-	void SetWeaponData(class UWeaponData* WeaponData);
+	
 public:
 	////저장한 파일을 읽어 무기 설정
 	UFUNCTION(BlueprintCallable)
