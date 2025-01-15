@@ -44,8 +44,6 @@ public:
 	UFUNCTION(Reliable, NetMulticast)
 	void DoIndexAction_NMC(int Index);
 
-
-
 	UFUNCTION(Reliable, Server)
 	void EndDoAction_Server();
 	UFUNCTION(Reliable, NetMulticast)

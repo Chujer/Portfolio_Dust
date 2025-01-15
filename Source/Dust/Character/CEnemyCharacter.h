@@ -22,8 +22,6 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
-	void MakeBossUI();
-
 	UFUNCTION()
 	void SetEnemyWeaponSet();
 
@@ -33,10 +31,6 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	TObjectPtr<class UStateComponent> StateComponent;
-
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<class UCBossHPWidget> HPWidgetClass;
-	class UCBossHPWidget* HPWidget;
 
 public:
 	UPROPERTY(EditAnywhere)

@@ -47,5 +47,9 @@ private:
 	UPROPERTY(EditAnywhere)
 	TArray<struct FDoActionData> DoActionDatas;
 
+	UPROPERTY(EditAnywhere)
+	struct FDoActionData DoSubActionData;
+
+
 	FDoActionData currentDoActionData;
 };

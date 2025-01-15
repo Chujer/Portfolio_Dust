@@ -14,21 +14,20 @@ AAttachment::AAttachment()
 	bAlwaysRelevant = true;
 ;
 	RootComponent = CreateDefaultSubobject<USceneComponent>("SceneComponent");
-	WeaponMesh1 = CreateDefaultSubobject<UStaticMeshComponent>("WeaponMesh1");
+	WeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>("WeaponMesh");
 	Collision = CreateDefaultSubobject<UCapsuleComponent>("Collision");
-	Collision->SetupAttachment(WeaponMesh1);
+	Collision->SetupAttachment(WeaponMesh);
 }
 
 void AAttachment::BeginPlay()
 {
 	Super::BeginPlay();
 	OwnerCharacter = Cast<ACharacter>(GetOwner());
-	
 	if (OwnerCharacter == nullptr)
 		return;
 	
 	Collision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	WeaponMesh1->AttachToComponent(OwnerCharacter->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, AttachSocketName);
+	WeaponMesh->AttachToComponent(OwnerCharacter->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, AttachSocketName);
 	
 	Collision->OnComponentBeginOverlap.AddDynamic(this, &AAttachment::BeginOverlap);
 }
@@ -49,17 +48,17 @@ void AAttachment::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 		return;
 
 	HittedCharacter.AddUnique(Cast<ACharacter>(otherActor));
-
-
+	
 	//公扁面倒 贸府
 	if (OnBeginCollision.IsBound())
 	{
-		TArray<AActor*> ignore;
 		FHitResult HitResult;
-		ignore.AddUnique(OwnerCharacter.Get());
+		Ignore.AddUnique(OwnerCharacter.Get());
 		UKismetSystemLibrary::LineTraceSingle(this, Collision->GetComponentLocation(), OtherActor->GetActorLocation(), ETraceTypeQuery::TraceTypeQuery3, false,
-			ignore, EDrawDebugTrace::Type::ForDuration, HitResult, true);
+			Ignore, EDrawDebugTrace::Type::ForDuration, HitResult, true);
 		UKismetSystemLibrary::DrawDebugSphere(GetWorld(), HitResult.Location, 10);
+
+
 		OnBeginCollision.Broadcast(OtherActor, this, HitResult);
 	}
 }

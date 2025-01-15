@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <GameObject/Weapon/IdentityObject.h>
+
 #include "CoreMinimal.h"
 #include "Action/CDoAction.h"
 #include "Engine/DataAsset.h"
@@ -22,9 +24,11 @@ public:
 	TSubclassOf<UAnimInstance> AnimInstance;
 
 	UPROPERTY(EditAnywhere, Category = "Attachment")
-	TSubclassOf<AAttachment> AttachmentClass; 
+	TSubclassOf<AAttachment> AttachmentClass;
+
+	UPROPERTY(EditAnywhere, Category = "Identity")
+	TSubclassOf<AIdentityObject> IdentityClass;
 
 	UPROPERTY(EditAnywhere, Category = "DoAction")
 	TSubclassOf<UCDoAction> DoActionClass;
-	
 };

@@ -3,7 +3,10 @@
 
 #include "Component/StateComponent.h"
 
+#include "Blueprint/UserWidget.h"
+#include "GameFramework/Character.h"
 #include "Net/UnrealNetwork.h"
+#include "Widget/CHPWidget.h"
 
 UStateComponent::UStateComponent()
 {
@@ -22,8 +25,22 @@ void UStateComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 void UStateComponent::BeginPlay()
 {
 	Super::BeginPlay();
+	OwnerCharacter = Cast<ACharacter>(GetOwner());
 
-	HP = MaxHP;
+	if (OwnerCharacter->GetController() == nullptr)
+		return;
+
+		HP = MaxHP;
+
+}
+
+void UStateComponent::MakeBossUI()
+{
+
+	HPWidget = Cast<UCHPWidget>(CreateWidget(GetWorld(), HPWidgetClass));
+	HPWidget->AddToViewport();
+	HPWidget->MaxHP = MaxHP;
+	HPWidget->HP = HP;
 }
 
 void UStateComponent::ChangeType_Implementation(EStateType InType)
@@ -74,5 +91,8 @@ void UStateComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	if (HPWidget == nullptr)
+		return;
+	HPWidget->HP = HP;
 }
 

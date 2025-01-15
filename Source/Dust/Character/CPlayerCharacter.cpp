@@ -4,6 +4,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Component/EvadeComponent.h"
+#include "Component/IdentityComponent.h"
 #include "Component/MoveComponent.h"
 #include "Component/PlayerSaveComponent.h"
 #include "Component/StateComponent.h"
@@ -54,6 +55,8 @@ ACPlayerCharacter::ACPlayerCharacter()
 	StateComponent->SetIsReplicated(true);
 	EvadeComponent = CreateDefaultSubobject<UEvadeComponent>("EvadeComponent");
 	EvadeComponent->SetIsReplicated(true);
+	IdentityComponent = CreateDefaultSubobject<UIdentityComponent>("IdentityComponent");
+	IdentityComponent->SetIsReplicated(true);
 
 	///////////////////////////////////////////////////
 	InteractText = CreateDefaultSubobject<UTextRenderComponent>("InteractText");
@@ -91,6 +94,11 @@ void ACPlayerCharacter::BeginPlay()
 			LastPlayerInGame_Server();
 		}
 	}
+
+	if (GetController() != nullptr && GetController()->IsLocalController())
+	{
+		StateComponent->MakeBossUI();
+	}
 }
 
 void ACPlayerCharacter::Tick(float DeltaTime)
@@ -127,6 +135,8 @@ void ACPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 		Input->BindAction(InteractionAction, ETriggerEvent::Triggered, this, &ACPlayerCharacter::PlayInteract);
 		Input->BindAction(ActionAction, ETriggerEvent::Triggered, WeaponComponent.Get(), &UWeaponComponent::DoAction_Server);
 		Input->BindAction(EvadeAction, ETriggerEvent::Triggered, EvadeComponent.Get(), &UEvadeComponent::Evade_Server);
+		Input->BindAction(IdentityStartAction, ETriggerEvent::Triggered, IdentityComponent.Get(), &UIdentityComponent::BeginIdentity);
+		Input->BindAction(IdentityEndAction, ETriggerEvent::Triggered, IdentityComponent.Get(), &UIdentityComponent::EndIdentity);
 	}
 }
 
@@ -205,6 +215,5 @@ void ACPlayerCharacter::LastPlayerInGame_NMC_Implementation()
 	if (WeaponComponent == nullptr)
 		return;
 	WeaponComponent->LoadSetWeaponData();
-
 }
 

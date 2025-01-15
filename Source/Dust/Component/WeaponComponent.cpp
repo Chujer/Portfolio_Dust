@@ -1,6 +1,7 @@
 #include "Component/WeaponComponent.h"
 
 #include "CLog.h"
+#include "IdentityComponent.h"
 #include "PlayerSaveComponent.h"
 #include "StateComponent.h"
 #include "Character/CPlayerCharacter.h"
@@ -80,7 +81,6 @@ void UWeaponComponent::DoIndexAction_NMC_Implementation(int Index)
 	GetDoAction()->DoIndexAction_NMC(Index);
 }
 
-
 void UWeaponComponent::DoAction_Server_Implementation()
 {
 	if (GetDoAction() == nullptr)
@@ -90,7 +90,7 @@ void UWeaponComponent::DoAction_Server_Implementation()
 	
 	GetDoAction()->DoActionTrigger();
 
-	if (StateComponent->GetStateType() != EStateType::Idle)
+	if (!StateComponent->IsIdleMode())
 		return;
 
 	GetDoAction()->DoAction_Server();
@@ -99,9 +99,6 @@ void UWeaponComponent::DoAction_Server_Implementation()
 
 void UWeaponComponent::DoAction_NMC_Implementation()
 {
-	if (GetDoAction() == nullptr)
-		return;
-
 	GetDoAction()->DoAction_NMC();
 }
 
@@ -132,6 +129,11 @@ void UWeaponComponent::SetWeaponData_Server_Implementation(int WeaponIndex)
 	param.Owner = Cast<AActor>(OwnerCharacter);
 	//Attachment의 경우 리플리케이션한 엑터이므로 밖(Server)에서 생성후 매개변수로 전달
 	tempAttachment = GetWorld()->SpawnActor<AAttachment>(weaponDataRow->WeaponDataAsset->AttachmentClass, param);
+
+	if(UIdentityComponent* IdentityComponent = OwnerCharacter->GetComponentByClass<UIdentityComponent>())
+	{
+		IdentityComponent->SetIdentity(weaponDataRow->WeaponDataAsset->IdentityClass);
+	}
 
 	//OnRep함수는 클라이언트에서만 실행되기 때문에 서버에서도 실행
 	SetWeaponData(WeaponIndex, tempAttachment);

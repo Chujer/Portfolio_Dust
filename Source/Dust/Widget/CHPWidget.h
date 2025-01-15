@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "CBossHPWidget.generated.h"
+#include "CHPWidget.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class DUST_API UCBossHPWidget : public UUserWidget
+class DUST_API UCHPWidget : public UUserWidget
 {
 	GENERATED_BODY()
 

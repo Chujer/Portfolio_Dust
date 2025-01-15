@@ -16,6 +16,8 @@ public:
 	AAttachment();
 
 public:
+	void AddIgnore(AActor* Actor) { Ignore.AddUnique(Actor); }
+
 	void SetCollision(ECollisionEnabled::Type value) { Collision->SetCollisionEnabled(value); }
 
 	void ClearHittedCharacter() { HittedCharacter.Empty(); }
@@ -29,15 +31,17 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	class UCapsuleComponent* Collision;
 
+	UPROPERTY(EditAnywhere)
+	UStaticMeshComponent* WeaponMesh;
+
 private:
 	TWeakObjectPtr<ACharacter> OwnerCharacter;
 	UPROPERTY(EditAnywhere, Category = "Attachment")
 	FName AttachSocketName;
 
-	UPROPERTY(EditAnywhere)
-	UStaticMeshComponent* WeaponMesh1;
-
 	TArray<ACharacter*> HittedCharacter;
+	//충돌처리시 제외할 엑터
+	TArray<AActor*> Ignore;
 
 public:
 	FOnBeginCollision OnBeginCollision;

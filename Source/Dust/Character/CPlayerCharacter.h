@@ -72,6 +72,11 @@ public:
 	 UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	 UInputAction* EvadeAction;
 
+	 UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	 UInputAction* IdentityStartAction;
+	 UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	 UInputAction* IdentityEndAction;
+
 public:
 	/////////////////////ÄÄÆ÷³ÍÆ®
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, meta = (AllowPrivateAccess = true))
@@ -84,6 +89,8 @@ public:
 	TObjectPtr<class UStateComponent> StateComponent;
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	TObjectPtr<class UEvadeComponent> EvadeComponent;
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	TObjectPtr<class UIdentityComponent> IdentityComponent;
 
 public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)

@@ -49,6 +49,9 @@ void UEvadeComponent::Evade_Server_Implementation()
 	if (StateComponent == nullptr)
 		return;
 
+	if (!StateComponent->IsIdleMode())
+		return;
+
 	StateComponent->SetActionMode();
 	Evade_NMC(MovementVector);
 }

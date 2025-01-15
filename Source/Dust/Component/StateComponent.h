@@ -30,6 +30,9 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
+	void MakeBossUI();
+
+public:
 	UFUNCTION(Server, Reliable)
 	void ChangeType(EStateType InType);
 
@@ -61,8 +64,16 @@ public:
 private:
 	UPROPERTY(EditAnywhere, Replicated)
 	EStateType Type = EStateType::Idle;
-	
+
+private:
+	TWeakObjectPtr<class ACharacter> OwnerCharacter;
+
 public:
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UCHPWidget> HPWidgetClass;
+	class UCHPWidget* HPWidget;
+
+
 	UPROPERTY(EditAnywhere, Replicated)
 	float MaxHP = 100;
 	UPROPERTY(EditAnywhere, Replicated)
