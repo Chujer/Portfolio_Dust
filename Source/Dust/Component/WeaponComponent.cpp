@@ -63,10 +63,10 @@ void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 void UWeaponComponent::DoIndexAction_Server_Implementation(int Index)
 {
-	if (GetDoAction() == nullptr)
+	if (StateComponent->GetStateType() == EStateType::Action)
 		return;
 
-	if (StateComponent->GetStateType() == EStateType::Action)
+	if (GetDoAction() == nullptr)
 		return;
 
 	GetDoAction()->DoAction_Server();

@@ -18,7 +18,6 @@ public:
 	AIdentityObject_Shiled();
 
 	virtual void BeginPlay() override;
-
 	virtual void BeginIdentity() override;
 	virtual void EndIdentity() override;
 

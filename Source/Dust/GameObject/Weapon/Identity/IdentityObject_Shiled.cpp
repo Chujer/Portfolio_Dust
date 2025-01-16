@@ -3,11 +3,13 @@
 
 #include "GameObject/Weapon/Identity/IdentityObject_Shiled.h"
 
+#include "CLog.h"
 #include "Component/StateComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/ShapeComponent.h"
 #include "GameFramework/Character.h"
 #include "GameObject/Weapon/Attachment.h"
+#include "Kismet/KismetMathLibrary.h"
 
 AIdentityObject_Shiled::AIdentityObject_Shiled()
 {
@@ -60,7 +62,13 @@ void AIdentityObject_Shiled::BeginOverlap(UPrimitiveComponent* OverlappedCompone
 
 	if (OtherAttachment == nullptr)
 		return;
+	FVector start = OtherAttachment->GetActorLocation() - GetActorLocation();
+	FVector end = (GetActorLocation() + GetActorForwardVector()) - GetActorLocation();
+
+	CLog::Print(OtherAttachment->GetActorLocation());
+	CLog::Print(GetActorLocation());
+	CLog::Print(UKismetMathLibrary::Dot_VectorVector(start, end));
 
 	OtherAttachment->AddIgnore(Cast<AActor>(OwnerCharacter));
-	OwnerCharacter->LaunchCharacter(FVector(100, 0, 0), false, false);
+	OwnerCharacter->LaunchCharacter(FVector(150, 0, 0), false, false);
 }
