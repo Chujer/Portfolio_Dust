@@ -21,8 +21,22 @@ void AIdentityObject::BeginPlay()
 	if (OwnerCharacter == nullptr)
 		return;
 
+
 	Collision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	AttachToComponent(OwnerCharacter->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, AttachSocketName);
 	IdentityMesh->AttachToComponent(OwnerCharacter->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, AttachSocketName);
+}
+
+void AIdentityObject::PlayMontage_Server_Implementation(UAnimMontage* montage)
+{
+	PlayMontage_NMC(montage);
+}
+
+void AIdentityObject::PlayMontage_NMC_Implementation(UAnimMontage* montage)
+{
+	if (OwnerCharacter == nullptr)
+		return;
+	OwnerCharacter->PlayAnimMontage(montage);
 }
 
 void AIdentityObject::BeginIdentity()
@@ -30,6 +44,14 @@ void AIdentityObject::BeginIdentity()
 }
 
 void AIdentityObject::EndIdentity()
+{
+}
+
+void AIdentityObject::BeginIdentitySkill()
+{
+}
+
+void AIdentityObject::EndIdentitySkill()
 {
 }
 

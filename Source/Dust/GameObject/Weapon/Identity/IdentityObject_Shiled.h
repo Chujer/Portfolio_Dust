@@ -20,13 +20,24 @@ public:
 	virtual void BeginPlay() override;
 	virtual void BeginIdentity() override;
 	virtual void EndIdentity() override;
+	virtual void BeginIdentitySkill() override;
+	virtual void EndIdentitySkill() override;
+
+
+public:
+	void GuardOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	void ParryOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 public:
 	UPROPERTY(EditAnywhere)
 	UAnimMontage* GuardAnim;
+	UPROPERTY(EditAnywhere)
+	UAnimMontage* ParryingAnim;
 
 	class UStateComponent* StateComponent;
 
+private:
+	bool IsParrying = false;
 
 public:
 	UFUNCTION()

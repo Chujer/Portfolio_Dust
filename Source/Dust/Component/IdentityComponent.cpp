@@ -32,14 +32,25 @@ void UIdentityComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 
 void UIdentityComponent::BeginIdentity()
 {
-	CLog::Print("BeginIdentity");
+	IsIdentityState = true;
 	Identity->BeginIdentity();
 }
 
 void UIdentityComponent::EndIdentity()
 {
-	CLog::Print("EndIdentity");
+	IsIdentityState = false;
 	Identity->EndIdentity();
+}
+
+void UIdentityComponent::BeginIdentitySkill()
+{
+	if(IsIdentityState == true)
+		Identity->BeginIdentitySkill();
+}
+
+void UIdentityComponent::EndIdentitySkill()
+{
+	Identity->EndIdentitySkill();
 }
 
 void UIdentityComponent::SetIdentity_Implementation(TSubclassOf<AIdentityObject> IdentityClass)

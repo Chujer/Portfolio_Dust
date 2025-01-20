@@ -26,6 +26,7 @@ public:
 	class AAttachment* GetAttachment() const; 
 	class UCDoAction* GetDoAction() const; 
 	class UWeaponDataAsset* GetWeaponDataAsset() { return WeaponDataAsset; }
+	class AIdentityObject GetIdentity();
 	
 public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;

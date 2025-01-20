@@ -57,10 +57,8 @@ void UPlayerSaveComponent::LoadSetWeaponData()
 	UWeaponComponent* weaponComponent = OwnerCharacter->GetComponentByClass<UWeaponComponent>();
 	if (weaponComponent == nullptr)
 		return;
-	CLog::Print("HaveWeaponComp");
 	if (SaveGame == nullptr)
 		return;
-	CLog::Print("HaveSaveGame");
 
 	weaponComponent->SetWeaponData_Server(SaveGame->WeaponIndex);
 }

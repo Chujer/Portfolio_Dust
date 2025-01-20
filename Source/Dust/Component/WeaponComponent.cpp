@@ -47,7 +47,6 @@ class UCDoAction* UWeaponComponent::GetDoAction() const
 	return WeaponData->DoAction;
 }
 
-
 void UWeaponComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);

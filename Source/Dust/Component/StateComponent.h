@@ -10,7 +10,7 @@
 UENUM(BlueprintType)
 enum class EStateType : uint8
 {
-	Idle = 0, Hitted, Dead, Action, Roll, Max
+	Idle = 0, Hitted, Dead, Action, Roll, Groggy, HittingParry, Max
 };
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FStateTypeChanged, EStateType, InPrevType, EStateType, InNewType);
 
@@ -30,6 +30,9 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
+	UFUNCTION(NetMulticast, Reliable)
+	void PlayAnimMontage_NMC(UAnimMontage* montage);
+public:
 	void MakeBossUI();
 
 public:
@@ -44,6 +47,8 @@ public:
 	FORCEINLINE bool IsActionMode() { return Type == EStateType::Action; }
 	FORCEINLINE bool IsHittedMode() { return Type == EStateType::Hitted; }
 	FORCEINLINE bool IsRollMode() { return Type == EStateType::Roll; }
+	FORCEINLINE bool IsGroggyMode() { return Type == EStateType::Groggy; }
+	FORCEINLINE bool IsHittingParryMode() { return Type == EStateType::HittingParry; }
 
 public:
 	void SetIdleMode();
@@ -51,6 +56,8 @@ public:
 	void SetDeadMode();
 	void SetActionMode();
 	void SetRollMode();
+	void SetGroggyMode();
+	void SetHittingParryMode();
 
 public:
 	void SubHP(float Damage);

@@ -27,6 +27,7 @@ void AAttachment::BeginPlay()
 		return;
 	
 	Collision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	AttachToComponent(OwnerCharacter->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, AttachSocketName);
 	WeaponMesh->AttachToComponent(OwnerCharacter->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, AttachSocketName);
 	
 	Collision->OnComponentBeginOverlap.AddDynamic(this, &AAttachment::BeginOverlap);

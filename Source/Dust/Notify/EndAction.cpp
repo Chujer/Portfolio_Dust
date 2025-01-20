@@ -4,6 +4,7 @@
 #include "Notify/EndAction.h"
 
 #include "Character/CPlayerCharacter.h"
+#include "Component/IdentityComponent.h"
 #include "Component/StateComponent.h"
 #include "Component/WeaponComponent.h"
 
@@ -19,5 +20,10 @@ void UEndAction::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Ani
 	if (UWeaponComponent* weaponComponent = MeshComp->GetOwner()->GetComponentByClass<UWeaponComponent>())
 	{
 		weaponComponent->EndDoAction_Server();
+	}
+
+	if(UIdentityComponent* identityComponent = MeshComp->GetOwner()->GetComponentByClass<UIdentityComponent>())
+	{
+		identityComponent->EndIdentitySkill();
 	}
 }

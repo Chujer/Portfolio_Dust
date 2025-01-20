@@ -31,10 +31,20 @@ public:
 	UFUNCTION()
 	void EndIdentity();
 
+	UFUNCTION()
+	virtual void BeginIdentitySkill();
+
+	UFUNCTION()
+	virtual void EndIdentitySkill();
+
+	AIdentityObject* GetIdentity() { return Identity; }
+
 
 public:
 	UPROPERTY(Replicated)
 	class AIdentityObject* Identity;
+
+	bool IsIdentityState = false;
 
 private:
 	TWeakObjectPtr<ACharacter> OwnerCharacter;

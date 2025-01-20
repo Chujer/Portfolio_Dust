@@ -4,6 +4,7 @@
 #include "GameObject/Weapon/Identity/IdentityObject_Shiled.h"
 
 #include "CLog.h"
+#include "Character/CEnemyCharacter.h"
 #include "Component/StateComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/ShapeComponent.h"
@@ -38,7 +39,7 @@ void AIdentityObject_Shiled::BeginIdentity()
 
 	StateComponent->SetActionMode();
 
-	OwnerCharacter->PlayAnimMontage(GuardAnim);
+	PlayMontage_Server(GuardAnim);
 	Collision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 }
 
@@ -46,11 +47,70 @@ void AIdentityObject_Shiled::EndIdentity()
 {
 	Super::EndIdentity();
 
-	StateComponent->SetIdleMode();
 
+	if (IsParrying == true)
+		return;
+	StateComponent->SetIdleMode();
 	OwnerCharacter->StopAnimMontage();
 	Collision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
+
+void AIdentityObject_Shiled::BeginIdentitySkill()
+{
+	Super::BeginIdentitySkill();
+	if (ParryingAnim == nullptr)
+		return;
+	if (StateComponent == nullptr)
+		return;
+
+	IsParrying = true;
+
+	StateComponent->SetActionMode();
+
+	PlayMontage_Server(ParryingAnim);
+	Collision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+}
+
+void AIdentityObject_Shiled::EndIdentitySkill()
+{
+	Super::EndIdentitySkill();
+	IsParrying = false;
+	StateComponent->SetIdleMode();
+}
+
+
+void AIdentityObject_Shiled::GuardOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+                                          UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	AAttachment* OtherAttachment = Cast<AAttachment>(OtherActor);
+	if (OtherAttachment == nullptr)
+		return;
+
+	FVector vector1 = OtherAttachment->GetActorLocation() - GetActorLocation();
+	FVector vector2 = (GetActorLocation() + OwnerCharacter->GetActorForwardVector()) - GetActorLocation();
+
+	float scala = UKismetMathLibrary::Dot_VectorVector(vector1, vector2);
+	if (scala < 20)
+		return;
+	OtherAttachment->AddIgnore(Cast<AActor>(OwnerCharacter));
+	OwnerCharacter->LaunchCharacter(OwnerCharacter->GetActorForwardVector() * -150.f, false, false);
+}
+
+void AIdentityObject_Shiled::ParryOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	ACEnemyCharacter* enemy = Cast<ACEnemyCharacter>(OtherActor->Owner);
+	if (enemy == nullptr)
+		return;
+	UStateComponent* enemyStateComponent = enemy->GetComponentByClass<UStateComponent>();
+	if (enemyStateComponent == nullptr)
+		return;
+	
+	enemyStateComponent->SetHittingParryMode();
+
+}
+
 
 void AIdentityObject_Shiled::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, 
                                           UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -58,17 +118,10 @@ void AIdentityObject_Shiled::BeginOverlap(UPrimitiveComponent* OverlappedCompone
 	if (HasAuthority() == false)
 		return;
 
-	AAttachment* OtherAttachment = Cast<AAttachment>(OtherActor);
-
-	if (OtherAttachment == nullptr)
-		return;
-	FVector start = OtherAttachment->GetActorLocation() - GetActorLocation();
-	FVector end = (GetActorLocation() + GetActorForwardVector()) - GetActorLocation();
-
-	CLog::Print(OtherAttachment->GetActorLocation());
-	CLog::Print(GetActorLocation());
-	CLog::Print(UKismetMathLibrary::Dot_VectorVector(start, end));
-
-	OtherAttachment->AddIgnore(Cast<AActor>(OwnerCharacter));
-	OwnerCharacter->LaunchCharacter(FVector(150, 0, 0), false, false);
+	if (IsParrying == true)
+	{
+		ParryOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
+	}
+	else
+		GuardOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
 }

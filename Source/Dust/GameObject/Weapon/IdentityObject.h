@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Components/ShapeComponent.h"
 #include "GameFramework/Actor.h"
 #include "IdentityObject.generated.h"
 
@@ -16,8 +17,20 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
+	UFUNCTION(NetMulticast, Reliable)
+	virtual void PlayMontage_NMC(UAnimMontage* montage);
+
+	UFUNCTION(Server, Reliable)
+	virtual void PlayMontage_Server(UAnimMontage* montage);
+
+public:
+	virtual void SetCollision(ECollisionEnabled::Type value) { Collision->SetCollisionEnabled(value); }
+
 	virtual void BeginIdentity();
 	virtual void EndIdentity();
+
+	virtual void BeginIdentitySkill();
+	virtual void EndIdentitySkill();
 
 public:
 	UPROPERTY(EditAnywhere)

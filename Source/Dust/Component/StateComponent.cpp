@@ -34,6 +34,11 @@ void UStateComponent::BeginPlay()
 
 }
 
+void UStateComponent::PlayAnimMontage_NMC_Implementation(UAnimMontage* montage)
+{
+	OwnerCharacter->PlayAnimMontage(montage);
+}
+
 void UStateComponent::MakeBossUI()
 {
 
@@ -75,6 +80,16 @@ void UStateComponent::SetActionMode()
 void UStateComponent::SetRollMode()
 {
 	ChangeType(EStateType::Roll);
+}
+
+void UStateComponent::SetGroggyMode()
+{
+	ChangeType(EStateType::Groggy);
+}
+
+void UStateComponent::SetHittingParryMode()
+{
+	ChangeType(EStateType::HittingParry);
 }
 
 void UStateComponent::SubHP(float Damage)
