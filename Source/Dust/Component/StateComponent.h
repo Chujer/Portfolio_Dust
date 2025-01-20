@@ -33,7 +33,7 @@ public:
 	UFUNCTION(NetMulticast, Reliable)
 	void PlayAnimMontage_NMC(UAnimMontage* montage);
 public:
-	void MakeBossUI();
+	void MakeHPUI();
 
 public:
 	UFUNCTION(Server, Reliable)
@@ -62,22 +62,28 @@ public:
 public:
 	void SubHP(float Damage);
 
+public:
+	UFUNCTION()
+	void OnHittingParry(EStateType InPrevType, EStateType InNewType);
+
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 public:
 	FStateTypeChanged OnStateTypeChanged;
 
+
 private:
 	UPROPERTY(EditAnywhere, Replicated)
 	EStateType Type = EStateType::Idle;
 
 private:
-	TWeakObjectPtr<class ACharacter> OwnerCharacter;
+	TWeakObjectPtr<class ACBaseCharacter> OwnerCharacter;
 
 public:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class UCHPWidget> HPWidgetClass;
+
 	class UCHPWidget* HPWidget;
 
 

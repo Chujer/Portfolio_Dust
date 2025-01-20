@@ -39,7 +39,8 @@ void AIdentityObject_Shiled::BeginIdentity()
 
 	StateComponent->SetActionMode();
 
-	PlayMontage_Server(GuardAnim);
+	OwnerCharacter->PlayMontage_Server(GuardAnim);
+	
 	Collision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 }
 
@@ -67,7 +68,7 @@ void AIdentityObject_Shiled::BeginIdentitySkill()
 
 	StateComponent->SetActionMode();
 
-	PlayMontage_Server(ParryingAnim);
+	OwnerCharacter->PlayMontage_Server(ParryingAnim);
 	Collision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 }

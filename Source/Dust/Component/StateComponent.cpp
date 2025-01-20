@@ -3,7 +3,9 @@
 
 #include "Component/StateComponent.h"
 
+#include "CLog.h"
 #include "Blueprint/UserWidget.h"
+#include "Character/CBaseCharacter.h"
 #include "GameFramework/Character.h"
 #include "Net/UnrealNetwork.h"
 #include "Widget/CHPWidget.h"
@@ -25,13 +27,13 @@ void UStateComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 void UStateComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	OwnerCharacter = Cast<ACharacter>(GetOwner());
+	OwnerCharacter = Cast<ACBaseCharacter>(GetOwner());
 
 	if (OwnerCharacter->GetController() == nullptr)
 		return;
 
-		HP = MaxHP;
-
+	HP = MaxHP;
+	OnStateTypeChanged.AddDynamic(this, &UStateComponent::OnHittingParry);
 }
 
 void UStateComponent::PlayAnimMontage_NMC_Implementation(UAnimMontage* montage)
@@ -39,7 +41,7 @@ void UStateComponent::PlayAnimMontage_NMC_Implementation(UAnimMontage* montage)
 	OwnerCharacter->PlayAnimMontage(montage);
 }
 
-void UStateComponent::MakeBossUI()
+void UStateComponent::MakeHPUI()
 {
 
 	HPWidget = Cast<UCHPWidget>(CreateWidget(GetWorld(), HPWidgetClass));
@@ -98,6 +100,15 @@ void UStateComponent::SubHP(float Damage)
 	if (HP <= 0)
 	{
 		SetDeadMode();
+	}
+}
+
+void UStateComponent::OnHittingParry(EStateType InPrevType, EStateType InNewType)
+{
+	if (InNewType == EStateType::HittingParry)
+	{
+		CLog::Print("parry");
+		OwnerCharacter->PlayMontage_Server(OwnerCharacter->HitData.ParryHitAnimation);
 	}
 }
 

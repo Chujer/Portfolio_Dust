@@ -3,11 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CBaseCharacter.h"
 #include "GameFramework/Character.h"
 #include "CEnemyCharacter.generated.h"
 
 UCLASS()
-class DUST_API ACEnemyCharacter : public ACharacter
+class DUST_API ACEnemyCharacter : public ACBaseCharacter
 {
 	GENERATED_BODY()
 
@@ -19,19 +20,10 @@ protected:
 
 public:	
 	virtual void Tick(float DeltaTime) override;
-
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
 	UFUNCTION()
 	void SetEnemyWeaponSet();
-
-public:
-	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	TObjectPtr<class UWeaponComponent> WeaponComponent;
-
-	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	TObjectPtr<class UStateComponent> StateComponent;
-
+	
 public:
 	UPROPERTY(EditAnywhere)
 	int WeaponIndex = 0;

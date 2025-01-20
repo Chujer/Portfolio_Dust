@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CBaseCharacter.h"
 #include "DustCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/Character.h"
@@ -10,7 +11,7 @@
 
 
 UCLASS()
-class DUST_API ACPlayerCharacter : public ACharacter
+class DUST_API ACPlayerCharacter : public ACBaseCharacter
 {
 	GENERATED_BODY()
 
@@ -85,10 +86,6 @@ public:
 	TObjectPtr<class UMoveComponent> MoveComponent;
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	TObjectPtr<class UPlayerSaveComponent> SaveComponent;
-	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	TObjectPtr<class UWeaponComponent> WeaponComponent;
-	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	TObjectPtr<class UStateComponent> StateComponent;
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	TObjectPtr<class UEvadeComponent> EvadeComponent;
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)

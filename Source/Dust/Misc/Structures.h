@@ -80,3 +80,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int WeaponNum = 0;
 };
+
+USTRUCT(BlueprintType)
+struct FHitAnimData
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UAnimMontage* ParryHitAnimation;
+
+};

@@ -14,10 +14,6 @@
 ACEnemyCharacter::ACEnemyCharacter()
 {
  	PrimaryActorTick.bCanEverTick = true;
-	StateComponent = CreateDefaultSubobject<UStateComponent>("StateComponent");
-	StateComponent->SetIsReplicated(true);
-	WeaponComponent = CreateDefaultSubobject<UWeaponComponent>("WeaponComponent");
-	WeaponComponent->SetIsReplicated(true);
 }
 
 void ACEnemyCharacter::BeginPlay()
@@ -30,7 +26,7 @@ void ACEnemyCharacter::BeginPlay()
 		gameMode->OnLastPlayerInGame.AddDynamic(this, &ACEnemyCharacter::SetEnemyWeaponSet);
 	}
 
-	StateComponent->MakeBossUI();
+	StateComponent->MakeHPUI();
 }
 
 void ACEnemyCharacter::Tick(float DeltaTime)
@@ -38,11 +34,6 @@ void ACEnemyCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void ACEnemyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-}
 
 void ACEnemyCharacter::SetEnemyWeaponSet()
 {

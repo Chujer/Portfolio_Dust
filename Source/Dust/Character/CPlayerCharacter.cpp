@@ -49,10 +49,6 @@ ACPlayerCharacter::ACPlayerCharacter()
 	MoveComponent = CreateDefaultSubobject<UMoveComponent>("MoveComponent");
 	MoveComponent->SetIsReplicated(true);
 	SaveComponent = CreateDefaultSubobject<UPlayerSaveComponent>("SaveComponent");
-	WeaponComponent = CreateDefaultSubobject<UWeaponComponent>("WeaponComponent");
-	WeaponComponent->SetIsReplicated(true);
-	StateComponent = CreateDefaultSubobject<UStateComponent>("StateComponent");
-	StateComponent->SetIsReplicated(true);
 	EvadeComponent = CreateDefaultSubobject<UEvadeComponent>("EvadeComponent");
 	EvadeComponent->SetIsReplicated(true);
 	IdentityComponent = CreateDefaultSubobject<UIdentityComponent>("IdentityComponent");
@@ -97,7 +93,7 @@ void ACPlayerCharacter::BeginPlay()
 
 	if (GetController() != nullptr && GetController()->IsLocalController())
 	{
-		StateComponent->MakeBossUI();
+		StateComponent->MakeHPUI();
 	}
 }
 

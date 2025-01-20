@@ -15,13 +15,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-
-public:
-	UFUNCTION(NetMulticast, Reliable)
-	virtual void PlayMontage_NMC(UAnimMontage* montage);
-
-	UFUNCTION(Server, Reliable)
-	virtual void PlayMontage_Server(UAnimMontage* montage);
+	
 
 public:
 	virtual void SetCollision(ECollisionEnabled::Type value) { Collision->SetCollisionEnabled(value); }
@@ -40,7 +34,7 @@ public:
 	class UShapeComponent* Collision;
 
 protected: 
-	TWeakObjectPtr<ACharacter> OwnerCharacter;
+	TWeakObjectPtr<class ACBaseCharacter> OwnerCharacter;
 	UPROPERTY(EditAnywhere, Category = "Attachment")
 	FName AttachSocketName;
 };
