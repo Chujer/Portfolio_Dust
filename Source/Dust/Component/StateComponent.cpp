@@ -60,6 +60,7 @@ void UStateComponent::ChangeType_Implementation(EStateType InType)
 	EStateType prevType = Type;
 	Type = InType;
 
+	//상태 변경시 델리게이트에 설정한 함수를 실행
 	if (OnStateTypeChanged.IsBound())
 		OnStateTypeChanged.Broadcast(prevType, Type);
 }
@@ -124,6 +125,7 @@ void UStateComponent::OnGroggy(EStateType InPrevType, EStateType InNewType)
 	if (!OwnerCharacter->HasAuthority())
 		return;
 
+	//그로기 상태로 진입 3초후 기존 상태로 복구
 	GetWorld()->GetTimerManager().SetTimer(Timer, this, &UStateComponent::EndGroggy, 3.0f, false, 3.0f);
 }
 
@@ -148,11 +150,11 @@ void UStateComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 		return;
 
 	// 타이머 함수 호출할 때 가지 남은 시간
-	if (OwnerCharacter->HasAuthority())
+	/*if (OwnerCharacter->HasAuthority())
 	{
 		GroggyTime = GetWorld()->GetTimerManager().GetTimerRemaining(Timer);
 
 		CLog::Print(GroggyTime);
-	}
+	}*/
 }
 

@@ -133,6 +133,8 @@ void AIdentityObject_Shiled::ParryOverlap(UPrimitiveComponent* OverlappedCompone
 	OtherAttachment->AddIgnore(Cast<AActor>(OwnerCharacter));
 	enemyStateComponent->SetHittingParryMode();
 
+	CLog::Print("Parry");
+
 }
 
 
