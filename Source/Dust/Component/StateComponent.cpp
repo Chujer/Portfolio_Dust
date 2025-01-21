@@ -6,6 +6,7 @@
 #include "CLog.h"
 #include "Blueprint/UserWidget.h"
 #include "Character/CBaseCharacter.h"
+#include "Character/CEnemyCharacter.h"
 #include "GameFramework/Character.h"
 #include "Net/UnrealNetwork.h"
 #include "Widget/CHPWidget.h"
@@ -21,6 +22,7 @@ void UStateComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 	DOREPLIFETIME(UStateComponent, Type);
 	DOREPLIFETIME(UStateComponent, HP);
 	DOREPLIFETIME(UStateComponent, MaxHP);
+	DOREPLIFETIME(UStateComponent, GroggyTime);
 }
 
 
@@ -34,6 +36,7 @@ void UStateComponent::BeginPlay()
 
 	HP = MaxHP;
 	OnStateTypeChanged.AddDynamic(this, &UStateComponent::OnHittingParry);
+	OnStateTypeChanged.AddDynamic(this, &UStateComponent::OnGroggy);
 }
 
 void UStateComponent::PlayAnimMontage_NMC_Implementation(UAnimMontage* montage)
@@ -43,6 +46,8 @@ void UStateComponent::PlayAnimMontage_NMC_Implementation(UAnimMontage* montage)
 
 void UStateComponent::MakeHPUI()
 {
+	if(HPWidgetClass == nullptr)
+		return;
 
 	HPWidget = Cast<UCHPWidget>(CreateWidget(GetWorld(), HPWidgetClass));
 	HPWidget->AddToViewport();
@@ -107,9 +112,26 @@ void UStateComponent::OnHittingParry(EStateType InPrevType, EStateType InNewType
 {
 	if (InNewType == EStateType::HittingParry)
 	{
-		CLog::Print("parry");
 		OwnerCharacter->PlayMontage_Server(OwnerCharacter->HitData.ParryHitAnimation);
 	}
+}
+
+void UStateComponent::OnGroggy(EStateType InPrevType, EStateType InNewType)
+{
+	if (InNewType != EStateType::Groggy)
+		return;
+
+	if (!OwnerCharacter->HasAuthority())
+		return;
+
+	GetWorld()->GetTimerManager().SetTimer(Timer, this, &UStateComponent::EndGroggy, 3.0f, false, 3.0f);
+}
+
+void UStateComponent::EndGroggy()
+{
+	OwnerCharacter->PlayMontage_Server();
+	SetIdleMode();
+	GetWorld()->GetTimerManager().ClearTimer(Timer);
 }
 
 
@@ -120,5 +142,17 @@ void UStateComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	if (HPWidget == nullptr)
 		return;
 	HPWidget->HP = HP;
+	
+
+	if (Cast<ACEnemyCharacter>(OwnerCharacter) == nullptr)
+		return;
+
+	// 타이머 함수 호출할 때 가지 남은 시간
+	if (OwnerCharacter->HasAuthority())
+	{
+		GroggyTime = GetWorld()->GetTimerManager().GetTimerRemaining(Timer);
+
+		CLog::Print(GroggyTime);
+	}
 }
 

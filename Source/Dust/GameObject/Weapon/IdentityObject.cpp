@@ -1,5 +1,6 @@
 #include "GameObject/Weapon/IdentityObject.h"
 
+#include "CLog.h"
 #include "Character/CBaseCharacter.h"
 #include "Components/ShapeComponent.h"
 #include "GameFramework/Character.h"
@@ -26,6 +27,11 @@ void AIdentityObject::BeginPlay()
 	Collision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	AttachToComponent(OwnerCharacter->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, AttachSocketName);
 	IdentityMesh->AttachToComponent(OwnerCharacter->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, AttachSocketName);
+}
+
+void AIdentityObject::SetCollision_Implementation(ECollisionEnabled::Type value)
+{
+	Collision->SetCollisionEnabled(value);
 }
 
 void AIdentityObject::BeginIdentity()

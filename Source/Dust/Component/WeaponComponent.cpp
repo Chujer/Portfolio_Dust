@@ -68,6 +68,9 @@ void UWeaponComponent::DoIndexAction_Server_Implementation(int Index)
 	if (GetDoAction() == nullptr)
 		return;
 
+	if (WeaponData == nullptr)
+		return;
+
 	GetDoAction()->DoAction_Server();
 	DoIndexAction_NMC(Index);
 }

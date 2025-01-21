@@ -66,6 +66,12 @@ public:
 	UFUNCTION()
 	void OnHittingParry(EStateType InPrevType, EStateType InNewType);
 
+	UFUNCTION()
+	void OnGroggy(EStateType InPrevType, EStateType InNewType);
+
+	UFUNCTION()
+	void EndGroggy();
+
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
@@ -77,8 +83,10 @@ private:
 	UPROPERTY(EditAnywhere, Replicated)
 	EStateType Type = EStateType::Idle;
 
-private:
 	TWeakObjectPtr<class ACBaseCharacter> OwnerCharacter;
+
+private:
+	FTimerHandle Timer;
 
 public:
 	UPROPERTY(EditAnywhere)
@@ -91,4 +99,7 @@ public:
 	float MaxHP = 100;
 	UPROPERTY(EditAnywhere, Replicated)
 	float HP = 100;
+	
+	UPROPERTY(BlueprintReadOnly, Replicated)
+	float GroggyTime = 0;
 };

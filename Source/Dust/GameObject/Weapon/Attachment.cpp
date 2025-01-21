@@ -19,6 +19,21 @@ AAttachment::AAttachment()
 	Collision->SetupAttachment(WeaponMesh);
 }
 
+void AAttachment::SetCollision_Implementation(ECollisionEnabled::Type value)
+{
+	Collision->SetCollisionEnabled(value);
+}
+
+void AAttachment::AddIgnore_Implementation(AActor* Actor)
+{
+	HittedCharacter.AddUnique(Cast<ACharacter>(Actor));
+}
+
+void AAttachment::ClearHittedCharacter_Implementation()
+{
+	HittedCharacter.Empty();
+}
+
 void AAttachment::BeginPlay()
 {
 	Super::BeginPlay();
@@ -54,6 +69,7 @@ void AAttachment::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 	if (OnBeginCollision.IsBound())
 	{
 		FHitResult HitResult;
+		TArray<AActor*> Ignore;
 		Ignore.AddUnique(OwnerCharacter.Get());
 		UKismetSystemLibrary::LineTraceSingle(this, Collision->GetComponentLocation(), OtherActor->GetActorLocation(), ETraceTypeQuery::TraceTypeQuery3, false,
 			Ignore, EDrawDebugTrace::Type::ForDuration, HitResult, true);

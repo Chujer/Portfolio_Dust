@@ -42,15 +42,15 @@ void ACBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 void ACBaseCharacter::PlayMontage_NMC_Implementation(UAnimMontage* AnimMontage, float InPlayRate,
 	FName StartSectionName)
 {
-	PlayAnimMontage(AnimMontage, InPlayRate, StartSectionName);
+	if (AnimMontage == nullptr)
+		StopAnimMontage();
+	else
+		PlayAnimMontage(AnimMontage, InPlayRate, StartSectionName);
 }
 
 void ACBaseCharacter::PlayMontage_Server_Implementation(UAnimMontage* AnimMontage, float InPlayRate,
                                                         FName StartSectionName)
 {
-	if (AnimMontage == nullptr)
-		return;
-
 	PlayMontage_NMC(AnimMontage, InPlayRate, StartSectionName);
 }
 

@@ -18,7 +18,8 @@ protected:
 	
 
 public:
-	virtual void SetCollision(ECollisionEnabled::Type value) { Collision->SetCollisionEnabled(value); }
+	UFUNCTION(Server,Reliable)
+	virtual void SetCollision(ECollisionEnabled::Type value); 
 
 	virtual void BeginIdentity();
 	virtual void EndIdentity();

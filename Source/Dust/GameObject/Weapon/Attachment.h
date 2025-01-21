@@ -16,11 +16,14 @@ public:
 	AAttachment();
 
 public:
-	void AddIgnore(AActor* Actor) { Ignore.AddUnique(Actor); }
+	UFUNCTION(Reliable, Server)
+	void AddIgnore(AActor* Actor);
 
-	void SetCollision(ECollisionEnabled::Type value) { Collision->SetCollisionEnabled(value); }
+	UFUNCTION(Reliable, Server)
+	void SetCollision(ECollisionEnabled::Type value); 
 
-	void ClearHittedCharacter() { HittedCharacter.Empty(); }
+	UFUNCTION(Reliable, Server)
+	void ClearHittedCharacter();
 
 protected:
 	virtual void BeginPlay() override;
@@ -40,8 +43,6 @@ private:
 	FName AttachSocketName;
 
 	TArray<ACharacter*> HittedCharacter;
-	//충돌처리시 제외할 엑터
-	TArray<AActor*> Ignore;
 
 public:
 	FOnBeginCollision OnBeginCollision;

@@ -23,6 +23,12 @@ public:
 	virtual void BeginIdentitySkill() override;
 	virtual void EndIdentitySkill() override;
 
+public:
+	UFUNCTION(Server, Reliable)
+	void SetParry(bool isParry);
+	
+public:
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 public:
 	void GuardOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
@@ -37,6 +43,7 @@ public:
 	class UStateComponent* StateComponent;
 
 private:
+	UPROPERTY(Replicated)
 	bool IsParrying = false;
 
 public:
