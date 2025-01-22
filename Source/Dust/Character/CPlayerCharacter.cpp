@@ -133,7 +133,7 @@ void ACPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 		Input->BindAction(EvadeAction, ETriggerEvent::Triggered, EvadeComponent.Get(), &UEvadeComponent::Evade_Server);
 		Input->BindAction(IdentityStartAction, ETriggerEvent::Triggered, IdentityComponent.Get(), &UIdentityComponent::BeginIdentity);
 		Input->BindAction(IdentityEndAction, ETriggerEvent::Triggered, IdentityComponent.Get(), &UIdentityComponent::EndIdentity);
-		Input->BindAction(IdentitySkillAction, ETriggerEvent::Triggered, IdentityComponent.Get(), &UIdentityComponent::BeginIdentitySkill);
+		Input->BindAction(RightClickAction, ETriggerEvent::Triggered, IdentityComponent.Get(), &UIdentityComponent::BeginIdentitySkill);
 	}
 }
 

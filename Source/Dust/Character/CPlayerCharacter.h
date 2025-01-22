@@ -78,7 +78,7 @@ public:
 	 UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	 UInputAction* IdentityEndAction;
 	 UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	 UInputAction* IdentitySkillAction;
+	 UInputAction* RightClickAction;
 
 public:
 	/////////////////////ÄÄÆ÷³ÍÆ®

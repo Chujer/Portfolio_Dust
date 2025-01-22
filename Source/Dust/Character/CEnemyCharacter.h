@@ -18,6 +18,11 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+private:
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<class UWidgetComponent> GroggyWidgetComponent;
+	
+	
 public:	
 	virtual void Tick(float DeltaTime) override;
 	

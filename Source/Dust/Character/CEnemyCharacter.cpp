@@ -6,14 +6,22 @@
 #include "Blueprint/UserWidget.h"
 #include "Component/StateComponent.h"
 #include "Component/WeaponComponent.h"
+#include "Components/WidgetComponent.h"
 #include "GameMode/CLobbyGameMode.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Widget/CGroggyWidget.h"
 #include "Widget/CHPWidget.h"
 
 ACEnemyCharacter::ACEnemyCharacter()
 {
  	PrimaryActorTick.bCanEverTick = true;
+	GroggyWidgetComponent = CreateDefaultSubobject<UWidgetComponent>("GroggyWidget");
+	GroggyWidgetComponent->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform);
+	GroggyWidgetComponent->SetIsReplicated(true);
+	GroggyWidgetComponent->SetRelativeLocation(FVector(0, 0, 70));
+	GroggyWidgetComponent->SetRelativeRotation(FRotator(0, 0, 90));
+	GroggyWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
 }
 
 void ACEnemyCharacter::BeginPlay()
@@ -27,11 +35,13 @@ void ACEnemyCharacter::BeginPlay()
 	}
 
 	StateComponent->MakeHPUI();
+	StateComponent->SetGroggyWidget(GroggyWidgetComponent->GetUserWidgetObject());
 }
 
 void ACEnemyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	
 }
 
 

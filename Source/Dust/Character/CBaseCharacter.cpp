@@ -3,6 +3,7 @@
 
 #include "Character/CBaseCharacter.h"
 
+#include "Blueprint/UserWidget.h"
 #include "Component/StateComponent.h"
 #include "Component/WeaponComponent.h"
 

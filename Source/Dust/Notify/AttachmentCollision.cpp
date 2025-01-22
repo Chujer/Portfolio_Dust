@@ -7,22 +7,21 @@
 #include "GameObject/Weapon/Attachment.h"
 
 void UAttachmentCollision::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
-                                       float TotalDuration)
+	float TotalDuration, const FAnimNotifyEventReference& EventReference)
 {
-	Super::NotifyBegin(MeshComp, Animation, TotalDuration);
-
+	Super::NotifyBegin(MeshComp, Animation, TotalDuration, EventReference);
 
 	if (UWeaponComponent* weaponComponent = MeshComp->GetOwner()->GetComponentByClass<UWeaponComponent>())
 	{
-		if(weaponComponent->GetAttachment()!= nullptr)
+		if (weaponComponent->GetAttachment() != nullptr)
 			weaponComponent->GetAttachment()->SetCollision(ECollisionEnabled::QueryOnly);
 	}
 }
 
-void UAttachmentCollision::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
+void UAttachmentCollision::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
+	const FAnimNotifyEventReference& EventReference)
 {
-	Super::NotifyEnd(MeshComp, Animation);
-
+	Super::NotifyEnd(MeshComp, Animation, EventReference);
 	if (UWeaponComponent* weaponComponent = MeshComp->GetOwner()->GetComponentByClass<UWeaponComponent>())
 	{
 		if (weaponComponent->GetAttachment() != nullptr)

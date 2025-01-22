@@ -7,8 +7,10 @@
 #include "Blueprint/UserWidget.h"
 #include "Character/CBaseCharacter.h"
 #include "Character/CEnemyCharacter.h"
+#include "Components/WidgetComponent.h"
 #include "GameFramework/Character.h"
 #include "Net/UnrealNetwork.h"
+#include "Widget/CGroggyWidget.h"
 #include "Widget/CHPWidget.h"
 
 UStateComponent::UStateComponent()
@@ -30,6 +32,8 @@ void UStateComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	OwnerCharacter = Cast<ACBaseCharacter>(GetOwner());
+
+
 
 	if (OwnerCharacter->GetController() == nullptr)
 		return;
@@ -100,6 +104,11 @@ void UStateComponent::SetHittingParryMode()
 	ChangeType(EStateType::HittingParry);
 }
 
+void UStateComponent::SetExecuteMode()
+{
+	ChangeType(EStateType::Execute);
+}
+
 void UStateComponent::SubHP(float Damage)
 {
 	HP -= Damage;
@@ -136,6 +145,20 @@ void UStateComponent::EndGroggy()
 	GetWorld()->GetTimerManager().ClearTimer(Timer);
 }
 
+void UStateComponent::SetGroggyWidget(UUserWidget* Widget)
+{
+	if (UWidgetComponent* temp = OwnerCharacter->GetComponentByClass<UWidgetComponent>())
+	{
+		if (temp->GetUserWidgetObject() != nullptr)
+			CLog::Print(temp->GetUserWidgetObject()->GetName());
+	}
+
+	GroggyWidget = Cast<UCGroggyWidget>(Widget);
+	if(GroggyWidget != nullptr)
+		GroggyWidget->MaxGroggyTime = MaxGroggyTime;
+	
+}
+
 
 void UStateComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
@@ -144,17 +167,18 @@ void UStateComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	if (HPWidget == nullptr)
 		return;
 	HPWidget->HP = HP;
-	
+
+
 
 	if (Cast<ACEnemyCharacter>(OwnerCharacter) == nullptr)
 		return;
 
 	// 타이머 함수 호출할 때 가지 남은 시간
-	/*if (OwnerCharacter->HasAuthority())
+	if (OwnerCharacter->HasAuthority())
 	{
 		GroggyTime = GetWorld()->GetTimerManager().GetTimerRemaining(Timer);
-
-		CLog::Print(GroggyTime);
-	}*/
+	}
+	if(GroggyWidget != nullptr)
+		GroggyWidget->GroggyTime = GroggyTime;
 }
 

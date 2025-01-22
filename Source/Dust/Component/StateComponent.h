@@ -10,7 +10,7 @@
 UENUM(BlueprintType)
 enum class EStateType : uint8
 {
-	Idle = 0, Hitted, Dead, Action, Roll, Groggy, HittingParry, Max
+	Idle = 0, Hitted, Dead, Action, Roll, Groggy, HittingParry, Execute, Max
 };
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FStateTypeChanged, EStateType, InPrevType, EStateType, InNewType);
 
@@ -49,6 +49,7 @@ public:
 	FORCEINLINE bool IsRollMode() { return Type == EStateType::Roll; }
 	FORCEINLINE bool IsGroggyMode() { return Type == EStateType::Groggy; }
 	FORCEINLINE bool IsHittingParryMode() { return Type == EStateType::HittingParry; }
+	FORCEINLINE bool IsExecuteMode() { return Type == EStateType::Execute; }
 
 public:
 	void SetIdleMode();
@@ -58,6 +59,7 @@ public:
 	void SetRollMode();
 	void SetGroggyMode();
 	void SetHittingParryMode();
+	void SetExecuteMode();
 
 public:
 	void SubHP(float Damage);
@@ -71,6 +73,9 @@ public:
 
 	UFUNCTION()
 	void EndGroggy();
+
+public:
+	void SetGroggyWidget(UUserWidget* Widget);
 
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -91,15 +96,19 @@ private:
 public:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class UCHPWidget> HPWidgetClass;
-
 	class UCHPWidget* HPWidget;
+
+public:
+	class UCGroggyWidget* GroggyWidget;
 
 
 	UPROPERTY(EditAnywhere, Replicated)
 	float MaxHP = 100;
 	UPROPERTY(EditAnywhere, Replicated)
 	float HP = 100;
-	
+
 	UPROPERTY(BlueprintReadOnly, Replicated)
 	float GroggyTime = 0;
+	UPROPERTY(BlueprintReadOnly, Replicated)
+	float MaxGroggyTime = 3.0f;
 };

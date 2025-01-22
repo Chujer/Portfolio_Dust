@@ -42,6 +42,7 @@ public:
 	TObjectPtr<class UStateComponent> StateComponent;
 
 
+
 public:
 	UPROPERTY(EditAnywhere)
 	FHitAnimData HitData;
