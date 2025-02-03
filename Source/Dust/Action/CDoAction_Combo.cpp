@@ -7,7 +7,7 @@
 #include "Component/WeaponComponent.h"
 #include "GameFramework/Character.h"
 
-void UCDoAction_Combo::BeginPlay(ACharacter* InOwner)
+void UCDoAction_Combo::BeginPlay(ACBaseCharacter* InOwner)
 {
 	Super::BeginPlay(InOwner);
 	if (OwnerCharacter.IsValid())

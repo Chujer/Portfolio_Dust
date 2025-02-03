@@ -45,5 +45,10 @@ public:
 
 public:
 	UPROPERTY(EditAnywhere)
-	FHitAnimData HitData;
+	UAnimMontage* ParryHitAnimation;
+
+	UPROPERTY(EditAnywhere)
+	UAnimMontage* EndDownAnimation;
+
+
 };

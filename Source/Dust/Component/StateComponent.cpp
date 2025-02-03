@@ -41,6 +41,7 @@ void UStateComponent::BeginPlay()
 	HP = MaxHP;
 	OnStateTypeChanged.AddDynamic(this, &UStateComponent::OnHittingParry);
 	OnStateTypeChanged.AddDynamic(this, &UStateComponent::OnGroggy);
+	OnStateTypeChanged.AddDynamic(this, &UStateComponent::OnDown);
 }
 
 void UStateComponent::PlayAnimMontage_NMC_Implementation(UAnimMontage* montage)
@@ -109,6 +110,11 @@ void UStateComponent::SetExecuteMode()
 	ChangeType(EStateType::Execute);
 }
 
+void UStateComponent::SetDownMode()
+{
+	ChangeType(EStateType::Down);
+}
+
 void UStateComponent::SubHP(float Damage)
 {
 	HP -= Damage;
@@ -122,7 +128,7 @@ void UStateComponent::OnHittingParry(EStateType InPrevType, EStateType InNewType
 {
 	if (InNewType == EStateType::HittingParry)
 	{
-		OwnerCharacter->PlayMontage_Server(OwnerCharacter->HitData.ParryHitAnimation);
+		OwnerCharacter->PlayMontage_Server(OwnerCharacter->ParryHitAnimation);
 	}
 }
 
@@ -135,13 +141,31 @@ void UStateComponent::OnGroggy(EStateType InPrevType, EStateType InNewType)
 		return;
 
 	//그로기 상태로 진입 3초후 기존 상태로 복구
-	GetWorld()->GetTimerManager().SetTimer(Timer, this, &UStateComponent::EndGroggy, 3.0f, false, 3.0f);
+	GetWorld()->GetTimerManager().SetTimer(GroggyTimer, this, &UStateComponent::EndGroggy, 3.0f, false, 3.0f);
 }
 
 void UStateComponent::EndGroggy()
 {
 	OwnerCharacter->PlayMontage_Server();
 	SetIdleMode();
+	GetWorld()->GetTimerManager().ClearTimer(Timer);
+}
+
+void UStateComponent::OnDown(EStateType InPrevType, EStateType InNewType)
+{
+	if (InNewType != EStateType::Down)
+		return;
+	if (!OwnerCharacter->HasAuthority())
+		return;
+
+
+	//다운 상태 진입 2초후 기존 상태로 복구
+	GetWorld()->GetTimerManager().SetTimer(Timer, this, &UStateComponent::EndDown, 2.0f, false, 3.0f);
+}
+
+void UStateComponent::EndDown()
+{
+	OwnerCharacter->PlayMontage_Server(OwnerCharacter->EndDownAnimation);
 	GetWorld()->GetTimerManager().ClearTimer(Timer);
 }
 
@@ -176,7 +200,7 @@ void UStateComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	// 타이머 함수 호출할 때 가지 남은 시간
 	if (OwnerCharacter->HasAuthority())
 	{
-		GroggyTime = GetWorld()->GetTimerManager().GetTimerRemaining(Timer);
+		GroggyTime = GetWorld()->GetTimerManager().GetTimerRemaining(GroggyTimer);
 	}
 	if(GroggyWidget != nullptr)
 		GroggyWidget->GroggyTime = GroggyTime;

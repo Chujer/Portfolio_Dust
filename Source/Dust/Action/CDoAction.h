@@ -14,7 +14,7 @@ public:
 	UCDoAction();
 	
 public:
-	virtual void BeginPlay(class ACharacter* InOwner);
+	virtual void BeginPlay(class ACBaseCharacter* InOwner);
 
 public:
 	virtual void DoActionTrigger();
@@ -23,6 +23,12 @@ public:
 	virtual void DoIndexAction_NMC(int Index);
 	virtual void EndDoAtion_Server();
 	virtual void EndDoAtion_NMC();
+
+	virtual void DoActionRight_Server();
+	virtual void DoActionRight_NMC();
+
+	virtual AActor* SearchCanExecut();
+	virtual void Execut(class ACEnemyCharacter* Target);
 
 public:
 	void LaunchCharacter(FDoActionData DoActionData, class ACharacter* LaunchCharacter);
@@ -33,7 +39,7 @@ public:
 	void SpawnHitEffect(FVector Location);
 
 protected:
-	TWeakObjectPtr<ACharacter> OwnerCharacter;
+	TWeakObjectPtr<class ACBaseCharacter> OwnerCharacter;
 
 protected:
 	TWeakObjectPtr<class UStateComponent> StateComponent;
@@ -46,6 +52,9 @@ protected:
 private:
 	UPROPERTY(EditAnywhere)
 	TArray<struct FDoActionData> DoActionDatas;
+
+	UPROPERTY(EditAnywhere)
+	struct FExecuteAnimData ExecuteAnimData;
 
 	UPROPERTY(EditAnywhere)
 	struct FDoActionData DoSubActionData;

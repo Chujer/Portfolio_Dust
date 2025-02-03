@@ -5,6 +5,7 @@
 
 #include "Character/CPlayerCharacter.h"
 #include "Component/IdentityComponent.h"
+#include "Component/MoveComponent.h"
 #include "Component/StateComponent.h"
 #include "Component/WeaponComponent.h"
 
@@ -25,5 +26,11 @@ void UEndAction::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Ani
 	if(UIdentityComponent* identityComponent = MeshComp->GetOwner()->GetComponentByClass<UIdentityComponent>())
 	{
 		identityComponent->EndIdentitySkill();
+	}
+
+	if (UMoveComponent* moveComponent = MeshComp->GetOwner()->GetComponentByClass<UMoveComponent>())
+	{
+		moveComponent->SetStop(false);
+		moveComponent->SetCamerafix(false);
 	}
 }

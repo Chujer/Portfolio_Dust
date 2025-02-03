@@ -10,7 +10,16 @@
 UENUM(BlueprintType)
 enum class EStateType : uint8
 {
-	Idle = 0, Hitted, Dead, Action, Roll, Groggy, HittingParry, Execute, Max
+	Idle = 0,
+	Hitted,
+	Dead,
+	Action,
+	Roll,
+	Groggy,
+	HittingParry,
+	Execute,	//처형 모션 중(Player, Enemy모두)
+	Down,
+	Max
 };
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FStateTypeChanged, EStateType, InPrevType, EStateType, InNewType);
 
@@ -50,6 +59,7 @@ public:
 	FORCEINLINE bool IsGroggyMode() { return Type == EStateType::Groggy; }
 	FORCEINLINE bool IsHittingParryMode() { return Type == EStateType::HittingParry; }
 	FORCEINLINE bool IsExecuteMode() { return Type == EStateType::Execute; }
+	FORCEINLINE bool IsDownMode() { return Type == EStateType::Down; }
 
 public:
 	void SetIdleMode();
@@ -60,6 +70,7 @@ public:
 	void SetGroggyMode();
 	void SetHittingParryMode();
 	void SetExecuteMode();
+	void SetDownMode();
 
 public:
 	void SubHP(float Damage);
@@ -70,9 +81,13 @@ public:
 
 	UFUNCTION()
 	void OnGroggy(EStateType InPrevType, EStateType InNewType);
-
 	UFUNCTION()
 	void EndGroggy();
+
+	UFUNCTION()
+	void OnDown(EStateType InPrevType, EStateType InNewType);
+	UFUNCTION()
+	void EndDown();
 
 public:
 	void SetGroggyWidget(UUserWidget* Widget);
@@ -92,6 +107,7 @@ private:
 
 private:
 	FTimerHandle Timer;
+	FTimerHandle GroggyTimer;
 
 public:
 	UPROPERTY(EditAnywhere)

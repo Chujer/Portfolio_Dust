@@ -24,7 +24,8 @@ public:
 
 
 public:
-	FORCEINLINE void SetStop(bool inStop) { IsStop = inStop; }
+	FORCEINLINE void SetStop(bool Stop) { IsStop = Stop; }
+	FORCEINLINE void SetCamerafix(bool CameraFix) { IsCamerafix = CameraFix; }
 	UFUNCTION(BlueprintCallable)
 	bool GetStop() { return IsStop; }
 public:
@@ -44,4 +45,8 @@ private:
 	FVector2D MovementVector;
 	UPROPERTY(EditAnywhere, Replicated)
 	bool IsStop = false;
+
+
+	UPROPERTY(Replicated)
+	bool IsCamerafix = false;
 };

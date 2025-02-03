@@ -9,8 +9,6 @@
 #include "DataAsset/WeaponDataAsset.h"
 #include "GameFramework/Character.h"
 #include "Net/UnrealNetwork.h"
-#include "DataAsset/WeaponData.h"
-#include "DataAsset/WeaponDataAsset.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 
@@ -23,7 +21,7 @@ UWeaponComponent::UWeaponComponent()
 void UWeaponComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	OwnerCharacter = Cast<ACharacter>(GetOwner());
+	OwnerCharacter = Cast<ACBaseCharacter>(GetOwner());
 	if (!OwnerCharacter.IsValid())
 		return;
 
@@ -58,6 +56,19 @@ void UWeaponComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+}
+
+void UWeaponComponent::DoActionRight_Server_Implementation()
+{
+	if (GetDoAction() == nullptr)
+		return;
+	GetDoAction()->DoActionRight_Server();
+	DoActionRight_NMC();
+}
+
+void UWeaponComponent::DoActionRight_NMC_Implementation()
+{
+	GetDoAction()->DoActionRight_NMC();
 }
 
 void UWeaponComponent::DoIndexAction_Server_Implementation(int Index)

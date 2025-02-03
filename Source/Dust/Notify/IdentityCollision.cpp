@@ -18,11 +18,10 @@ void UIdentityCollision::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequ
 	}
 }
 
-
-void UIdentityCollision::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
+void UIdentityCollision::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
+	const FAnimNotifyEventReference& EventReference)
 {
-	Super::NotifyEnd(MeshComp, Animation);
-
+	Super::NotifyEnd(MeshComp, Animation, EventReference);
 	if (UIdentityComponent* identityComponent = MeshComp->GetOwner()->GetComponentByClass<UIdentityComponent>())
 	{
 

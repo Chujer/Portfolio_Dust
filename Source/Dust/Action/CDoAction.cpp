@@ -8,12 +8,15 @@
 #include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
 #include "NiagaraFunctionLibrary.h"
+#include "Character/CBaseCharacter.h"
+#include "Character/CEnemyCharacter.h"
+#include "Kismet/KismetMathLibrary.h"
 
 UCDoAction::UCDoAction()
 {
 	MaxActionIndex = DoActionDatas.Num();
 }
-void UCDoAction::BeginPlay(ACharacter* InOwner)
+void UCDoAction::BeginPlay(ACBaseCharacter* InOwner)
 {
 	OwnerCharacter = InOwner;
 	if (OwnerCharacter.IsValid())
@@ -71,6 +74,60 @@ void UCDoAction::EndDoAtion_Server()
 void UCDoAction::EndDoAtion_NMC()
 {
 	ActionIndex = 0;
+}
+
+void UCDoAction::DoActionRight_Server()
+{
+
+	if (!StateComponent.IsValid())
+		return;
+
+	StateComponent->SetActionMode();
+
+	ACEnemyCharacter* enemy = Cast<ACEnemyCharacter>(SearchCanExecut());
+	if(enemy != nullptr)
+	{
+		FVector vector1 = enemy->GetActorForwardVector();
+		FVector vector2 = OwnerCharacter->GetActorForwardVector();
+
+		float scala = UKismetMathLibrary::Dot_VectorVector(vector1, vector2);
+		CLog::Print(scala);
+		if (scala < -0.9)
+			Execut(enemy);
+	}
+
+}
+
+void UCDoAction::DoActionRight_NMC()
+{
+}
+
+AActor* UCDoAction::SearchCanExecut()
+{
+	FVector start = OwnerCharacter->GetActorLocation();
+	FVector end = start + OwnerCharacter->GetActorForwardVector() * 150;
+	TArray<AActor*> ignore;
+	ignore.Add(Cast<AActor>(OwnerCharacter));
+	FHitResult hitResult;
+
+	UKismetSystemLibrary::LineTraceSingle(GetWorld(), start, end, ETraceTypeQuery::TraceTypeQuery3, false,
+		ignore, EDrawDebugTrace::Type::ForDuration, hitResult, true);
+
+	return hitResult.GetActor();
+}
+
+void UCDoAction::Execut(class ACEnemyCharacter* Target)
+{
+	MoveComponent->SetCamerafix(true);
+
+	OwnerCharacter->PlayMontage_Server(ExecuteAnimData.ExecuteAnimation_Executioner);
+	Target->PlayMontage_Server(ExecuteAnimData.ExecuteAnimation_Target);
+
+	Target->SetActorRotation(UKismetMathLibrary::FindLookAtRotation(Target->GetActorLocation(), OwnerCharacter->GetActorLocation()));
+	OwnerCharacter->SetActorRotation(UKismetMathLibrary::FindLookAtRotation(OwnerCharacter->GetActorLocation(), Target->GetActorLocation()));
+
+	StateComponent->SetExecuteMode();
+	Target->StateComponent->SetExecuteMode();
 }
 
 void UCDoAction::LaunchCharacter(FDoActionData DoActionData, ACharacter* LaunchCharacter)

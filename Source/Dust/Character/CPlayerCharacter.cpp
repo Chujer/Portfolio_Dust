@@ -134,6 +134,7 @@ void ACPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 		Input->BindAction(IdentityStartAction, ETriggerEvent::Triggered, IdentityComponent.Get(), &UIdentityComponent::BeginIdentity);
 		Input->BindAction(IdentityEndAction, ETriggerEvent::Triggered, IdentityComponent.Get(), &UIdentityComponent::EndIdentity);
 		Input->BindAction(RightClickAction, ETriggerEvent::Triggered, IdentityComponent.Get(), &UIdentityComponent::BeginIdentitySkill);
+		Input->BindAction(RightClickAction, ETriggerEvent::Triggered, WeaponComponent.Get(), &UWeaponComponent::DoActionRight_Server);
 	}
 }
 
@@ -164,7 +165,6 @@ void ACPlayerCharacter::NotifyActorBeginOverlap(AActor* OtherActor)
 			}
 		}
 		InteractText->SetVisibility(true);
-
 	}
 }
 

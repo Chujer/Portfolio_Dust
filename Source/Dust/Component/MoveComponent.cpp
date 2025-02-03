@@ -63,6 +63,9 @@ void UMoveComponent::Look(const FInputActionValue& Value)
 	FVector2D LookAxisVector = Value.Get<FVector2D>();
 	APlayerController* playerController = Cast<APlayerController>(OwnerCharacter->GetController());
 
+	if (IsCamerafix == true)
+		return;
+
 	if (!!playerController && playerController->bShowMouseCursor == false)
 	{
 		// add yaw and pitch input to controller

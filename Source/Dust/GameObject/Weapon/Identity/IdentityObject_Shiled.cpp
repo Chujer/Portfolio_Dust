@@ -107,9 +107,10 @@ void AIdentityObject_Shiled::GuardOverlap(UPrimitiveComponent* OverlappedCompone
 	if (OtherAttachment == nullptr)
 		return;
 
+	//FowardVector를 사용하지 않은이유 : 해당 가드의 경우 기준점은 적이 바라보는 방향이 아닌 적 무기의 위치에 따라 판별해야 하기 때문
 	FVector vector1 = OtherAttachment->GetActorLocation() - GetActorLocation();
 	FVector vector2 = (GetActorLocation() + OwnerCharacter->GetActorForwardVector()) - GetActorLocation();
-
+	
 	float scala = UKismetMathLibrary::Dot_VectorVector(vector1, vector2);
 	if (scala < 20)
 		return;
@@ -132,8 +133,6 @@ void AIdentityObject_Shiled::ParryOverlap(UPrimitiveComponent* OverlappedCompone
 	//충돌 제외 캐릭터에 추가
 	OtherAttachment->AddIgnore(Cast<AActor>(OwnerCharacter));
 	enemyStateComponent->SetHittingParryMode();
-
-	CLog::Print("Parry");
 
 }
 

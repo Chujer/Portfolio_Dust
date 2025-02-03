@@ -88,6 +88,20 @@ struct FHitAnimData
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UAnimMontage* ParryHitAnimation;
+	UAnimMontage* HitAnimation;
+
+};
+
+
+USTRUCT(BlueprintType)
+struct FExecuteAnimData
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UAnimMontage* ExecuteAnimation_Executioner;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UAnimMontage* ExecuteAnimation_Target;
 
 };

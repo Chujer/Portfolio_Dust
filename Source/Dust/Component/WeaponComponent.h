@@ -40,6 +40,12 @@ public:
 	UFUNCTION(Reliable, NetMulticast)
 	void DoAction_NMC();
 
+public:
+	UFUNCTION(Reliable, Server)
+	void DoActionRight_Server();
+	UFUNCTION(Reliable, NetMulticast)
+	void DoActionRight_NMC();
+
 	UFUNCTION(Reliable, Server)
 	void DoIndexAction_Server(int Index);
 	UFUNCTION(Reliable, NetMulticast)
@@ -72,7 +78,7 @@ private:
 	TWeakObjectPtr<class UPlayerSaveComponent> SaveComponent;
 
 private:
-	TWeakObjectPtr<ACharacter> OwnerCharacter;
+	TWeakObjectPtr<class ACBaseCharacter> OwnerCharacter;
 	
 	class UWeaponDataAsset* WeaponDataAsset;
 
