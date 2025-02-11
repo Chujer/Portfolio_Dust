@@ -29,6 +29,12 @@ void UWeaponComponent::BeginPlay()
 	SaveComponent  = OwnerCharacter->GetComponentByClass<UPlayerSaveComponent>();
 }
 
+void UWeaponComponent::BeginDestroy()
+{
+	Super::BeginDestroy();
+	CLog::Print("destroy weaponCOmp");
+}
+
 class AAttachment* UWeaponComponent::GetAttachment() const
 {
 	if (WeaponData == nullptr)
@@ -180,6 +186,7 @@ void UWeaponComponent::SetWeaponData(int WeaponIndex, AAttachment* Attachment)
 	WeaponData = NewObject<UWeaponData>(this, UWeaponData::StaticClass());
 	WeaponData->Attachment = tempAttachment;
 	WeaponData->AnimInstance = WeaponDataAsset->AnimInstance;
+	
 
 	if (!!WeaponDataAsset->DoActionClass)
 	{

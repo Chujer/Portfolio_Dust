@@ -14,7 +14,10 @@ UCLASS()
 class DUST_API UWeaponData : public UObject
 {
 	GENERATED_BODY()
-	
+
+public:
+	virtual void BeginDestroy() override;
+
 public:
 	UPROPERTY(EditAnywhere, Category = "Animation")
 	TSubclassOf<UAnimInstance> AnimInstance;

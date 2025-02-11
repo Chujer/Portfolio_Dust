@@ -78,22 +78,22 @@ void UCDoAction::EndDoAtion_NMC()
 
 void UCDoAction::DoActionRight_Server()
 {
-
 	if (!StateComponent.IsValid())
 		return;
-
-	StateComponent->SetActionMode();
-
-	ACEnemyCharacter* enemy = Cast<ACEnemyCharacter>(SearchCanExecut());
-	if(enemy != nullptr)
+	
+	if (StateComponent->IsIdleMode())
 	{
-		FVector vector1 = enemy->GetActorForwardVector();
-		FVector vector2 = OwnerCharacter->GetActorForwardVector();
+		ACEnemyCharacter* enemy = Cast<ACEnemyCharacter>(SearchCanExecut());
+		if (enemy != nullptr)
+		{
+			FVector vector1 = enemy->GetActorForwardVector();
+			FVector vector2 = OwnerCharacter->GetActorForwardVector();
 
-		float scala = UKismetMathLibrary::Dot_VectorVector(vector1, vector2);
-		CLog::Print(scala);
-		if (scala < -0.9)
-			Execut(enemy);
+			float scala = UKismetMathLibrary::Dot_VectorVector(vector1, vector2);
+			CLog::Print(scala);
+			if (scala < -0.9)
+				Execute(enemy);
+		}
 	}
 
 }
@@ -102,27 +102,37 @@ void UCDoAction::DoActionRight_NMC()
 {
 }
 
+//처형 판별
 AActor* UCDoAction::SearchCanExecut()
 {
 	FVector start = OwnerCharacter->GetActorLocation();
-	FVector end = start + OwnerCharacter->GetActorForwardVector() * 150;
+	FVector end = start + OwnerCharacter->GetActorForwardVector() * 100;
 	TArray<AActor*> ignore;
 	ignore.Add(Cast<AActor>(OwnerCharacter));
 	FHitResult hitResult;
 
-	UKismetSystemLibrary::LineTraceSingle(GetWorld(), start, end, ETraceTypeQuery::TraceTypeQuery3, false,
+	bool result = UKismetSystemLibrary::LineTraceSingle(GetWorld(), start, end, ETraceTypeQuery::TraceTypeQuery3, false,
 		ignore, EDrawDebugTrace::Type::ForDuration, hitResult, true);
+
+	if (result == false)
+		return nullptr;
+
+	if (!hitResult.GetActor()->GetComponentByClass<UStateComponent>()->IsGroggyMode())
+		return nullptr;
 
 	return hitResult.GetActor();
 }
 
-void UCDoAction::Execut(class ACEnemyCharacter* Target)
+//처형
+void UCDoAction::Execute(class ACEnemyCharacter* Target)
 {
+	ExecuteTarget = Target;
 	MoveComponent->SetCamerafix(true);
 
 	OwnerCharacter->PlayMontage_Server(ExecuteAnimData.ExecuteAnimation_Executioner);
 	Target->PlayMontage_Server(ExecuteAnimData.ExecuteAnimation_Target);
 
+	//처형 축 보정
 	Target->SetActorRotation(UKismetMathLibrary::FindLookAtRotation(Target->GetActorLocation(), OwnerCharacter->GetActorLocation()));
 	OwnerCharacter->SetActorRotation(UKismetMathLibrary::FindLookAtRotation(OwnerCharacter->GetActorLocation(), Target->GetActorLocation()));
 

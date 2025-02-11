@@ -33,23 +33,37 @@ void UIdentityComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 void UIdentityComponent::BeginIdentity()
 {
 	IsIdentityState = true;
+
+	if (Identity == nullptr)
+		return;
+
 	Identity->BeginIdentity();
 }
 
 void UIdentityComponent::EndIdentity()
 {
 	IsIdentityState = false;
+
+	if (Identity == nullptr)
+		return;
+
 	Identity->EndIdentity();
 }
 
 void UIdentityComponent::BeginIdentitySkill()
 {
+	if (Identity == nullptr)
+		return;
+
 	if(IsIdentityState == true)
 		Identity->BeginIdentitySkill();
 }
 
 void UIdentityComponent::EndIdentitySkill()
 {
+	if (Identity == nullptr)
+		return;
+
 	Identity->EndIdentitySkill();
 }
 

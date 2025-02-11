@@ -89,6 +89,8 @@ public:
 	UFUNCTION()
 	void EndDown();
 
+	UFUNCTION()
+	void OnExecute(EStateType InPrevType, EStateType InNewType);
 public:
 	void SetGroggyWidget(UUserWidget* Widget);
 

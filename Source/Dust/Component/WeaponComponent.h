@@ -21,6 +21,7 @@ public:
 	
 protected:
 	virtual void BeginPlay() override;
+	virtual void BeginDestroy() override;
 
 public:
 	class AAttachment* GetAttachment() const; 
@@ -81,7 +82,7 @@ private:
 	TWeakObjectPtr<class ACBaseCharacter> OwnerCharacter;
 	
 	class UWeaponDataAsset* WeaponDataAsset;
-
+	UPROPERTY()
 	class UWeaponData* WeaponData;
 
 public:

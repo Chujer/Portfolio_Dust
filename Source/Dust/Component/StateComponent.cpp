@@ -33,8 +33,6 @@ void UStateComponent::BeginPlay()
 	Super::BeginPlay();
 	OwnerCharacter = Cast<ACBaseCharacter>(GetOwner());
 
-
-
 	if (OwnerCharacter->GetController() == nullptr)
 		return;
 
@@ -42,6 +40,7 @@ void UStateComponent::BeginPlay()
 	OnStateTypeChanged.AddDynamic(this, &UStateComponent::OnHittingParry);
 	OnStateTypeChanged.AddDynamic(this, &UStateComponent::OnGroggy);
 	OnStateTypeChanged.AddDynamic(this, &UStateComponent::OnDown);
+	OnStateTypeChanged.AddDynamic(this, &UStateComponent::OnExecute);
 }
 
 void UStateComponent::PlayAnimMontage_NMC_Implementation(UAnimMontage* montage)
@@ -148,7 +147,7 @@ void UStateComponent::EndGroggy()
 {
 	OwnerCharacter->PlayMontage_Server();
 	SetIdleMode();
-	GetWorld()->GetTimerManager().ClearTimer(Timer);
+	GetWorld()->GetTimerManager().ClearTimer(GroggyTimer);
 }
 
 void UStateComponent::OnDown(EStateType InPrevType, EStateType InNewType)
@@ -167,6 +166,14 @@ void UStateComponent::EndDown()
 {
 	OwnerCharacter->PlayMontage_Server(OwnerCharacter->EndDownAnimation);
 	GetWorld()->GetTimerManager().ClearTimer(Timer);
+}
+
+void UStateComponent::OnExecute(EStateType InPrevType, EStateType InNewType)
+{
+	if (InPrevType == EStateType::Groggy && InNewType == EStateType::Execute)
+	{
+		GetWorld()->GetTimerManager().ClearTimer(GroggyTimer);
+	}
 }
 
 void UStateComponent::SetGroggyWidget(UUserWidget* Widget)

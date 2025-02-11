@@ -28,7 +28,10 @@ public:
 	virtual void DoActionRight_NMC();
 
 	virtual AActor* SearchCanExecut();
-	virtual void Execut(class ACEnemyCharacter* Target);
+	virtual void Execute(class ACEnemyCharacter* Target);
+
+public:
+	ACBaseCharacter* GetExecuteTarget() { return ExecuteTarget; }
 
 public:
 	void LaunchCharacter(FDoActionData DoActionData, class ACharacter* LaunchCharacter);
@@ -59,6 +62,8 @@ private:
 	UPROPERTY(EditAnywhere)
 	struct FDoActionData DoSubActionData;
 
-
 	FDoActionData currentDoActionData;
+
+private:
+	ACBaseCharacter* ExecuteTarget;
 };

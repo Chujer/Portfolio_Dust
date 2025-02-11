@@ -2,3 +2,13 @@
 
 
 #include "DataAsset/WeaponData.h"
+
+#include "CLog.h"
+
+void UWeaponData::BeginDestroy()
+{
+	UObject::BeginDestroy();
+
+	CLog::Print("remove" + GetName());
+	
+}
