@@ -3,7 +3,9 @@
 
 #include "Component/StateComponent.h"
 
+#include "AIController.h"
 #include "CLog.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "Blueprint/UserWidget.h"
 #include "Character/CBaseCharacter.h"
 #include "Character/CEnemyCharacter.h"
@@ -63,6 +65,9 @@ void UStateComponent::ChangeType_Implementation(EStateType InType)
 {
 	EStateType prevType = Type;
 	Type = InType;
+
+	if(AAIController* aiController = Cast<AAIController>(OwnerCharacter->GetController()))
+		aiController->GetBlackboardComponent()->SetValueAsEnum("State",  (uint8)Type);
 
 	//상태 변경시 델리게이트에 설정한 함수를 실행
 	if (OnStateTypeChanged.IsBound())
