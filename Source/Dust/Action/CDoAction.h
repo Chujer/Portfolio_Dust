@@ -52,10 +52,11 @@ protected:
 	unsigned int ActionIndex = 0;
 	unsigned int MaxActionIndex = 0;
 
-private:
+public:
 	UPROPERTY(EditAnywhere)
 	TArray<struct FDoActionData> DoActionDatas;
 
+private:
 	UPROPERTY(EditAnywhere)
 	struct FExecuteAnimData ExecuteAnimData;
 

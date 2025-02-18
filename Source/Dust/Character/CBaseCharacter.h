@@ -28,6 +28,9 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 public:
+	void LookAtTarget(const AActor* target);
+
+public:
 	UFUNCTION(Server, Reliable)
 	void PlayMontage_Server(class UAnimMontage* AnimMontage = nullptr, float InPlayRate = 1.f, FName StartSectionName = NAME_None);
 

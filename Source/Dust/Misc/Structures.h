@@ -47,6 +47,10 @@ public:
 
 public:
 	UPROPERTY(EditAnywhere)
+	float Range = 0;
+
+public:
+	UPROPERTY(EditAnywhere)
 		TSubclassOf<UCameraShakeBase> CameraShakeClass;
 };
 

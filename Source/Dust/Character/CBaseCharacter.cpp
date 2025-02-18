@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Component/StateComponent.h"
 #include "Component/WeaponComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
 ACBaseCharacter::ACBaseCharacter()
@@ -40,8 +41,19 @@ void ACBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 }
 
+void ACBaseCharacter::LookAtTarget(const AActor* target)
+{
+	if (target == nullptr)
+		return;
+
+	FRotator rotate = GetActorRotation();
+	rotate.Yaw = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), target->GetActorLocation()).Yaw;
+
+	SetActorRotation(rotate);
+}
+
 void ACBaseCharacter::PlayMontage_NMC_Implementation(UAnimMontage* AnimMontage, float InPlayRate,
-	FName StartSectionName)
+                                                     FName StartSectionName)
 {
 	if (AnimMontage == nullptr)
 		StopAnimMontage();

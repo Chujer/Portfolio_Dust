@@ -66,6 +66,7 @@ void UStateComponent::ChangeType_Implementation(EStateType InType)
 	EStateType prevType = Type;
 	Type = InType;
 
+	//OwnerCharacter가 AI를 사용하는 몬스터일 경우 블랙보드의 State를 갱신
 	if(AAIController* aiController = Cast<AAIController>(OwnerCharacter->GetController()))
 		aiController->GetBlackboardComponent()->SetValueAsEnum("State",  (uint8)Type);
 
