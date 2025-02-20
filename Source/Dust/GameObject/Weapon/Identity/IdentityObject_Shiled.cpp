@@ -5,6 +5,7 @@
 
 #include "CLog.h"
 #include "Character/CEnemyCharacter.h"
+#include "Component/MoveComponent.h"
 #include "Component/StateComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/ShapeComponent.h"
@@ -74,6 +75,7 @@ void AIdentityObject_Shiled::BeginIdentitySkill()
 	StateComponent->SetActionMode();
 
 	OwnerCharacter->PlayMontage_Server(ParryingAnim);
+	OwnerCharacter->GetComponentByClass<UMoveComponent>()->SetStop(true);
 
 	SetCollision(ECollisionEnabled::NoCollision);
 	if (HasAuthority())

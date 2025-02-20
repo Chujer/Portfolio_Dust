@@ -25,6 +25,9 @@ void UAttachmentCollision::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequ
 	if (UWeaponComponent* weaponComponent = MeshComp->GetOwner()->GetComponentByClass<UWeaponComponent>())
 	{
 		if (weaponComponent->GetAttachment() != nullptr)
+		{
 			weaponComponent->GetAttachment()->SetCollision(ECollisionEnabled::NoCollision);
+			weaponComponent->GetAttachment()->ClearHittedCharacter();
+		}
 	}
 }

@@ -102,7 +102,7 @@ void ACPlayerCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	//UseControllerRotationYaw의 활성화시 캐릭터의 회전이 뚝끊겨보이는 것을 보간해서 부드러운 회전으로 설정
-	if(IsUseControllerRotYaw)
+	if(EvadeToCameraFix)
 	{
 		FRotator currentRotation = GetActorRotation();
 		FRotator targetRotation = GetActorRotation();
@@ -115,6 +115,7 @@ void ACPlayerCharacter::Tick(float DeltaTime)
 		{
 			bUseControllerRotationYaw = true;
 			IsUseControllerRotYaw = false;
+			EvadeToCameraFix = false;
 		}
 	}
 }

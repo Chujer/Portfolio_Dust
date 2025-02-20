@@ -46,10 +46,33 @@ void ACBaseCharacter::LookAtTarget(const AActor* target)
 	if (target == nullptr)
 		return;
 
+
 	FRotator rotate = GetActorRotation();
 	rotate.Yaw = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), target->GetActorLocation()).Yaw;
-
+	
 	SetActorRotation(rotate);
+}
+
+void ACBaseCharacter::LookAtLERP(const AActor* target)
+{
+	if (target == nullptr)
+		return;
+	
+	FRotator currentRotation = GetActorRotation();
+	FRotator targetRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), target->GetActorLocation());
+
+	float deltaYaw = UKismetMathLibrary::NormalizeAxis(targetRotation.Yaw - currentRotation.Yaw);
+
+	if (deltaYaw > 180.0f)
+		deltaYaw -= 360.0f;
+	else if (deltaYaw < -180.0f)
+		deltaYaw += 360.0f;
+
+	float newYaw = FMath::FInterpTo(currentRotation.Yaw, currentRotation.Yaw + deltaYaw, GetWorld()->GetDeltaSeconds(), 10.0f);
+
+	
+    FRotator newRotation = FRotator(currentRotation.Pitch, newYaw, currentRotation.Roll);
+    SetActorRotation(newRotation);
 }
 
 void ACBaseCharacter::PlayMontage_NMC_Implementation(UAnimMontage* AnimMontage, float InPlayRate,

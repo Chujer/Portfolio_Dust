@@ -89,6 +89,7 @@ void UEvadeComponent::Evade_NMC_Implementation(const FVector2D& value)
 		PlayMontage(EvadeDataL);
 	else
 		PlayMontage(EvadeDataF);
+	
 }
 
 

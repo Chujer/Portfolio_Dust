@@ -29,6 +29,7 @@ public:
 
 public:
 	void LookAtTarget(const AActor* target);
+	void LookAtLERP(const AActor* target);
 
 public:
 	UFUNCTION(Server, Reliable)

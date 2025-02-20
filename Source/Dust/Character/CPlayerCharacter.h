@@ -29,6 +29,10 @@ public:
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 	virtual void NotifyActorEndOverlap(AActor* OtherActor) override;
 
+public:
+	// 카메라 고정전 보간 여부
+	void DoEvadeToCameraFix(bool InFix) { EvadeToCameraFix = InFix; }
+
 	//TODO - 임시 실행 함수 /////////////////////////////////////////
 public:
 	void PlayInteract();
@@ -108,4 +112,7 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "UseControllerRotSetting")
 	float NealyControllerGap = 370.0f;
+
+private:
+	bool EvadeToCameraFix = true;
 };
