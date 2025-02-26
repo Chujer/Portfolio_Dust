@@ -1,7 +1,11 @@
 #include "GameObject/Weapon/Attachment.h"
 
+#include <filesystem>
+
 #include "CLog.h"
 #include "Action/CDoAction.h"
+#include "Character/CBaseCharacter.h"
+#include "Component/StateComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
@@ -26,12 +30,16 @@ void AAttachment::SetCollision_Implementation(ECollisionEnabled::Type value)
 
 void AAttachment::AddIgnore_Implementation(AActor* Actor)
 {
-	HittedCharacter.AddUnique(Cast<ACharacter>(Actor));
+	if (ACBaseCharacter* character = Cast<ACBaseCharacter>(Actor))
+	{
+		HittedCharacter.AddUnique(character);
+	}
 }
 
 void AAttachment::ClearHittedCharacter_Implementation()
 {
 	HittedCharacter.Empty();
+	HittedRollCharacter.Empty();
 }
 
 void AAttachment::BeginPlay()
@@ -52,18 +60,23 @@ void AAttachment::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	Super::NotifyActorBeginOverlap(OtherActor);
-	ACharacter* otherActor = Cast<ACharacter>(OtherActor);
+	ACBaseCharacter* otherActor = Cast<ACBaseCharacter>(OtherActor);
 
 	//중복충돌 방지
-	if (OtherActor == OwnerCharacter || Cast<ACharacter>(otherActor) == nullptr)
+	if (OtherActor == OwnerCharacter || Cast<ACBaseCharacter>(otherActor) == nullptr)
 		return;
 	if (OwnerCharacter->GetClass() == otherActor->GetClass())
 		return;
 
-	if (HittedCharacter.Find(Cast<ACharacter>(otherActor)) != INDEX_NONE)
+	//구르기로 회피한 적
+	if (otherActor->GetComponentByClass<UStateComponent>()->IsRollMode())
+		HittedRollCharacter.AddUnique(otherActor);
+
+	if (HittedCharacter.Find(Cast<ACBaseCharacter>(otherActor)) != INDEX_NONE || HittedRollCharacter.Find(Cast<ACBaseCharacter>(otherActor)) != INDEX_NONE)
 		return;
 
-	HittedCharacter.AddUnique(Cast<ACharacter>(otherActor));
+	//이미 타격한 적 추가
+	HittedCharacter.AddUnique(Cast<ACBaseCharacter>(otherActor));
 	
 	//무기충돌 처리
 	if (OnBeginCollision.IsBound())

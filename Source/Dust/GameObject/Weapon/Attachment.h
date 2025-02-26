@@ -42,7 +42,8 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Attachment")
 	FName AttachSocketName;
 
-	TArray<ACharacter*> HittedCharacter;
+	TArray<class ACBaseCharacter*> HittedCharacter;
+	TArray<class ACBaseCharacter*> HittedRollCharacter;
 
 public:
 	FOnBeginCollision OnBeginCollision;
