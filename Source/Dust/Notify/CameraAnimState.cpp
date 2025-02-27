@@ -17,9 +17,12 @@ void UCameraAnimState::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequen
 {
 	Super::NotifyBegin(MeshComp, Animation, TotalDuration, EventReference);
 
+
 	OwnerCharacter = Cast<ACharacter>(MeshComp->GetOwner());
 
 	if (OwnerCharacter == nullptr || CameraAnimActorClass == nullptr || AnimSequence == nullptr)
+		return;
+	if (!OwnerCharacter->IsLocallyControlled())
 		return;
 
 	FRotator rotator = OwnerCharacter->GetActorRotation();
@@ -35,6 +38,9 @@ void UCameraAnimState::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequence
 	const FAnimNotifyEventReference& EventReference)
 {
 	Super::NotifyEnd(MeshComp, Animation, EventReference);
+
+	/*if (!OwnerCharacter->IsLocallyControlled())
+		return;*/
 
 	if (OwnerCharacter == nullptr)
 		return;

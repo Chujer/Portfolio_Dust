@@ -59,6 +59,7 @@ void UCDoAction::DoIndexAction_NMC(int Index)
 	{
 		OwnerCharacter->PlayAnimMontage(DoActionDatas[Index].Montage, DoActionDatas[Index].PlayRate);
 		currentDoActionData = DoActionDatas[Index];
+		ActionIndex = Index;
 	}
 }
 
@@ -159,6 +160,10 @@ void UCDoAction::ApplyDamage(AActor* OtherActor, class AAttachment* Attachment, 
 {
 	//UKismetSystemLibrary::DrawDebugSphere(this, HitResult.Location, 10, 12, FLinearColor::White, 5);
 	SpawnHitEffect(HitResult.Location);
+	APlayerController* controller = OwnerCharacter->GetController<APlayerController>();
+
+	if (controller != nullptr && DoActionDatas[ActionIndex].CameraShakeClass != nullptr)
+		controller->PlayerCameraManager->StartCameraShake(DoActionDatas[ActionIndex].CameraShakeClass);
 	
 	UStateComponent* stateComponent = OtherActor->GetComponentByClass<UStateComponent>();
 	if (stateComponent == nullptr)

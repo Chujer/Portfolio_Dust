@@ -25,7 +25,7 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	class UCameraAnimationSequence* AnimSequence;
-private:
+	
 	class ACharacter* OwnerCharacter;
 
 };

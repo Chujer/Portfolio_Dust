@@ -17,7 +17,12 @@ protected:
 public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void StartCameraAnim(class UCameraAnimationSequence* AnimSequence);
+
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void EndCameraAnim();
-	
+
+
+public:
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	class ACharacter* OwnerCharacter;
 };
