@@ -118,7 +118,14 @@ void AIdentityObject_Shiled::GuardOverlap(UPrimitiveComponent* OverlappedCompone
 		return;
 	//충돌 제외 캐릭터에 추가
 	OtherAttachment->AddIgnore(Cast<AActor>(OwnerCharacter));
-	OwnerCharacter->LaunchCharacter(OwnerCharacter->GetActorForwardVector() * -150.f, false, false);
+
+	if(BlockAnim != nullptr)
+		OwnerCharacter->PlayMontage_Server(BlockAnim);
+
+	OwnerCharacter->LaunchCharacter(OwnerCharacter->GetActorForwardVector() * -150, false, false);
+
+	if (CameraShakeClass != nullptr)
+		Cast<APlayerController>(OwnerCharacter->GetController())->PlayerCameraManager->StartCameraShake(CameraShakeClass);
 }
 
 void AIdentityObject_Shiled::ParryOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,

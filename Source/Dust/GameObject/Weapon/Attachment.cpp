@@ -85,8 +85,8 @@ void AAttachment::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 		TArray<AActor*> Ignore;
 		Ignore.AddUnique(OwnerCharacter.Get());
 		UKismetSystemLibrary::LineTraceSingle(this, Collision->GetComponentLocation(), OtherActor->GetActorLocation(), ETraceTypeQuery::TraceTypeQuery3, false,
-			Ignore, EDrawDebugTrace::Type::ForDuration, HitResult, true);
-		UKismetSystemLibrary::DrawDebugSphere(GetWorld(), HitResult.Location, 10);
+			Ignore, EDrawDebugTrace::Type::None, HitResult, true);
+		//UKismetSystemLibrary::DrawDebugSphere(GetWorld(), HitResult.Location, 10);
 
 
 		OnBeginCollision.Broadcast(OtherActor, this, HitResult);

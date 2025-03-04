@@ -10,6 +10,7 @@
 #include "NiagaraFunctionLibrary.h"
 #include "Character/CBaseCharacter.h"
 #include "Character/CEnemyCharacter.h"
+#include "Character/CPlayerCharacter.h"
 #include "Kismet/KismetMathLibrary.h"
 
 UCDoAction::UCDoAction()
@@ -113,7 +114,7 @@ AActor* UCDoAction::SearchCanExecut()
 	FHitResult hitResult;
 
 	bool result = UKismetSystemLibrary::LineTraceSingle(GetWorld(), start, end, ETraceTypeQuery::TraceTypeQuery3, false,
-		ignore, EDrawDebugTrace::Type::ForDuration, hitResult, true);
+		ignore, EDrawDebugTrace::Type::None, hitResult, true);
 
 	if (result == false)
 		return nullptr;
@@ -162,15 +163,41 @@ void UCDoAction::ApplyDamage(AActor* OtherActor, class AAttachment* Attachment, 
 	SpawnHitEffect(HitResult.Location);
 	APlayerController* controller = OwnerCharacter->GetController<APlayerController>();
 
-	if (controller != nullptr && DoActionDatas[ActionIndex].CameraShakeClass != nullptr)
-		controller->PlayerCameraManager->StartCameraShake(DoActionDatas[ActionIndex].CameraShakeClass);
-	
-	UStateComponent* stateComponent = OtherActor->GetComponentByClass<UStateComponent>();
-	if (stateComponent == nullptr)
+
+	UStateComponent* otherStateComponent = OtherActor->GetComponentByClass<UStateComponent>();
+	ACBaseCharacter* OtherCharacter = Cast<ACBaseCharacter>(OtherActor);
+	if (otherStateComponent == nullptr)
 		return;
 
-	if (OwnerCharacter->HasAuthority())
-		stateComponent->SubHP(currentDoActionData.Power);
+	//카메라 쉐이크 [플레이어의 경우 ActionIndex를 올리지만 몬스터의 경우 올리지 않기에 Cast로 판별]
+
+	if (Cast<ACPlayerCharacter>(OtherCharacter) == nullptr)					//몬스터 히트
+	{
+		if (controller != nullptr && DoActionDatas[ActionIndex].CameraShakeClass != nullptr)
+		{
+			controller->PlayerCameraManager->StartCameraShake(DoActionDatas[ActionIndex].CameraShakeClass);
+		}
+	}
+	else                                                                    //플레이어 히트
+	{
+		//공격 강함 판별
+		if (DoActionDatas[ActionIndex - 1].isNormalHit)
+			OtherCharacter->PlayMontage_Server(OtherCharacter->HitNormalAnim);
+		else
+			OtherCharacter->PlayMontage_Server(OtherCharacter->NockDownAnim);
+
+		if (controller != nullptr && DoActionDatas[ActionIndex - 1].CameraShakeClass != nullptr)
+		{
+			controller->PlayerCameraManager->StartCameraShake(DoActionDatas[ActionIndex - 1].CameraShakeClass);
+
+			OtherCharacter->StateComponent->SetHittedMode();
+
+		}
+	}
+
+	if (OtherCharacter->HasAuthority())
+		otherStateComponent->SubHP(currentDoActionData.Power);
+
 }
 
 void UCDoAction::SpawnHitEffect(FVector Location)

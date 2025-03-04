@@ -30,6 +30,8 @@ public:
 		float PlayRate = 1.0f;
 	UPROPERTY(EditAnywhere)
 		bool bCanMove = false;
+	UPROPERTY(EditAnywhere)
+		bool isNormalHit = true;
 
 public:
 	UPROPERTY(EditAnywhere)

@@ -38,7 +38,13 @@ public:
 	UPROPERTY(EditAnywhere)
 	UAnimMontage* GuardAnim;
 	UPROPERTY(EditAnywhere)
+	UAnimMontage* BlockAnim;
+
+	UPROPERTY(EditAnywhere)
 	UAnimMontage* ParryingAnim;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UCameraShakeBase> CameraShakeClass;
 
 	class UStateComponent* StateComponent;
 

@@ -48,11 +48,17 @@ public:
 
 
 public:
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "HitAnim")
 	UAnimMontage* ParryHitAnimation;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "HitAnim")
 	UAnimMontage* EndDownAnimation;
+
+	UPROPERTY(EditAnywhere, Category = "HitAnim")
+	UAnimMontage* HitNormalAnim;
+
+	UPROPERTY(EditAnywhere, Category = "HitAnim")
+	UAnimMontage* NockDownAnim;
 
 
 };
