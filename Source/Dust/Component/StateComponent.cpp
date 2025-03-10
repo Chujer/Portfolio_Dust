@@ -158,14 +158,14 @@ void UStateComponent::EndGroggy()
 
 void UStateComponent::OnDown(EStateType InPrevType, EStateType InNewType)
 {
-	if (InNewType != EStateType::Down)
+	if (InNewType != EStateType::Down || InPrevType != EStateType::Execute)
 		return;
 	if (!OwnerCharacter->HasAuthority())
 		return;
 
 
 	//다운 상태 진입 2초후 기존 상태로 복구
-	GetWorld()->GetTimerManager().SetTimer(Timer, this, &UStateComponent::EndDown, 2.0f, false, 3.0f);
+	GetWorld()->GetTimerManager().SetTimer(Timer, this, &UStateComponent::EndDown, 2.0f, false, 2.0f);
 }
 
 void UStateComponent::EndDown()

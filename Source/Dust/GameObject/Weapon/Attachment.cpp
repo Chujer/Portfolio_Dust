@@ -39,7 +39,7 @@ void AAttachment::AddIgnore_Implementation(AActor* Actor)
 void AAttachment::ClearHittedCharacter_Implementation()
 {
 	HittedCharacter.Empty();
-	HittedRollCharacter.Empty();
+	invincibilityCharacter.Empty();
 }
 
 void AAttachment::BeginPlay()
@@ -68,11 +68,14 @@ void AAttachment::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 	if (OwnerCharacter->GetClass() == otherActor->GetClass())
 		return;
 
-	//구르기로 회피한 적
-	if (otherActor->GetComponentByClass<UStateComponent>()->IsRollMode())
-		HittedRollCharacter.AddUnique(otherActor);
+	//무적상태인 캐릭터
+	if (UStateComponent* otherState = otherActor->GetComponentByClass<UStateComponent>())
+	{
+		if (otherState->IsRollMode() || otherState->IsDownMode() || otherState->IsExecuteMode())
+			invincibilityCharacter.AddUnique(otherActor);
+	}
 
-	if (HittedCharacter.Find(Cast<ACBaseCharacter>(otherActor)) != INDEX_NONE || HittedRollCharacter.Find(Cast<ACBaseCharacter>(otherActor)) != INDEX_NONE)
+	if (HittedCharacter.Find(Cast<ACBaseCharacter>(otherActor)) != INDEX_NONE || invincibilityCharacter.Find(Cast<ACBaseCharacter>(otherActor)) != INDEX_NONE)
 		return;
 
 	//이미 타격한 적 추가
@@ -89,6 +92,6 @@ void AAttachment::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 		//UKismetSystemLibrary::DrawDebugSphere(GetWorld(), HitResult.Location, 10);
 
 
-		OnBeginCollision.Broadcast(OtherActor, this, HitResult);
+		OnBeginCollision.Broadcast(OtherActor, this, HitResult, isNormalDamage);
 	}
 }

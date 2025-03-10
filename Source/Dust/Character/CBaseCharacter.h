@@ -38,6 +38,13 @@ public:
 	UFUNCTION(NetMulticast, Reliable)
 	void PlayMontage_NMC(class UAnimMontage* AnimMontage = nullptr, float InPlayRate = 1.f, FName StartSectionName = NAME_None);
 
+
+	UFUNCTION(Server, Reliable)
+	void StopMontage_Server();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void StopMontage_NMC();
+
 public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	TObjectPtr<class UWeaponComponent> WeaponComponent;

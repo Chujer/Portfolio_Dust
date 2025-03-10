@@ -15,6 +15,9 @@ void UAttachmentCollision::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSe
 	{
 		if (weaponComponent->GetAttachment() != nullptr)
 			weaponComponent->GetAttachment()->SetCollision(ECollisionEnabled::QueryOnly);
+
+		if (weaponComponent->GetAttachment() != nullptr)
+			weaponComponent->GetAttachment()->isNormalDamage = IsNormalDamage;
 	}
 }
 

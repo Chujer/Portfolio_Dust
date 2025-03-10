@@ -37,7 +37,7 @@ public:
 	void LaunchCharacter(FDoActionData DoActionData, class ACharacter* LaunchCharacter);
 
 	UFUNCTION()
-	void ApplyDamage(AActor* OtherActor, class AAttachment* Attachment, const FHitResult& HitResult);
+	void ApplyDamage(AActor* OtherActor, class AAttachment* Attachment, const FHitResult& HitResult, bool isNormalHit);
 	
 	void SpawnHitEffect(FVector Location);
 

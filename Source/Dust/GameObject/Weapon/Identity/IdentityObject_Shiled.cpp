@@ -56,7 +56,9 @@ void AIdentityObject_Shiled::EndIdentity()
 	if (IsParrying == true)
 		return;
 	StateComponent->SetIdleMode();
-	OwnerCharacter->StopAnimMontage();
+
+	if (OwnerCharacter->GetCurrentMontage() == GuardAnim)
+		OwnerCharacter->StopMontage_Server();
 
 
 	SetCollision(ECollisionEnabled::NoCollision);
@@ -68,6 +70,8 @@ void AIdentityObject_Shiled::BeginIdentitySkill()
 	if (ParryingAnim == nullptr)
 		return;
 	if (StateComponent == nullptr)
+		return;
+	if (StateComponent->IsDownMode())
 		return;
 
 	SetParry(true);

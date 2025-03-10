@@ -157,7 +157,7 @@ void UCDoAction::LaunchCharacter(FDoActionData DoActionData, ACharacter* LaunchC
 		OwnerCharacter->LaunchCharacter(launchVector, true, true);
 }
 
-void UCDoAction::ApplyDamage(AActor* OtherActor, class AAttachment* Attachment, const FHitResult& HitResult)
+void UCDoAction::ApplyDamage(AActor* OtherActor, class AAttachment* Attachment, const FHitResult& HitResult, bool isNormalHit)
 {
 	//UKismetSystemLibrary::DrawDebugSphere(this, HitResult.Location, 10, 12, FLinearColor::White, 5);
 	SpawnHitEffect(HitResult.Location);
@@ -170,8 +170,7 @@ void UCDoAction::ApplyDamage(AActor* OtherActor, class AAttachment* Attachment, 
 		return;
 
 	//카메라 쉐이크 [플레이어의 경우 ActionIndex를 올리지만 몬스터의 경우 올리지 않기에 Cast로 판별]
-
-	if (Cast<ACPlayerCharacter>(OtherCharacter) == nullptr)					//몬스터 히트
+	if (Cast<ACPlayerCharacter>(OwnerCharacter) == nullptr)					//몬스터 히트
 	{
 		if (controller != nullptr && DoActionDatas[ActionIndex].CameraShakeClass != nullptr)
 		{
@@ -180,23 +179,28 @@ void UCDoAction::ApplyDamage(AActor* OtherActor, class AAttachment* Attachment, 
 	}
 	else                                                                    //플레이어 히트
 	{
-		//공격 강함 판별
-		if (DoActionDatas[ActionIndex - 1].isNormalHit)
-			OtherCharacter->PlayMontage_Server(OtherCharacter->HitNormalAnim);
-		else
-			OtherCharacter->PlayMontage_Server(OtherCharacter->NockDownAnim);
 
 		if (controller != nullptr && DoActionDatas[ActionIndex - 1].CameraShakeClass != nullptr)
 		{
 			controller->PlayerCameraManager->StartCameraShake(DoActionDatas[ActionIndex - 1].CameraShakeClass);
-
-			OtherCharacter->StateComponent->SetHittedMode();
-
 		}
 	}
 
+	if(Cast<ACPlayerCharacter>(OtherCharacter) != nullptr)
+		OtherCharacter->StateComponent->SetHittedMode();
+
 	if (OtherCharacter->HasAuthority())
 		otherStateComponent->SubHP(currentDoActionData.Power);
+
+	if (OtherCharacter->HitNormalAnim == nullptr || OtherCharacter->NockDownAnim == nullptr)
+		return;
+
+	//공격 강함에 따른 애니메이션 출력
+	if (isNormalHit)
+		OtherCharacter->PlayMontage_Server(OtherCharacter->HitNormalAnim);
+	else
+		OtherCharacter->PlayMontage_Server(OtherCharacter->NockDownAnim);
+
 
 }
 

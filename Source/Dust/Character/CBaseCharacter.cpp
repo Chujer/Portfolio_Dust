@@ -75,6 +75,16 @@ void ACBaseCharacter::LookAtLERP(const AActor* target)
     SetActorRotation(newRotation);
 }
 
+void ACBaseCharacter::StopMontage_Server_Implementation()
+{
+	StopMontage_NMC();
+}
+
+void ACBaseCharacter::StopMontage_NMC_Implementation()
+{
+	StopAnimMontage();
+}
+
 void ACBaseCharacter::PlayMontage_NMC_Implementation(UAnimMontage* AnimMontage, float InPlayRate,
                                                      FName StartSectionName)
 {

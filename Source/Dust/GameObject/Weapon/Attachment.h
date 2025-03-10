@@ -5,7 +5,7 @@
 #include "GameFramework/Actor.h"
 #include "Attachment.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnBeginCollision, AActor*, OtherActor, class AAttachment*, Attachment, const FHitResult&, HitResult);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnBeginCollision, AActor*, OtherActor, class AAttachment*, Attachment, const FHitResult&, HitResult, bool, isNormalHit);
 
 UCLASS()
 class DUST_API AAttachment : public AActor
@@ -37,13 +37,15 @@ public:
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* WeaponMesh;
 
+	bool isNormalDamage = true;
+
 private:
 	TWeakObjectPtr<ACharacter> OwnerCharacter;
 	UPROPERTY(EditAnywhere, Category = "Attachment")
 	FName AttachSocketName;
 
 	TArray<class ACBaseCharacter*> HittedCharacter;
-	TArray<class ACBaseCharacter*> HittedRollCharacter;
+	TArray<class ACBaseCharacter*> invincibilityCharacter;
 
 public:
 	FOnBeginCollision OnBeginCollision;
