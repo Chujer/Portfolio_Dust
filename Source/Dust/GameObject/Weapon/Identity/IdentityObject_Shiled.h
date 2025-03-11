@@ -53,6 +53,11 @@ private:
 	bool IsParrying = false;
 
 public:
+	UPROPERTY(EditAnywhere, Category = "Sound")
+	USoundBase* GaurdSound;
+	UPROPERTY(EditAnywhere, Category = "Sound")
+	USoundBase* ParrySound;
+public:
 	UFUNCTION()
 	void BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 };

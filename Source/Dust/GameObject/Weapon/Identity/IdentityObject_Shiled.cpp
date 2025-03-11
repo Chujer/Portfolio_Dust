@@ -11,6 +11,7 @@
 #include "Components/ShapeComponent.h"
 #include "GameFramework/Character.h"
 #include "GameObject/Weapon/Attachment.h"
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Net/UnrealNetwork.h"
 
@@ -126,6 +127,8 @@ void AIdentityObject_Shiled::GuardOverlap(UPrimitiveComponent* OverlappedCompone
 	if(BlockAnim != nullptr)
 		OwnerCharacter->PlayMontage_Server(BlockAnim);
 
+	UGameplayStatics::PlaySound2D(GetWorld(), GaurdSound);
+
 	OwnerCharacter->LaunchCharacter(OwnerCharacter->GetActorForwardVector() * -150, false, false);
 
 	if (CameraShakeClass != nullptr)
@@ -145,6 +148,7 @@ void AIdentityObject_Shiled::ParryOverlap(UPrimitiveComponent* OverlappedCompone
 
 	//충돌 제외 캐릭터에 추가
 	OtherAttachment->AddIgnore(Cast<AActor>(OwnerCharacter));
+	UGameplayStatics::PlaySound2D(GetWorld(), ParrySound);
 	enemyStateComponent->SetHittingParryMode();
 
 }
