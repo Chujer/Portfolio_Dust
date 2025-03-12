@@ -41,6 +41,18 @@ void ACBaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 }
 
+void ACBaseCharacter::SetCustomTimeAndEnd(float MulTime, float EndTime)
+{
+	CustomTimeDilation = MulTime;
+	GetWorldTimerManager().SetTimer(ReturnChangedCustomTimeTimerHandle, this, &ACBaseCharacter::ReturnCustomTIme, EndTime, false, EndTime);
+}
+
+void ACBaseCharacter::ReturnCustomTIme()
+{
+	CustomTimeDilation = 1.0f;
+	GetWorldTimerManager().ClearTimer(ReturnChangedCustomTimeTimerHandle);
+}
+
 void ACBaseCharacter::LookAtTarget(const AActor* target)
 {
 	if (target == nullptr)

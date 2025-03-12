@@ -49,4 +49,7 @@ private:
 
 public:
 	FOnBeginCollision OnBeginCollision;
+
+	UPROPERTY(EditAnywhere, Category = "Sound")
+	USoundBase* HitSound;
 };

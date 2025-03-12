@@ -89,8 +89,10 @@ void AAttachment::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 		Ignore.AddUnique(OwnerCharacter.Get());
 		UKismetSystemLibrary::LineTraceSingle(this, Collision->GetComponentLocation(), OtherActor->GetActorLocation(), ETraceTypeQuery::TraceTypeQuery3, false,
 			Ignore, EDrawDebugTrace::Type::None, HitResult, true);
-		//UKismetSystemLibrary::DrawDebugSphere(GetWorld(), HitResult.Location, 10);
+		UKismetSystemLibrary::DrawDebugSphere(GetWorld(), HitResult.Location, 10);
 
+		//Hit»ç¿îµå
+		UGameplayStatics::PlaySound2D(GetWorld(), HitSound);
 
 		OnBeginCollision.Broadcast(OtherActor, this, HitResult, isNormalDamage);
 	}

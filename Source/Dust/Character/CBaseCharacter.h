@@ -28,6 +28,10 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 public:
+	void SetCustomTimeAndEnd(float MulTime, float EndTime);
+	void ReturnCustomTIme();
+
+public:
 	void LookAtTarget(const AActor* target);
 	void LookAtLERP(const AActor* target);
 
@@ -52,8 +56,6 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	TObjectPtr<class UStateComponent> StateComponent;
 
-
-
 public:
 	UPROPERTY(EditAnywhere, Category = "HitAnim")
 	UAnimMontage* ParryHitAnimation;
@@ -67,5 +69,6 @@ public:
 	UPROPERTY(EditAnywhere, Category = "HitAnim")
 	UAnimMontage* NockDownAnim;
 
-
+private:
+	FTimerHandle ReturnChangedCustomTimeTimerHandle;
 };

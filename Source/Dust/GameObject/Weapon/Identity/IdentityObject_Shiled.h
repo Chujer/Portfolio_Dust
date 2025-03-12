@@ -22,7 +22,7 @@ public:
 	virtual void EndIdentity() override;
 	virtual void BeginIdentitySkill() override;
 	virtual void EndIdentitySkill() override;
-
+	
 public:
 	UFUNCTION(Server, Reliable)
 	void SetParry(bool isParry);
@@ -57,6 +57,7 @@ public:
 	USoundBase* GaurdSound;
 	UPROPERTY(EditAnywhere, Category = "Sound")
 	USoundBase* ParrySound;
+	
 public:
 	UFUNCTION()
 	void BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);

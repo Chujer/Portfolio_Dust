@@ -140,15 +140,25 @@ void AIdentityObject_Shiled::ParryOverlap(UPrimitiveComponent* OverlappedCompone
 {
 	ACEnemyCharacter* enemy = Cast<ACEnemyCharacter>(OtherActor->Owner);
 	AAttachment* OtherAttachment = Cast<AAttachment>(OtherActor);
+
+	if (OwnerCharacter->StateComponent->IsDownMode() || OwnerCharacter->StateComponent->IsHittedMode())
+		return;
+
 	if (enemy == nullptr)
 		return;
 	UStateComponent* enemyStateComponent = enemy->GetComponentByClass<UStateComponent>();
 	if (enemyStateComponent == nullptr)
 		return;
+	//충돌 제외 캐릭터에 추가
+	OtherAttachment->AddIgnore(Cast<AActor>(OwnerCharacter));
+
+	UGameplayStatics::PlaySound2D(GetWorld(), ParrySound);
+
+	enemy->SetCustomTimeAndEnd(0.25f, 1.0f);
+	OwnerCharacter->SetCustomTimeAndEnd(0.25f, 1.0f);
 
 	//충돌 제외 캐릭터에 추가
 	OtherAttachment->AddIgnore(Cast<AActor>(OwnerCharacter));
-	UGameplayStatics::PlaySound2D(GetWorld(), ParrySound);
 	enemyStateComponent->SetHittingParryMode();
 
 }
