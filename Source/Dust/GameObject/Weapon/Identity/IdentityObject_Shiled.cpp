@@ -126,8 +126,8 @@ void AIdentityObject_Shiled::GuardOverlap(UPrimitiveComponent* OverlappedCompone
 
 	if(BlockAnim != nullptr)
 		OwnerCharacter->PlayMontage_Server(BlockAnim);
-
-	UGameplayStatics::PlaySound2D(GetWorld(), GaurdSound);
+	
+	OwnerCharacter->PlaySoundRPC(GaurdSound);
 
 	OwnerCharacter->LaunchCharacter(OwnerCharacter->GetActorForwardVector() * -150, false, false);
 
@@ -146,16 +146,17 @@ void AIdentityObject_Shiled::ParryOverlap(UPrimitiveComponent* OverlappedCompone
 
 	if (enemy == nullptr)
 		return;
+
 	UStateComponent* enemyStateComponent = enemy->GetComponentByClass<UStateComponent>();
 	if (enemyStateComponent == nullptr)
 		return;
 	//충돌 제외 캐릭터에 추가
 	OtherAttachment->AddIgnore(Cast<AActor>(OwnerCharacter));
+	enemy->LookAtLERP(Cast<AActor>(OwnerCharacter));
+	OwnerCharacter->PlaySoundRPC(ParrySound);
 
-	UGameplayStatics::PlaySound2D(GetWorld(), ParrySound);
-
-	enemy->SetCustomTimeAndEnd(0.25f, 1.0f);
-	OwnerCharacter->SetCustomTimeAndEnd(0.25f, 1.0f);
+	enemy->SetCustomTimeAndEnd(0.4f, 1.0f);
+	OwnerCharacter->SetCustomTimeAndEnd(0.4f, 1.0f);
 
 	//충돌 제외 캐릭터에 추가
 	OtherAttachment->AddIgnore(Cast<AActor>(OwnerCharacter));

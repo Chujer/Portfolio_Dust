@@ -3,6 +3,7 @@
 
 #include "Notify/AttachmentCollision.h"
 
+#include "Character/CBaseCharacter.h"
 #include "Component/WeaponComponent.h"
 #include "GameObject/Weapon/Attachment.h"
 
@@ -10,6 +11,9 @@ void UAttachmentCollision::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSe
 	float TotalDuration, const FAnimNotifyEventReference& EventReference)
 {
 	Super::NotifyBegin(MeshComp, Animation, TotalDuration, EventReference);
+
+	if (!MeshComp->GetOwner()->HasAuthority())
+		return;
 
 	if (UWeaponComponent* weaponComponent = MeshComp->GetOwner()->GetComponentByClass<UWeaponComponent>())
 	{
@@ -24,6 +28,9 @@ void UAttachmentCollision::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSe
 void UAttachmentCollision::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
 	const FAnimNotifyEventReference& EventReference)
 {
+	if (!MeshComp->GetOwner()->HasAuthority())
+		return;
+
 	Super::NotifyEnd(MeshComp, Animation, EventReference);
 	if (UWeaponComponent* weaponComponent = MeshComp->GetOwner()->GetComponentByClass<UWeaponComponent>())
 	{

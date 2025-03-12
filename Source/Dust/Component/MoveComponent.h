@@ -43,7 +43,9 @@ private:
 	//키입력값이 저장될 변수
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	FVector2D MovementVector;
-	UPROPERTY(EditAnywhere, Replicated)
+
+public:
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Replicated)
 	bool IsStop = false;
 
 

@@ -15,6 +15,15 @@ void UEndAction::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Ani
 {
 	Super::Notify(MeshComp, Animation, EventReference);
 
+	if (UMoveComponent* moveComponent = MeshComp->GetOwner()->GetComponentByClass<UMoveComponent>())
+	{
+		moveComponent->SetStop(false);
+		moveComponent->SetCamerafix(false);
+	}
+
+	if (!MeshComp->GetOwner()->HasAuthority())
+		return;
+
 	if(Cast<ACPlayerCharacter>(MeshComp->GetOwner()))
 		Cast<ACPlayerCharacter>(MeshComp->GetOwner())->IsUseControllerRotYaw = true;
 
@@ -28,9 +37,4 @@ void UEndAction::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Ani
 		identityComponent->EndIdentitySkill();
 	}
 
-	if (UMoveComponent* moveComponent = MeshComp->GetOwner()->GetComponentByClass<UMoveComponent>())
-	{
-		moveComponent->SetStop(false);
-		moveComponent->SetCamerafix(false);
-	}
 }

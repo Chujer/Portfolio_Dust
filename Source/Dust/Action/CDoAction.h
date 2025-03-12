@@ -38,8 +38,11 @@ public:
 
 	UFUNCTION()
 	void ApplyDamage(AActor* OtherActor, class AAttachment* Attachment, const FHitResult& HitResult, bool isNormalHit);
-	
-	void SpawnHitEffect(FVector Location);
+
+	UFUNCTION(Server, Reliable)
+	void SpawnHitEffect_Server(FVector Location);
+	UFUNCTION(NetMulticast, Reliable)
+	void SpawnHitEffect_NMC(FVector Location);
 
 protected:
 	TWeakObjectPtr<class ACBaseCharacter> OwnerCharacter;

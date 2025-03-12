@@ -31,9 +31,24 @@ public:
 	void SetCustomTimeAndEnd(float MulTime, float EndTime);
 	void ReturnCustomTIme();
 
-public:
+public:    //시점 고정
 	void LookAtTarget(const AActor* target);
 	void LookAtLERP(const AActor* target);
+
+public: 
+	//사운드 출력 RPC
+	UFUNCTION(Server,Reliable)
+	void PlaySoundRPC(USoundBase* Sound);
+	UFUNCTION(NetMulticast, Reliable)
+	void PlaySoundRPC_NMC(USoundBase* Sound);
+
+public:
+	//Particle 실행
+	UFUNCTION(Server, Reliable)
+	void SpawnNiagaraRPC(UNiagaraSystem* Niagara, FVector Location, FRotator Rotator, FVector Scale);
+	UFUNCTION(NetMulticast, Reliable)
+	void SpawnNiagara_NMC(UNiagaraSystem* Niagara, FVector Location, FRotator Rotator, FVector Scale);
+	
 
 public:
 	UFUNCTION(Server, Reliable)
@@ -41,7 +56,6 @@ public:
 
 	UFUNCTION(NetMulticast, Reliable)
 	void PlayMontage_NMC(class UAnimMontage* AnimMontage = nullptr, float InPlayRate = 1.f, FName StartSectionName = NAME_None);
-
 
 	UFUNCTION(Server, Reliable)
 	void StopMontage_Server();

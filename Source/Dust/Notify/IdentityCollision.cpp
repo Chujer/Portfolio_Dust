@@ -11,6 +11,10 @@ void UIdentityCollision::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequ
 	float TotalDuration, const FAnimNotifyEventReference& EventReference)
 {
 	Super::NotifyBegin(MeshComp, Animation, TotalDuration, EventReference);
+
+	if (!MeshComp->GetOwner()->HasAuthority())
+		return;
+
 	if (UIdentityComponent* identityComponent = MeshComp->GetOwner()->GetComponentByClass<UIdentityComponent>())
 	{
 		if (identityComponent->GetIdentity() != nullptr)
@@ -22,6 +26,10 @@ void UIdentityCollision::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequen
 	const FAnimNotifyEventReference& EventReference)
 {
 	Super::NotifyEnd(MeshComp, Animation, EventReference);
+
+	if (!MeshComp->GetOwner()->HasAuthority())
+		return;
+
 	if (UIdentityComponent* identityComponent = MeshComp->GetOwner()->GetComponentByClass<UIdentityComponent>())
 	{
 

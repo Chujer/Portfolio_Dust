@@ -3,9 +3,11 @@
 
 #include "Character/CBaseCharacter.h"
 
+#include "NiagaraFunctionLibrary.h"
 #include "Blueprint/UserWidget.h"
 #include "Component/StateComponent.h"
 #include "Component/WeaponComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
@@ -85,6 +87,26 @@ void ACBaseCharacter::LookAtLERP(const AActor* target)
 	
     FRotator newRotation = FRotator(currentRotation.Pitch, newYaw, currentRotation.Roll);
     SetActorRotation(newRotation);
+}
+
+void ACBaseCharacter::SpawnNiagaraRPC_Implementation(UNiagaraSystem* Niagara, FVector Location, FRotator Rotator, FVector Scale)
+{
+	SpawnNiagara_NMC(Niagara, Location, Rotator, Scale);
+}
+
+void ACBaseCharacter::SpawnNiagara_NMC_Implementation(UNiagaraSystem* Niagara, FVector Location, FRotator Rotator, FVector Scale)
+{
+	UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), Niagara, Location, Rotator, Scale);
+}
+
+void ACBaseCharacter::PlaySoundRPC_Implementation(USoundBase* Sound)
+{
+	PlaySoundRPC_NMC(Sound);
+}
+
+void ACBaseCharacter::PlaySoundRPC_NMC_Implementation(USoundBase* Sound)
+{
+	UGameplayStatics::PlaySound2D(GetWorld(), Sound);
 }
 
 void ACBaseCharacter::StopMontage_Server_Implementation()

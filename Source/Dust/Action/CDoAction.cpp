@@ -160,7 +160,7 @@ void UCDoAction::LaunchCharacter(FDoActionData DoActionData, ACharacter* LaunchC
 void UCDoAction::ApplyDamage(AActor* OtherActor, class AAttachment* Attachment, const FHitResult& HitResult, bool isNormalHit)
 {
 	//UKismetSystemLibrary::DrawDebugSphere(this, HitResult.Location, 10, 12, FLinearColor::White, 5);
-	SpawnHitEffect(HitResult.Location);
+	SpawnHitEffect_Server(HitResult.Location);
 	APlayerController* controller = OwnerCharacter->GetController<APlayerController>();
 
 
@@ -179,7 +179,6 @@ void UCDoAction::ApplyDamage(AActor* OtherActor, class AAttachment* Attachment, 
 	}
 	else                                                                    //플레이어 히트
 	{
-
 		if (controller != nullptr && DoActionDatas[ActionIndex - 1].CameraShakeClass != nullptr)
 		{
 			controller->PlayerCameraManager->StartCameraShake(DoActionDatas[ActionIndex - 1].CameraShakeClass);
@@ -204,10 +203,15 @@ void UCDoAction::ApplyDamage(AActor* OtherActor, class AAttachment* Attachment, 
 
 }
 
-void UCDoAction::SpawnHitEffect(FVector Location)
+void UCDoAction::SpawnHitEffect_Server_Implementation(FVector Location)
+{
+	SpawnHitEffect_NMC(Location);
+}
+
+void UCDoAction::SpawnHitEffect_NMC_Implementation(FVector Location)
 {
 	if (currentDoActionData.HittEffect == nullptr)
 		return;
 	//피격 이펙트 생성
-	UNiagaraFunctionLibrary::SpawnSystemAtLocation(OwnerCharacter->GetWorld(), currentDoActionData.HittEffect, Location);
+	OwnerCharacter->SpawnNiagara_NMC(currentDoActionData.HittEffect, Location, FRotator::ZeroRotator, FVector(0.2f, 0.2f, 0.2f));
 }

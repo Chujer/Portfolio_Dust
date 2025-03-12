@@ -9,7 +9,9 @@ void UChangeState::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* A
                           const FAnimNotifyEventReference& EventReference)
 {
 	Super::Notify(MeshComp, Animation, EventReference);
-	
+
+	if (!MeshComp->GetOwner()->HasAuthority())
+		return;
 
 	if (UStateComponent* StateComponent = MeshComp->GetOwner()->GetComponentByClass<UStateComponent>())
 	{

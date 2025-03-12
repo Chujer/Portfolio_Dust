@@ -40,7 +40,7 @@ public:
 	bool isNormalDamage = true;
 
 private:
-	TWeakObjectPtr<ACharacter> OwnerCharacter;
+	TWeakObjectPtr<class ACBaseCharacter> OwnerCharacter;
 	UPROPERTY(EditAnywhere, Category = "Attachment")
 	FName AttachSocketName;
 
