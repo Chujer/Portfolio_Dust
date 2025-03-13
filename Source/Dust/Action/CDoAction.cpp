@@ -2,12 +2,15 @@
 
 
 #include "CDoAction.h"
+
+#include "AIController.h"
 #include "CLog.h"
 #include "Component/MoveComponent.h"
 #include "Component/StateComponent.h"
 #include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
 #include "NiagaraFunctionLibrary.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "Character/CBaseCharacter.h"
 #include "Character/CEnemyCharacter.h"
 #include "Character/CPlayerCharacter.h"
@@ -169,15 +172,15 @@ void UCDoAction::ApplyDamage(AActor* OtherActor, class AAttachment* Attachment, 
 	if (otherStateComponent == nullptr)
 		return;
 
-	//카메라 쉐이크 [플레이어의 경우 ActionIndex를 올리지만 몬스터의 경우 올리지 않기에 Cast로 판별]
-	if (Cast<ACPlayerCharacter>(OwnerCharacter) == nullptr)					//몬스터 히트
+	//카메라 쉐이크
+	if (Cast<ACPlayerCharacter>(OwnerCharacter) == nullptr)					//몬스터가 한 공격
 	{
 		if (controller != nullptr && DoActionDatas[ActionIndex].CameraShakeClass != nullptr)
 		{
 			controller->PlayerCameraManager->StartCameraShake(DoActionDatas[ActionIndex].CameraShakeClass);
 		}
 	}
-	else                                                                    //플레이어 히트
+	else                                                                    //플레이어가 한 공격
 	{
 		if (controller != nullptr && DoActionDatas[ActionIndex - 1].CameraShakeClass != nullptr)
 		{
@@ -185,11 +188,20 @@ void UCDoAction::ApplyDamage(AActor* OtherActor, class AAttachment* Attachment, 
 		}
 	}
 
-	if(Cast<ACPlayerCharacter>(OtherCharacter) != nullptr)
+	//피격 대상별 행동
+	if (Cast<ACPlayerCharacter>(OtherCharacter) != nullptr)
+	{
 		OtherCharacter->StateComponent->SetHittedMode();
+	}
+	else
+	{
+		Cast<AAIController>(OtherCharacter->GetController())->GetBlackboardComponent()->SetValueAsObject("AttackTarget", Cast<UObject>(OwnerCharacter));
+	}
 
 	if (OtherCharacter->HasAuthority())
+	{
 		otherStateComponent->SubHP(currentDoActionData.Power);
+	}
 
 	if (OtherCharacter->HitNormalAnim == nullptr || OtherCharacter->NockDownAnim == nullptr)
 		return;

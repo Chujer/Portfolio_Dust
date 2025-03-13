@@ -5,6 +5,7 @@
 
 #include "NiagaraFunctionLibrary.h"
 #include "Blueprint/UserWidget.h"
+#include "Component/FeetComponent.h"
 #include "Component/StateComponent.h"
 #include "Component/WeaponComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -20,6 +21,8 @@ ACBaseCharacter::ACBaseCharacter()
 	StateComponent->SetIsReplicated(true);
 	WeaponComponent = CreateDefaultSubobject<UWeaponComponent>("WeaponComponent");
 	WeaponComponent->SetIsReplicated(true);
+	FeetComponent = CreateDefaultSubobject<UFeetComponent>("FeetComponent");
+	FeetComponent->SetIsReplicated(true);
 }
 
 // Called when the game starts or when spawned

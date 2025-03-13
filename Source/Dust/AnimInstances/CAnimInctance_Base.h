@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
+#include "Component/FeetComponent.h"
 #include "CAnimInctance_Base.generated.h"
 
 /**
@@ -29,7 +30,14 @@ protected:
 		float Pitch;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character_Info")
 		float Direction;
+
+protected:
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "InverseKinemetics")
+	bool bFeet = true;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "InverseKinemetics")
+	FFeetData FeetData;
+
 private:
-	TWeakObjectPtr<ACharacter> Character;
+	TWeakObjectPtr<ACBaseCharacter> OwnerCharacter;
 	FRotator InterpRotation;
 };

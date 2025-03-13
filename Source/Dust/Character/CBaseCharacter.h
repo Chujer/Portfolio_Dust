@@ -70,6 +70,9 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	TObjectPtr<class UStateComponent> StateComponent;
 
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	TObjectPtr<class UFeetComponent> FeetComponent;
+
 public:
 	UPROPERTY(EditAnywhere, Category = "HitAnim")
 	UAnimMontage* ParryHitAnimation;
