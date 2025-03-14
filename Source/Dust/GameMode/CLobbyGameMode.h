@@ -14,6 +14,7 @@ class DUST_API ACLobbyGameMode : public AGameModeBase
 
 public:
 	virtual void OnPostLogin(AController* NewPlayer) override;
+	void UpdatePlayerInfo();
 
 	void Test(APawn* OldPawn, APawn* NewPawn);
 public:

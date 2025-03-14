@@ -18,12 +18,16 @@ void ACLobbyGameMode::OnPostLogin(AController* NewPlayer)
 	newPlayerController->SetPlayerInfo();
 
 	ConnectedPlayers.Add(newPlayerController);
-	ConnectedPlayerInfos.Add(newPlayerController->PlayerInfo);
+	UpdatePlayerInfo();
+}
 
+void ACLobbyGameMode::UpdatePlayerInfo()
+{
+	ConnectedPlayerInfos.Empty();
 	for (ACLobbyController* connectedPlayer : ConnectedPlayers)
 	{
+		ConnectedPlayerInfos.Add(connectedPlayer->PlayerInfo);
+
 		connectedPlayer->UpdatePlayerList(ConnectedPlayerInfos);
 	}
-
-	
 }

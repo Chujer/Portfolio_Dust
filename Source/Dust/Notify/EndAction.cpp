@@ -15,6 +15,9 @@ void UEndAction::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Ani
 {
 	Super::Notify(MeshComp, Animation, EventReference);
 
+	if(ACPlayerCharacter* Character = Cast<ACPlayerCharacter>(MeshComp->GetOwner()))
+		Character->DoEvadeToCameraFix(true);
+	
 	if (UMoveComponent* moveComponent = MeshComp->GetOwner()->GetComponentByClass<UMoveComponent>())
 	{
 		moveComponent->SetStop(false);

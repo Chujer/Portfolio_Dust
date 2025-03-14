@@ -12,7 +12,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	FText PlayerName = FText::FromString("PlayerName");
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	bool IsReady = false;
+	UTexture2D* WeaponIcon = nullptr;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TWeakObjectPtr<class ACLobbyController> PController;
 

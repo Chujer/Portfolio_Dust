@@ -11,6 +11,7 @@ class DUST_API UCLobbyWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
+
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void UpdatePlayerList(const TArray<FPlayerInfo>& PlayerInfos);
 

@@ -10,6 +10,9 @@
 #include "GameFramework/Character.h"
 #include "Net/UnrealNetwork.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include <Controller/CLobbyController.h>
+
+#include "GameMode/CLobbyGameMode.h"
 
 
 UWeaponComponent::UWeaponComponent()
@@ -139,10 +142,21 @@ void UWeaponComponent::SetWeaponData_Server_Implementation(int WeaponIndex)
 		return;
 	}
 
+
 	curWeaponIndex = WeaponIndex;
 	FString temp = FString::FromInt(WeaponIndex);
 
 	FWeaponDataStruct* weaponDataRow = DataTable->FindRow<FWeaponDataStruct>(FName(*temp), FString(""));
+
+	if (ACLobbyController* lobbyController = Cast<ACLobbyController>(OwnerCharacter->GetController()))	//로비에서 무기를 장착시 변경
+	{
+		if (weaponDataRow->WeaponDataAsset != nullptr && weaponDataRow->WeaponDataAsset->Icon != nullptr)
+		{
+			lobbyController->PlayerInfo.WeaponIcon = weaponDataRow->WeaponDataAsset->Icon;
+			if (auto lobbyGameMode = Cast<ACLobbyGameMode>(GetWorld()->GetAuthGameMode()))
+				lobbyGameMode->UpdatePlayerInfo();
+		}
+	}
 
 	FActorSpawnParameters param;
 	param.Owner = Cast<AActor>(OwnerCharacter);

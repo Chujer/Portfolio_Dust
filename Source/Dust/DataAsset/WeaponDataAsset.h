@@ -31,4 +31,7 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "DoAction")
 	TSubclassOf<UCDoAction> DoActionClass;
+	
+	UPROPERTY(EditAnywhere, Category = "ICon")
+	UTexture2D* Icon;
 };
