@@ -11,7 +11,12 @@ class DUST_API UCGameInstance : public UGameInstance
 
 
 public:
-
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	int MissionPlayerCount = 99;
+
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float MouseSenceX = 1.0f;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float MouseSenceY = 1.0f;
 };

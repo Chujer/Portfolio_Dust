@@ -30,10 +30,15 @@ public:
 	virtual void NotifyActorEndOverlap(AActor* OtherActor) override;
 
 public:
-	// 카메라 고정전 보간 여부
-	void DoEvadeToCameraFix(bool InFix) { EvadeToCameraFix = InFix; }
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
-	//TODO - 임시 실행 함수 /////////////////////////////////////////
+public:
+	// 카메라 고정전 보간 여부
+	UFUNCTION(Server, Reliable)
+	void DoEvadeToCameraFix(bool InFix);
+	UFUNCTION(NetMulticast, Reliable)
+	void DoEvadeToCameraFix_NMC(bool InFix);
+	
 public:
 	void PlayInteract();
 
@@ -48,10 +53,15 @@ public:
 	UFUNCTION(NetMulticast, Reliable)
 	void LastPlayerInGame_NMC();
 
+public:
+	UFUNCTION(Client, Reliable)
+	void FiexCameraWalk_Client(FRotator rotation);
 
-	
-	//TODO/////////////////// /////////////////////////////////////////
-		
+	UFUNCTION(NetMulticast, Reliable)
+	void SetRotateOption();
+
+
+
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class USpringArmComponent* SpringArmComponent;

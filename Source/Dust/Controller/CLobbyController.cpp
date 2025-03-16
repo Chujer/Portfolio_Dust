@@ -24,7 +24,12 @@ void ACLobbyController::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 	DOREPLIFETIME(ACLobbyController, PlayerInfo);
 }
 
-void ACLobbyController::CreateLobbyWidget_Client_Implementation()
+void ACLobbyController::CreateLobbyWidget_Server_Implementation()
+{
+	CreateLobbyWidget_NMC();
+}
+
+void ACLobbyController::CreateLobbyWidget_NMC_Implementation()
 {
 	if (!IsLocalPlayerController())
 		return;
@@ -59,7 +64,12 @@ void ACLobbyController::SetGIPlayerCount(int count)
 	}
 }
 
-void ACLobbyController::UpdatePlayerList(const TArray<FPlayerInfo>& PlayerInfos)
+void ACLobbyController::UpdatePlayerList_Server_Implementation(const TArray<FPlayerInfo>& PlayerInfos)
+{
+	UpdatePlayerList_NMC(PlayerInfos);
+}
+
+void ACLobbyController::UpdatePlayerList_NMC_Implementation(const TArray<FPlayerInfo>& PlayerInfos)
 {
 	ConnectedPlayerInfo = PlayerInfos;
 

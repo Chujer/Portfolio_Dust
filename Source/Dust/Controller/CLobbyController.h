@@ -16,10 +16,16 @@ public:
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 public:
+	UFUNCTION(BlueprintCallable, Server, Reliable)
+	void CreateLobbyWidget_Server();
+	UFUNCTION(BlueprintCallable, NetMulticast, Reliable)
+	void CreateLobbyWidget_NMC();
+
+
+	UFUNCTION(BlueprintCallable, Server, Reliable)
+	void UpdatePlayerList_Server(const TArray<FPlayerInfo>& PlayerInfos);
 	UFUNCTION(BlueprintCallable, Client, Reliable)
-	void CreateLobbyWidget_Client();
-	UFUNCTION(BlueprintCallable)
-	void UpdatePlayerList(const TArray<FPlayerInfo>& PlayerInfos);
+	void UpdatePlayerList_NMC(const TArray<FPlayerInfo>& PlayerInfos);
 
 	void SetPlayerInfo();
 

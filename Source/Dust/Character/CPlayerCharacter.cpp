@@ -17,6 +17,7 @@
 #include "GameMode/CLobbyGameMode.h"
 #include "Interface/InteractionInterface.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Net/UnrealNetwork.h"
 #include "Utility/CHelpers.h"
 
 
@@ -95,6 +96,14 @@ void ACPlayerCharacter::BeginPlay()
 	{
 		StateComponent->MakeHPUI();
 	}
+
+
+}
+
+void ACPlayerCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	//DOREPLIFETIME(ACPlayerCharacter, EvadeToCameraFix);
 }
 
 void ACPlayerCharacter::Tick(float DeltaTime)
@@ -102,23 +111,34 @@ void ACPlayerCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	//UseControllerRotationYaw의 활성화시 캐릭터의 회전이 뚝끊겨보이는 것을 보간해서 부드러운 회전으로 설정
-	if(EvadeToCameraFix)
+	if (EvadeToCameraFix)
 	{
-		FRotator currentRotation = GetActorRotation();
-		FRotator targetRotation = GetActorRotation();
-		targetRotation.Yaw = GetControlRotation().Yaw;
-		FRotator newRotation = UKismetMathLibrary::RInterpTo(currentRotation, targetRotation, DeltaTime, 15.0f);
-		SetActorRotation(newRotation);
-
-		if (UKismetMathLibrary::NearlyEqual_FloatFloat(UKismetMathLibrary::NormalizeAxis(currentRotation.Yaw),
-			UKismetMathLibrary::NormalizeAxis(targetRotation.Yaw), NealyControllerGap))
+		if (HasAuthority())
 		{
-			bUseControllerRotationYaw = true;
-			IsUseControllerRotYaw = false;
-			EvadeToCameraFix = false;
+			FRotator currentRotation = GetActorRotation();
+			FRotator targetRotation = GetActorRotation();
+
+			targetRotation.Yaw = GetControlRotation().Yaw;
+
+			FRotator newRotation = UKismetMathLibrary::RInterpTo(currentRotation, targetRotation, DeltaTime, 15.0f);
+			
+			SetActorRotation(newRotation);
+			FiexCameraWalk_Client(newRotation);
+
+			if (UKismetMathLibrary::NearlyEqual_FloatFloat(UKismetMathLibrary::NormalizeAxis(currentRotation.Yaw),
+				UKismetMathLibrary::NormalizeAxis(targetRotation.Yaw), NealyControllerGap))
+			{
+				SetRotateOption();
+			}
 		}
 	}
 }
+
+void ACPlayerCharacter::FiexCameraWalk_Client_Implementation(FRotator rotation)
+{
+	SetActorRotation(rotation);
+}
+
 
 void ACPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -131,7 +151,7 @@ void ACPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 		Input->BindAction(LookAction, ETriggerEvent::Triggered, MoveComponent.Get(), &UMoveComponent::Look);
 		Input->BindAction(InteractionAction, ETriggerEvent::Triggered, this, &ACPlayerCharacter::PlayInteract);
 		Input->BindAction(ActionAction, ETriggerEvent::Triggered, WeaponComponent.Get(), &UWeaponComponent::DoAction_Server);
-		Input->BindAction(EvadeAction, ETriggerEvent::Triggered, EvadeComponent.Get(), &UEvadeComponent::Evade_Server);
+		Input->BindAction(EvadeAction, ETriggerEvent::Triggered, EvadeComponent.Get(), &UEvadeComponent::Evade_Client);
 		Input->BindAction(IdentityStartAction, ETriggerEvent::Triggered, IdentityComponent.Get(), &UIdentityComponent::BeginIdentity);
 		Input->BindAction(IdentityEndAction, ETriggerEvent::Triggered, IdentityComponent.Get(), &UIdentityComponent::EndIdentity);
 		Input->BindAction(RightClickAction, ETriggerEvent::Triggered, IdentityComponent.Get(), &UIdentityComponent::BeginIdentitySkill);
@@ -182,10 +202,28 @@ void ACPlayerCharacter::NotifyActorEndOverlap(AActor* OtherActor)
 	}
 }
 
+void ACPlayerCharacter::DoEvadeToCameraFix_Implementation(bool InFix)
+{
+	DoEvadeToCameraFix_NMC(InFix);
+}
+
+void ACPlayerCharacter::DoEvadeToCameraFix_NMC_Implementation(bool InFix)
+{
+	EvadeToCameraFix = InFix; 
+}
+
 void ACPlayerCharacter::PlayInteract()
 {
 	if(!!InteractionObject)
 		InteractionObject->Interact(this);
+}
+
+
+void ACPlayerCharacter::SetRotateOption_Implementation()
+{
+	bUseControllerRotationYaw = true;
+	IsUseControllerRotYaw = false;
+	EvadeToCameraFix = false;
 }
 
 void ACPlayerCharacter::LastPlayerInGame_Server_Implementation()
@@ -212,6 +250,8 @@ void ACPlayerCharacter::LastPlayerInGame_NMC_Implementation()
 {
 	if (WeaponComponent == nullptr)
 		return;
+	else
+		CLog::Print(FString("NoReadyWeaponComponent"), 100, 10);
 	WeaponComponent->LoadSetWeaponData();
 }
 

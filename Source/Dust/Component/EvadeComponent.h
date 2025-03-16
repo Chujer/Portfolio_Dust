@@ -19,6 +19,8 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+public:
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -27,12 +29,15 @@ public:
 
 	void PlayMontage(const FEvadeData& MontageData);
 
+
+	UFUNCTION(Reliable, Client)
+	void Evade_Client();
 	UFUNCTION(Reliable, Server)
-	void Evade_Server();
-	UFUNCTION(Reliable, NetMulticast)
-	void Evade_NMC(const FVector2D& value);
+	void Evade_Server(const FVector2D& value);
+
+	
 private:
-	TWeakObjectPtr<class ACharacter> OwnerCharacter;
+	TWeakObjectPtr<class ACBaseCharacter> OwnerCharacter;
 	FVector2D MovementVector;
 private:
 	UPROPERTY(EditAnywhere, Category = "Evade")

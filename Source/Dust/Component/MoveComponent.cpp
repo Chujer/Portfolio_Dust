@@ -1,6 +1,7 @@
 #include "Component/MoveComponent.h"
 
 #include "GameFramework/Character.h"
+#include "GameInstance/CGameInstance.h"
 #include "Net/UnrealNetwork.h"
 
 UMoveComponent::UMoveComponent()
@@ -68,8 +69,11 @@ void UMoveComponent::Look(const FInputActionValue& Value)
 
 	if (!!playerController && playerController->bShowMouseCursor == false)
 	{
+		float mouseSenceX = Cast<UCGameInstance>(OwnerCharacter->GetGameInstance())->MouseSenceX;
+		float mouseSenceY = Cast<UCGameInstance>(OwnerCharacter->GetGameInstance())->MouseSenceY;
+
 		// add yaw and pitch input to controller
-		OwnerCharacter->AddControllerYawInput(LookAxisVector.X);
-		OwnerCharacter->AddControllerPitchInput(LookAxisVector.Y);
+		OwnerCharacter->AddControllerYawInput(LookAxisVector.X * mouseSenceX);
+		OwnerCharacter->AddControllerPitchInput(LookAxisVector.Y * mouseSenceY);
 	}
 }

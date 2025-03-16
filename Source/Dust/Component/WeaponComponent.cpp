@@ -169,7 +169,8 @@ void UWeaponComponent::SetWeaponData_Server_Implementation(int WeaponIndex)
 	}
 
 	//OnRep함수는 클라이언트에서만 실행되기 때문에 서버에서도 실행
-	SetWeaponData(WeaponIndex, tempAttachment);
+	//SetWeaponData(WeaponIndex, tempAttachment);
+	OnRepAttach();
 }
 
 void UWeaponComponent::SetWeaponData(int WeaponIndex, AAttachment* Attachment)
@@ -183,7 +184,7 @@ void UWeaponComponent::SetWeaponData(int WeaponIndex, AAttachment* Attachment)
 
 	if (Cast<ACPlayerCharacter>(OwnerCharacter))
 	{
-		Cast<ACPlayerCharacter>(OwnerCharacter)->IsUseControllerRotYaw = true;
+		Cast<ACPlayerCharacter>(OwnerCharacter)->SetRotateOption();//->IsUseControllerRotYaw = true;
 		OwnerCharacter->GetCharacterMovement()->bOrientRotationToMovement = false;
 
 		//변경된 WeaponIndex값을 Save
@@ -241,4 +242,6 @@ void UWeaponComponent::LoadSetWeaponData()
 	//SaveData에서 값을 받아와 무기 설정
 	if (SaveComponent.IsValid())
 		SaveComponent->LoadSetWeaponData();
+	else
+		CLog::Print(FString("noSaveData"), 90, 10);
 }
