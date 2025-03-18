@@ -14,6 +14,9 @@ class DUST_API UPlayerSaveComponent : public UActorComponent
 public:	
 	UPlayerSaveComponent();
 
+public:
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 protected:
 	virtual void BeginPlay() override;
 

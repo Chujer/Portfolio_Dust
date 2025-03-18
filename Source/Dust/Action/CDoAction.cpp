@@ -95,7 +95,6 @@ void UCDoAction::DoActionRight_Server()
 			FVector vector2 = OwnerCharacter->GetActorForwardVector();
 
 			float scala = UKismetMathLibrary::Dot_VectorVector(vector1, vector2);
-			CLog::Print(scala);
 			if (scala < -0.9)
 				Execute(enemy);
 		}

@@ -8,7 +8,4 @@
 void UWeaponData::BeginDestroy()
 {
 	UObject::BeginDestroy();
-
-	CLog::Print("remove" + GetName());
-	
 }

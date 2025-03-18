@@ -184,12 +184,6 @@ void UStateComponent::OnExecute(EStateType InPrevType, EStateType InNewType)
 
 void UStateComponent::SetGroggyWidget(UUserWidget* Widget)
 {
-	if (UWidgetComponent* temp = OwnerCharacter->GetComponentByClass<UWidgetComponent>())
-	{
-		if (temp->GetUserWidgetObject() != nullptr)
-			CLog::Print(temp->GetUserWidgetObject()->GetName());
-	}
-
 	GroggyWidget = Cast<UCGroggyWidget>(Widget);
 	if(GroggyWidget != nullptr)
 		GroggyWidget->MaxGroggyTime = MaxGroggyTime;

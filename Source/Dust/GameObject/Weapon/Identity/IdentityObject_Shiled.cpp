@@ -83,8 +83,6 @@ void AIdentityObject_Shiled::BeginIdentitySkill()
 	OwnerCharacter->GetComponentByClass<UMoveComponent>()->SetStop(true);
 
 	SetCollision(ECollisionEnabled::NoCollision);
-	if (HasAuthority())
-		CLog::Print(IsParrying);
 
 }
 

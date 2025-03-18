@@ -35,7 +35,6 @@ void UWeaponComponent::BeginPlay()
 void UWeaponComponent::BeginDestroy()
 {
 	Super::BeginDestroy();
-	CLog::Print("destroy weaponCOmp");
 }
 
 class AAttachment* UWeaponComponent::GetAttachment() const
@@ -138,11 +137,9 @@ void UWeaponComponent::SetWeaponData_Server_Implementation(int WeaponIndex)
 {
 	if (DataTable == nullptr || WeaponIndex > DataTable->GetRowNames().Num() || WeaponIndex == 0)
 	{
-		CLog::Print("WeaponIndex > DataTableSize");
 		return;
 	}
-
-
+	
 	curWeaponIndex = WeaponIndex;
 	FString temp = FString::FromInt(WeaponIndex);
 
@@ -160,6 +157,7 @@ void UWeaponComponent::SetWeaponData_Server_Implementation(int WeaponIndex)
 
 	FActorSpawnParameters param;
 	param.Owner = Cast<AActor>(OwnerCharacter);
+	
 	//Attachment의 경우 리플리케이션한 엑터이므로 밖(Server)에서 생성후 매개변수로 전달
 	tempAttachment = GetWorld()->SpawnActor<AAttachment>(weaponDataRow->WeaponDataAsset->AttachmentClass, param);
 
@@ -167,9 +165,7 @@ void UWeaponComponent::SetWeaponData_Server_Implementation(int WeaponIndex)
 	{
 		IdentityComponent->SetIdentity(weaponDataRow->WeaponDataAsset->IdentityClass);
 	}
-
-	//OnRep함수는 클라이언트에서만 실행되기 때문에 서버에서도 실행
-	//SetWeaponData(WeaponIndex, tempAttachment);
+	
 	OnRepAttach();
 }
 
@@ -184,7 +180,7 @@ void UWeaponComponent::SetWeaponData(int WeaponIndex, AAttachment* Attachment)
 
 	if (Cast<ACPlayerCharacter>(OwnerCharacter))
 	{
-		Cast<ACPlayerCharacter>(OwnerCharacter)->SetRotateOption();//->IsUseControllerRotYaw = true;
+		Cast<ACPlayerCharacter>(OwnerCharacter)->SetRotateOption();
 		OwnerCharacter->GetCharacterMovement()->bOrientRotationToMovement = false;
 
 		//변경된 WeaponIndex값을 Save
@@ -201,7 +197,6 @@ void UWeaponComponent::SetWeaponData(int WeaponIndex, AAttachment* Attachment)
 	WeaponData = NewObject<UWeaponData>(this, UWeaponData::StaticClass());
 	WeaponData->Attachment = tempAttachment;
 	WeaponData->AnimInstance = WeaponDataAsset->AnimInstance;
-	
 
 	if (!!WeaponDataAsset->DoActionClass)
 	{
@@ -242,6 +237,4 @@ void UWeaponComponent::LoadSetWeaponData()
 	//SaveData에서 값을 받아와 무기 설정
 	if (SaveComponent.IsValid())
 		SaveComponent->LoadSetWeaponData();
-	else
-		CLog::Print(FString("noSaveData"), 90, 10);
 }

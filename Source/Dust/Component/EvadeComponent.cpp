@@ -77,14 +77,12 @@ void UEvadeComponent::Evade_Server_Implementation(const FVector2D& value)
 	else if (value.Y > 0 && value.X != 0)
 	{
 		rotate.Yaw = OwnerCharacter->GetActorRotation().Yaw + UKismetMathLibrary::RadiansToDegrees(UKismetMathLibrary::Atan2(value.X, value.Y));
-		CLog::Print(rotate.Yaw);
 		OwnerCharacter->SetActorRotation(rotate);
 
 	}
 	else if (value.Y < 0 && value.X != 0)
 	{
 		rotate.Yaw = OwnerCharacter->GetActorRotation().Yaw - (180 - UKismetMathLibrary::RadiansToDegrees(UKismetMathLibrary::Atan2(value.X, value.Y)));
-		CLog::Print(rotate.Yaw);
 		OwnerCharacter->SetActorRotation(rotate);
 	}
 	
@@ -100,66 +98,4 @@ void UEvadeComponent::Evade_Server_Implementation(const FVector2D& value)
 	else
 		PlayMontage(EvadeDataF);
 }
-
-
-//void UEvadeComponent::Evade_Server_Implementation()
-//{
-//	if (StateComponent == nullptr)
-//		return;
-//
-//	if (!StateComponent->IsIdleMode())
-//		return;
-//
-//	StateComponent->SetActionMode();
-//
-//
-//	Evade_NMC(MovementVector);
-//}
-//
-//void UEvadeComponent::Evade_NMC_Implementation(const FVector2D& value)
-//{
-//	if (!OwnerCharacter.IsValid())
-//		return;
-//
-//	FRotator rotate = OwnerCharacter->GetActorRotation();
-//	OwnerCharacter->bUseControllerRotationYaw = false;
-//	Cast<ACPlayerCharacter>(OwnerCharacter)->IsUseControllerRotYaw = false;
-//
-//
-//	CLog::Print("TT : ", 6);
-//	//if()
-//	//실행 시킬 애니메이션의 방향으로 회전
-//	if (OwnerCharacter->IsLocallyControlled())
-//	{
-//		if (MovementVector.Y == 0 || MovementVector.X == 0)
-//		{
-//		}
-//		else if (MovementVector.Y > 0 && MovementVector.X != 0)
-//		{
-//			rotate.Yaw = OwnerCharacter->GetActorRotation().Yaw + UKismetMathLibrary::RadiansToDegrees(UKismetMathLibrary::Atan2(MovementVector.X, MovementVector.Y));
-//			CLog::Print(rotate.Yaw);
-//			OwnerCharacter->SetActorRotation(rotate);
-//		}
-//		else if (MovementVector.Y < 0 && MovementVector.X != 0)
-//		{
-//			rotate.Yaw = OwnerCharacter->GetActorRotation().Yaw - (180 - UKismetMathLibrary::RadiansToDegrees(UKismetMathLibrary::Atan2(MovementVector.X, MovementVector.Y)));
-//			CLog::Print(rotate.Yaw);
-//			OwnerCharacter->SetActorRotation(rotate);
-//		}
-//	}
-//
-//	//애니메이션의 종류가 4가지 이기 때문에 대각선은 앞또는 뒤애니메이션실행
-//	if (MovementVector.Y > 0)
-//		PlayMontage(EvadeDataF);
-//	else if (MovementVector.Y < 0)
-//		PlayMontage(EvadeDataB);
-//	else if (MovementVector.X > 0)
-//		PlayMontage(EvadeDataR);
-//	else if (MovementVector.X < 0)
-//		PlayMontage(EvadeDataL);
-//	else
-//		PlayMontage(EvadeDataF);
-//	
-//}
-
 

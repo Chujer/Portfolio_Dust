@@ -6,11 +6,18 @@
 #include "Save/CPlayerSaveGame.h"
 #include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
+#include "Net/UnrealNetwork.h"
 
 
 UPlayerSaveComponent::UPlayerSaveComponent()
 {
-	FilePath = "SaveData";
+	FilePath = "PlayerWeaponData";
+}
+
+void UPlayerSaveComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	//DOREPLIFETIME(UPlayerSaveComponent, SaveGame);
 }
 
 
@@ -18,14 +25,8 @@ void UPlayerSaveComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	OwnerCharacter = Cast<ACharacter>(GetOwner());
-	ACLobbyController* temp = Cast<ACLobbyController>(OwnerCharacter->GetController());
 
-	if (temp == nullptr)
-		return;
-
-	FilePath += temp->PlayerInfo.PlayerName.ToString();
-
-	if (FPaths::ValidatePath(FilePath) == false)
+	if (FPaths::ValidatePath(FilePath) == false) // 물음표등 잘못된 이름이 존재한다면 FilePath를 SaveDataTemp로 설정
 		FilePath = "SaveDataTemp";
 
 	if (UGameplayStatics::DoesSaveGameExist(FilePath, 0) == true)	//해당경로에 데이터가 있다면
@@ -42,9 +43,11 @@ void UPlayerSaveComponent::BeginPlay()
 
 void UPlayerSaveComponent::LoadData()
 {
+	CLog::Print("ReadyLoadSetWeaponData1");
 	if (!OwnerCharacter.IsValid()|| SaveGame == nullptr)
 		return;
 
+	CLog::Print("ReadyLoadSetWeaponData2");
 	//무기 정보 Load 및 해당 무기 장착
 	LoadSetWeaponData();
 }
@@ -54,11 +57,15 @@ void UPlayerSaveComponent::LoadSetWeaponData()
 	if (!OwnerCharacter.IsValid())
 		return;
 
+	CLog::Print("ReadyLoadSetWeaponData3");
+
 	UWeaponComponent* weaponComponent = OwnerCharacter->GetComponentByClass<UWeaponComponent>();
 	if (weaponComponent == nullptr)
 		return;
 	if (SaveGame == nullptr)
 		return;
+
+	CLog::Print("StartLoadSetWeaponData");
 
 	weaponComponent->SetWeaponData_Server(SaveGame->WeaponIndex);
 }

@@ -14,6 +14,7 @@
 void ACLobbyController::BeginPlay()
 {
 	Super::BeginPlay();
+	ConsoleCommand(TEXT("DisableAllScreenMessages"));
 }
 
 void ACLobbyController::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

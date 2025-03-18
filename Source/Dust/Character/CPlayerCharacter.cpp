@@ -78,17 +78,21 @@ void ACPlayerCharacter::BeginPlay()
 		}
 	}
 
-	//마지막 클라이언트의 캐릭터가 생성된 경우 
-	if (Controller != nullptr && Controller->IsLocalController())
+	if (!HasAuthority())
 	{
-		ACLobbyController* lobbyController = Cast<ACLobbyController>(Controller);
-		UCGameInstance* gameInstance = Cast<UCGameInstance>(GetGameInstance());
-		if (lobbyController == nullptr || gameInstance == nullptr)
-			return;
-
-		if (lobbyController->ConnectedPlayerInfo.Num() >= gameInstance->MissionPlayerCount)
+		//마지막 클라이언트의 캐릭터가 생성된 경우 
+		if (Controller != nullptr && Controller->IsLocalController())
 		{
-			LastPlayerInGame_Server();
+			ACLobbyController* lobbyController = Cast<ACLobbyController>(Controller);
+			UCGameInstance* gameInstance = Cast<UCGameInstance>(GetGameInstance());
+			if (lobbyController == nullptr || gameInstance == nullptr)
+				return;
+
+			if (lobbyController->ConnectedPlayerInfo.Num() >= gameInstance->MissionPlayerCount)
+			{
+				TestFun();
+				// LastPlayerInGame_Server();
+			}
 		}
 	}
 
@@ -103,7 +107,6 @@ void ACPlayerCharacter::BeginPlay()
 void ACPlayerCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-	//DOREPLIFETIME(ACPlayerCharacter, EvadeToCameraFix);
 }
 
 void ACPlayerCharacter::Tick(float DeltaTime)
@@ -218,6 +221,10 @@ void ACPlayerCharacter::PlayInteract()
 		InteractionObject->Interact(this);
 }
 
+void ACPlayerCharacter::TestFun_Implementation()
+{
+}
+
 
 void ACPlayerCharacter::SetRotateOption_Implementation()
 {
@@ -233,25 +240,36 @@ void ACPlayerCharacter::LastPlayerInGame_Server_Implementation()
 		return;
 
 	int playerCount = gameMode->GetNumPlayers();
-
-
-	//게임모드 안의 모든 컨트롤러들의 LoadSetWeaponData(무기불러오기)를 실행
-	for(int i = 0; i < playerCount; ++i)
+	ACLobbyController* ServerController = Cast<ACLobbyController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	CLog::Print(ServerController->GetPawn());
+	for (FPlayerInfo PlayerInfo : Cast<ACLobbyController>(UGameplayStatics::GetPlayerController(GetWorld(), 0))->ConnectedPlayerInfo)
 	{
-		ACPlayerCharacter* player = Cast<ACPlayerCharacter>(UGameplayStatics::GetPlayerController(GetWorld(), i)->GetPawn());
-		if(player == nullptr)
-			continue;
-		player->LastPlayerInGame_NMC();
+		CLog::Print("Player");
+		CLog::Print(PlayerInfo.PController->GetPawn());
+		if (ACPlayerCharacter* player = Cast<ACPlayerCharacter>(PlayerInfo.PController->GetPawn()))
+		{
+			player->LastPlayerInGame_NMC();
+		}
 	}
+
+	////게임모드 안의 모든 컨트롤러들의 LoadSetWeaponData(무기불러오기)를 실행
+	//for(int i = 0; i < playerCount; ++i)
+	//{
+	//	ACPlayerCharacter* player = Cast<ACPlayerCharacter>(UGameplayStatics::GetPlayerController(GetWorld(), i)->GetPawn());
+	//	if(player == nullptr)
+	//		continue;
+	//	player->LastPlayerInGame_NMC();
+	//}
 	gameMode->OnLastPlayerInGame.Broadcast();
 }
 
 void ACPlayerCharacter::LastPlayerInGame_NMC_Implementation()
 {
 	if (WeaponComponent == nullptr)
+	{
 		return;
-	else
-		CLog::Print(FString("NoReadyWeaponComponent"), 100, 10);
+	}
+	CLog::Print("LastPlayerInGameNMC");
 	WeaponComponent->LoadSetWeaponData();
 }
 

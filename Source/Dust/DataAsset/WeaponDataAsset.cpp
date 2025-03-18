@@ -9,6 +9,5 @@
 void UWeaponDataAsset::BeginDestroy()
 {
 	Super::BeginDestroy();
-
-	CLog::Print("WeaponDataRemove");
+	
 }

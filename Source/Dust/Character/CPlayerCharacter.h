@@ -53,6 +53,8 @@ public:
 	UFUNCTION(NetMulticast, Reliable)
 	void LastPlayerInGame_NMC();
 
+	UFUNCTION(BlueprintNativeEvent)
+	void TestFun();
 public:
 	UFUNCTION(Client, Reliable)
 	void FiexCameraWalk_Client(FRotator rotation);
