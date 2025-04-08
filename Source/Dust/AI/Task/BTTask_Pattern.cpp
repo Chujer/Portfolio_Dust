@@ -30,9 +30,9 @@ EBTNodeResult::Type UBTTask_Pattern::ExecuteTask(UBehaviorTreeComponent& OwnerCo
 	index = OwnerComp.GetBlackboardComponent()->GetValueAsInt("PatternIndex");
 	float distance = OwnerCharacter->GetDistanceTo(target);
 
+	//패턴의 사정거리 설정(Do Action에서 설정한 사거리)
 	PatternRange = OwnerCharacter->GetComponentByClass<UWeaponComponent>()->GetDoAction()->DoActionDatas[index].Range;
 	OwnerComp.GetBlackboardComponent()->SetValueAsFloat("Distance", distance);
-
 
 	if (distance > PatternRange)
 	{
@@ -40,6 +40,7 @@ EBTNodeResult::Type UBTTask_Pattern::ExecuteTask(UBehaviorTreeComponent& OwnerCo
 		return EBTNodeResult::InProgress;
 	}
 
+	//패턴 실행
 	OwnerCharacter->LookAtTarget(target);
 	OwnerCharacter->WeaponComponent->DoIndexAction_Server(index);
 

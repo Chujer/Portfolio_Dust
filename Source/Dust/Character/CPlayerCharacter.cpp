@@ -131,6 +131,9 @@ void ACPlayerCharacter::Tick(float DeltaTime)
 			if (UKismetMathLibrary::NearlyEqual_FloatFloat(UKismetMathLibrary::NormalizeAxis(currentRotation.Yaw),
 				UKismetMathLibrary::NormalizeAxis(targetRotation.Yaw), NealyControllerGap))
 			{
+				bUseControllerRotationYaw = true;
+				IsUseControllerRotYaw = false;
+				EvadeToCameraFix = false;
 				SetRotateOption();
 			}
 		}

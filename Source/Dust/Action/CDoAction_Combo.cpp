@@ -18,7 +18,7 @@ void UCDoAction_Combo::DoActionTrigger()
 {
 	Super::DoActionTrigger();
 
-	if (AvailableTime)
+	if (bAvailableTime)
 		ComboTrigger = true;
 }
 
@@ -32,7 +32,7 @@ void UCDoAction_Combo::EndDoAtion_NMC()
 {
 	Super::EndDoAtion_NMC();
 	ComboTrigger = false;
-	AvailableTime = false;
+	bAvailableTime = false;
 }
 
 void UCDoAction_Combo::NextDoAction()
@@ -43,7 +43,7 @@ void UCDoAction_Combo::NextDoAction()
 	StateComponent->SetIdleMode();
 
 	ComboTrigger = false;
-	AvailableTime = false;
+	bAvailableTime = false;
 
 	if(WeaponComponent.IsValid())
 		WeaponComponent->DoAction_Server();

@@ -14,13 +14,6 @@ UPlayerSaveComponent::UPlayerSaveComponent()
 	FilePath = "PlayerWeaponData";
 }
 
-void UPlayerSaveComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-	//DOREPLIFETIME(UPlayerSaveComponent, SaveGame);
-}
-
-
 void UPlayerSaveComponent::BeginPlay()
 {
 	Super::BeginPlay();

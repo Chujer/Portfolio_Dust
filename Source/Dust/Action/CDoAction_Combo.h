@@ -15,7 +15,7 @@ class DUST_API UCDoAction_Combo : public UCDoAction
 	GENERATED_BODY()
 public:
 	FORCEINLINE void SetComboTrigger() { ComboTrigger = true; }
-	FORCEINLINE void SetAvailableTime(bool val) { AvailableTime = val; }
+	FORCEINLINE void SetAvailableTime(bool val) { bAvailableTime = val; }
 
 public:
 	virtual void BeginPlay(ACBaseCharacter* InOwner) override;
@@ -29,7 +29,7 @@ private:
 	TWeakObjectPtr<class UWeaponComponent> WeaponComponent;
 
 	//콤보입력이 가능한 시간(노티파이 스테이트)
-	bool AvailableTime = false;
+	bool bAvailableTime = false;
 	//추가공격 트리거
 	bool ComboTrigger = false;
 };
